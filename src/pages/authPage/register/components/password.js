@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../register.css';
-import goodIcon from '../../../../assets/images/goodIcon.svg';
+import eye from '../../../../assets/images/eye.svg';
 
 export default function Password(props) {
 
@@ -38,7 +38,7 @@ export default function Password(props) {
                             <input className="w-100 h-100 text-center" type="password" id="password" placeholder="Password" onChange={handleChange} />
                         </div>
                         <div className="col-2 d-flex align-items-center justify-content-center">
-                            <img src={goodIcon} alt="good icon" />
+                            <img src={eye} alt="good icon" />
                         </div>
                     </div>
                 </div>
