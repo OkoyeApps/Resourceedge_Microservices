@@ -3,7 +3,8 @@ import CustomModal from '../customModal/customModal';
 
 export default function EpaUpload(props) {
     return (
-        <div>
+
+        <div className="d-flex align-items-center justify-content-center" style={{ marginTop: "40vh" }}>
             <section className="text-center">
                 <div className="notice-text">
                     Add your EPA
@@ -17,5 +18,6 @@ export default function EpaUpload(props) {
                 <CustomModal content={<div className="text-center"><button className="btn addBtn">+ Start Adding</button></div>} />
             </div>
         </div>
+
     )
 }
