@@ -40,7 +40,7 @@ export default function Password(props) {
             <div className="name-box">
                 <hi className="welcome-text">Hello Eliezer!</hi>
             </div>
-            <p className="text">Please create your new password</p>
+            <p className="text">Please enter your password</p>
             {/* <form> */}
                 <div className="form-control enter-mail" onKeyUp={checkForValue}
                     style={showBorder === true ? { border: "1px solid #1D1D1D" } : { border: "1px solid #DDDDDD" }}>
