@@ -12,6 +12,7 @@ export default function Password(props) {
     const [data, setData] = useState("");
     const [showBorder, setShowBorder] = useState(false);
     const [newPassword, changePassword] = useState("password");
+    const [icon, changeIcon] = useState("open");
 
     const handleChange = (e) => {
         setData({ [e.target.id]: e.target.value })
@@ -27,9 +28,11 @@ export default function Password(props) {
     const showPassword = () => {
         if (newPassword == "password") {
             changePassword("text");
+            changeIcon("hide");
         }
         else {
             changePassword("password");
+            changeIcon("open");
         }
     }
 
@@ -48,7 +51,11 @@ export default function Password(props) {
                             <input className="w-100 h-100 text-center" type={`${newPassword}`} id="password" placeholder="Password" onChange={handleChange} />
                         </div>
                         <div className="col-2 d-flex align-items-center justify-content-center">
-                            <img src={openEye} alt="good icon" onMouseDown={showPassword}/>
+                            {icon === "open" ? 
+                                <img src={openEye} alt="good icon" onMouseDown={showPassword} className="password-icon"/>
+                                :
+                                <img src={closedEye} alt="good icon" onMouseDown={showPassword} className="password-icon"/>
+                            }
                         </div>
                     </div>
                 </div>

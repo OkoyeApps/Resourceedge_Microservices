@@ -68,3 +68,6 @@
         margin-left: 100px;
     }
 }
+.password-icon:hover {
+    cursor: pointer;
+}
