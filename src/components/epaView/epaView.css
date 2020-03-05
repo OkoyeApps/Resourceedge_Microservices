@@ -24,6 +24,7 @@
 }
 
 .epa-card h4 {
+  display: inline;
   font-style: normal;
   font-weight: 600;
   font-size: 17px;
@@ -88,4 +89,12 @@
   font-size: 14px;
   line-height: 19px;
   color: #000000;
+}
+
+.timer {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 16px;
+  color: #999999;
 }

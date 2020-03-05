@@ -1,5 +1,6 @@
 import React from 'react'
 import './epaView.css'
+import tick from '../../assets/images/Online.svg'
 import Avatar from 'react-avatar'
 export default function EpaView(props) {
     var { data } = props
@@ -31,7 +32,7 @@ export default function EpaView(props) {
                                 <div className="epa-card mt-2">
                                     <div className="row mx-0">
                                         <div className="col-11 pl-0">
-                                            <h4>Learning Physical Internship</h4>
+                                            <h4>Learning Physical Internship</h4><span className="pl-2"><img src={tick} alt="reviewed" /></span>
                                         </div>
                                         <div className="col-1">
                                             <div className="view-epa">View</div>
@@ -69,6 +70,7 @@ export default function EpaView(props) {
                                     <div className="col-10">
                                         <div className="activity-text">
                                             <b>Susan Onuorah</b> approved your Employee Performance Agreement
+                                            <div className="timer">3 days ago</div>
                                         </div>
                                     </div>
                                 </div>
@@ -77,6 +79,7 @@ export default function EpaView(props) {
                                     <div className="col-10">
                                         <div className="activity-text">
                                             <b>You</b> accepted your Employee Performance Agreement
+                                            <div className="timer">3 days ago</div>
                                         </div>
                                     </div>
                                 </div>
@@ -90,6 +93,7 @@ export default function EpaView(props) {
                                     <div className="col-10">
                                         <div className="activity-text">
                                             <b>Susan Onuorah</b> approved your Employee Performance Agreement
+                                            <div className="timer">3 days ago</div>
                                         </div>
                                     </div>
                                 </div>
