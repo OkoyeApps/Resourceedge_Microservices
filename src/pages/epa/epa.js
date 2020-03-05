@@ -29,8 +29,8 @@ export default function Epa() {
                     </ul>
                 </section>
             </div>
-            <div className="col-9 d-flex align-items-center justify-content-center">
-                {tab === "view" ? <EpaView /> : <EpaUpload />}
+            <div className="col-9 epa-content">
+                {tab === "view" ? <EpaView data={[1, 2, 3, 4]} /> : <EpaUpload />}
             </div>
 
         </div>

@@ -15,7 +15,7 @@ export default function MainLayout(props) {
     }
     return (
         <div>
-            <div className="row mx-0">
+            <div className="row mx-0 stick-top">
                 <div className="col-12 px-0">
                     <Notifier />
                 </div>

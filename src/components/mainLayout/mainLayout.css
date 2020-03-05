@@ -12,3 +12,9 @@
 .un-clicked {
   padding: 0.6rem;
 }
+
+.stick-top {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}

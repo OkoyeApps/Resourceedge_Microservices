@@ -2,7 +2,8 @@ import React from 'react'
 
 export default function EpaUpload(props) {
     return (
-        <div>
+
+        <div className="d-flex align-items-center justify-content-center" style={{ marginTop: "40vh" }}>
             <section className="text-center">
                 <div className="notice-text">
                     Add your EPA
@@ -16,5 +17,6 @@ export default function EpaUpload(props) {
                 </div>
             </section>
         </div>
+
     )
 }
