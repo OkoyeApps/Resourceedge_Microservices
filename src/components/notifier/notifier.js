@@ -5,7 +5,7 @@ import Avatar from 'react-avatar';
 import './notifier.css'
 export default function notifier(props) {
     return (
-        <div>
+        <div className="notifier">
             <div className="row mx-0">
                 <div className="col-5 py-2 px-0 d-flex justify-content-left pl-4">
                     <div className="row mx-0 logo">

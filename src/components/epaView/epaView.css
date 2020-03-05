@@ -1,0 +1,91 @@
+.view-intro-txt {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 18px;
+  color: #999999;
+}
+
+.btn-disabled {
+  background: #dddddd;
+  border-radius: 2px;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 18px;
+  text-align: center;
+  color: #999999;
+}
+
+.epa-card {
+  background-color: #ffffff;
+  border-radius: 4px;
+  padding: 1rem 2rem;
+}
+
+.epa-card h4 {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 22px;
+  color: #1d1d1d;
+}
+.view-epa {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 18px;
+  color: #1a73e8;
+}
+
+.epa-mains span:first-child {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 20px;
+  color: #1d1d1d;
+}
+
+.epa-mains span:last-child {
+  font-style: normal;
+  font-weight: 600;
+  margin-left: 3px;
+  font-size: 14px;
+  line-height: 20px;
+  color: #1d1d1d;
+}
+
+.key-outcome {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 22px;
+  color: #1d1d1d;
+}
+.activity-card {
+  background-color: #ffffff;
+  padding: 1rem 2rem;
+}
+.activity-card h4 {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 23px;
+  color: #000000;
+}
+
+.activity-card h6 {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 19px;
+  color: #999999;
+}
+
+.activity-text {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 19px;
+  color: #000000;
+}
