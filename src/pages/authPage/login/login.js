@@ -1,17 +1,23 @@
-import React from 'react';
-// import './login.css'
+import React,{useState, useEffect} from 'react';
+import Email from './components/email'
+import Password from './components/password';
 
-export default function login() {
+export default function Login() {
+    const [stage, setStage] = useState(1);
+
+    const changeStage = (newStage) => {
+        // event.preventDefault();
+        setStage(newStage);
+    }
+    console.log(stage)
     return (
-        <div className="login-box">
-            <div className="name-box">
-            <hi className="welcome-text">Welcome Back!</hi>
-            </div>
-            <p className="text">We know you’ve been working hard, let’s measure your progress</p>
-            <form>
-                <input type="email" className="form-control enter-mail" id="email" placeholder="Please enter your company email address"/>
-                <button className="btn proceed">Proceed</button>
-            </form>
+        <div>
+           {
+               stage === 1 ?
+                <Email checkForStep={(step)=>{ setStage(step)}}/>
+                :
+                <Password checkForStep={()=>{setStage(2)}}/>
+           }
         </div>
     )
 }
