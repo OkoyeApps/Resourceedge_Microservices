@@ -9,8 +9,8 @@ export default function Email(props) {
     return (
         <div className="login-box">
             <div className="name-box">
-            <hi className="welcome-text">Welcome Back!</hi>
-            {/* {console.log(stage)} */}
+                <hi className="welcome-text">Welcome Back!</hi>
+                {/* {console.log(stage)} */}
             </div>
             <p className="text">We know you’ve been working hard, let’s measure your progress</p>
             {/* <form> */}
