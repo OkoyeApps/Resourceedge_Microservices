@@ -5,7 +5,7 @@ import openEye from '../../../../assets/images/openEye.svg';
 
 export default function Password(props) {
 
-     useEffect(()=>{
+    useEffect(()=>{
         props.checkForStep(1)
     },[])
 
