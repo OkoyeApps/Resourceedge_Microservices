@@ -61,3 +61,8 @@
   line-height: 18px;
   color: #1a73e8;
 }
+
+.epa-content {
+  max-height: 89vh;
+  overflow: auto;
+}
