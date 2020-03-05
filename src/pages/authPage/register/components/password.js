@@ -10,6 +10,7 @@ export default function Password(props) {
 
     const [data, setData] = useState("");
     const [showBorder, setShowBorder] = useState(false);
+    const [newPassword, changePassword] = useState("password");
 
     const handleChange = (e) => {
         setData({ [e.target.id]: e.target.value })
@@ -20,6 +21,14 @@ export default function Password(props) {
             setShowBorder(false)
         } else {
             setShowBorder(true)
+        }
+    }
+    const showPassword = () => {
+        if (newPassword == "password") {
+            changePassword("text");
+        }
+        else {
+            changePassword("password");
         }
     }
 
@@ -35,10 +44,10 @@ export default function Password(props) {
                     <div className="row h-100">
                         <div className="col-2"></div>
                         <div className="col-8 h-100">
-                            <input className="w-100 h-100 text-center" type="password" id="password" placeholder="Password" onChange={handleChange} />
+                            <input className="w-100 h-100 text-center" type={`${newPassword}`} id="password" placeholder="Password" onChange={handleChange} />
                         </div>
                         <div className="col-2 d-flex align-items-center justify-content-center">
-                            <img src={eye} alt="good icon" />
+                            <img src={eye} alt="good icon" onMouseDown={showPassword}/>
                         </div>
                     </div>
                 </div>
