@@ -34,7 +34,7 @@ export default function MainLayout(props) {
                         </div>
                     </section>
                 </div>
-                <div className="col-11 main-content">
+                <div className="col-11 main-content pl-0">
                     {props.children}
                 </div>
             </div>

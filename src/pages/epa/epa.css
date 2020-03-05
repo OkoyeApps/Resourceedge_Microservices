@@ -1,0 +1,63 @@
+.inner-sidebar {
+  padding-top: 4.7rem;
+  background-color: #ffffff;
+  min-height: 90.5vh;
+}
+
+.inner-sidebar div:nth-child(2) {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 17px;
+  line-height: 23px;
+  text-align: center;
+  letter-spacing: -0.330769px;
+  color: #19233c;
+}
+
+.tab-section ul {
+  padding: 0;
+  margin: 0;
+  margin-top: 8vh;
+  list-style: none;
+}
+
+.tab-section li {
+  padding: 0.5rem 0;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 45px;
+  text-align: center;
+  letter-spacing: -0.107692px;
+  color: #999999;
+}
+
+.tabbed {
+  border-right: 2px solid #006ff9;
+  background: #d2e3fa;
+}
+
+.notice-text {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 18px;
+  color: #1d1d1d;
+}
+
+.little-gray-text {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 18px;
+  text-align: center;
+  color: #999999;
+}
+
+.addBtn {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 18px;
+  color: #1a73e8;
+}
