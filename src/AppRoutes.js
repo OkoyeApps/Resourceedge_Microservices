@@ -2,8 +2,10 @@ import React from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import AuthLayout from './components/authLayout/authLayout'
 import MainLayout from './components/mainLayout/mainLayout'
-import Login from './pages/login/login'
 import EPA from './pages/epa/epa'
+import Login from './pages/authPage/login/login'
+import Register from './pages/authPage/register/register'
+
 
 
 const AuthRoute = ({ Component, path, exact, ...rest }) => {
@@ -22,7 +24,8 @@ export default function AppRoutes() {
     return (
         <Router>
             <Switch>
-                <AuthRoute path="/" exact Component={Login} />
+                <AuthRoute path="/" exact Component={Register} />
+                <AuthRoute path="/register" exact Component={Register} />
                 <AuthRoute path="/login" exact Component={Login} />
                 <MainRoute path='/employee_performance_agreement' exact Component={EPA} />
             </Switch>

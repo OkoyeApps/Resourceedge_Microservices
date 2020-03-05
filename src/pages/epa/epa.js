@@ -30,13 +30,7 @@ export default function Epa() {
                 </section>
             </div>
             <div className="col-9 d-flex align-items-center justify-content-center">
-                {tab === "view" ?
-                    <EpaView />
-                    :
-                    <EpaUpload />
-                }
-
-
+                {tab === "view" ? <EpaView /> : <EpaUpload />}
             </div>
 
         </div>
