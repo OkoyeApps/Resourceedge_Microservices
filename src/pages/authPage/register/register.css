@@ -1,0 +1,57 @@
+.welcome-text{
+    width: 177px;
+    height: 49px;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 36px;
+    line-height: 49px;
+    text-align: center;
+    color: #1D1D1D;
+    margin-bottom: 100px;
+}
+.name-box {
+    margin-bottom: 25px;
+}
+.text {
+    width: 456px;
+    height: 50px;
+    font-family: Avenir Next;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 25px;
+    text-align: center;
+    color: #999999;
+
+}
+.enter-mail {
+    height: 50px;
+    background: #FFFFFF;
+    border: 1px solid #DDDDDD;
+    box-sizing: border-box;
+    border-radius: 5px;
+    margin-bottom: 70px;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 19px;
+    text-align: center;
+    color: #999999;
+}
+.proceed {
+    background: #1A73E8;
+    border-radius: 5px;
+    height: 50px;
+    width: 325px;
+    align-items: center;
+    text-align: center;
+    color: #FFFFFF;
+}
+.login-box > p{
+    margin-bottom: 140px;
+}
+
+@media (max-width: 320px) {
+    .welcome-text {
+        margin-left: 100px;
+    }
+}
