@@ -15,7 +15,7 @@
 .text {
     width: 456px;
     height: 50px;
-    font-family: Avenir Next;
+    /* font-family: Avenir Next; */
     font-style: normal;
     font-weight: normal;
     font-size: 18px;
@@ -37,6 +37,16 @@
     text-align: center;
     color: #999999;
 }
+.enter-mail:focus{
+    outline: 1px solid black;
+}
+.enter-mail input{
+    border: none;
+}
+.enter-mail input:focus{
+    /* border: none; */
+    outline: none;
+}
 .proceed {
     background: #1A73E8;
     border-radius: 5px;
@@ -45,6 +55,9 @@
     align-items: center;
     text-align: center;
     color: #FFFFFF;
+}
+.login-box{
+    text-align: center;
 }
 .login-box > p{
     margin-bottom: 140px;
