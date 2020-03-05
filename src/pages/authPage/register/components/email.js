@@ -1,8 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../register.css';
 import goodIcon from '../../../../assets/images/goodIcon.svg';
 
-export default function Email() {
+export default function Email(props) {
+
+     useEffect(()=>{
+        props.checkForStep(1)
+    },[])
+
     const [data, setData] = useState("");
     const [showBorder, setShowBorder] = useState(false);
 
@@ -24,7 +29,7 @@ export default function Email() {
                 <hi className="welcome-text">Welcome!</hi>
             </div>
             <p className="text">We know you’ve been working hard, let’s measure your progress</p>
-            <form>
+            {/* <form> */}
                 <div className="form-control enter-mail" onKeyUp={checkForValue}
                     style={showBorder === true ? { border: "1px solid #1D1D1D" } : { border: "1px solid #DDDDDD" }}>
                     <div className="row h-100">
@@ -37,8 +42,8 @@ export default function Email() {
                         </div>
                     </div>
                 </div>
-                <button className="btn proceed">Proceed</button>
-            </form>
+                <button className="btn proceed" onClick={() => { props.checkForStep(2) }}>Proceed</button>
+            {/* </form> */}
         </div>
     )
 }
