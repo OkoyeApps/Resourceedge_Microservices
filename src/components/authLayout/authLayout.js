@@ -6,7 +6,7 @@ export default function authLayout(props) {
         <div className="row mx-0">
             <div className="col-3 px-0">
                 <div>
-                    <img src={AuthImg} alt="auth image" className="authImg" />
+                    <img src={AuthImg} alt="auth" className="authImg" />
                 </div>
             </div>
             <div className="col-9 d-flex justify-content-center align-items-center">
