@@ -1,0 +1,14 @@
+.main-content {
+  background-color: #e5e5e5;
+  min-height: 90.5vh;
+}
+
+.clicked {
+  background: rgba(255, 255, 255, 0.5);
+  padding: 0.6rem;
+  border-radius: 4px;
+}
+
+.un-clicked {
+  padding: 0.6rem;
+}

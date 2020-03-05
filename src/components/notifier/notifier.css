@@ -1,0 +1,12 @@
+.logo div:last-child {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 21px;
+  color: #000000;
+}
+
+.narrow-bar {
+  color: white;
+  background-color: #0000af;
+}
