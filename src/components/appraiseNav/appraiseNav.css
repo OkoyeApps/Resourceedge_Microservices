@@ -1,0 +1,15 @@
+.subs {
+  text-align: left !important;
+  font-style: normal !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  line-height: 45px !important;
+  letter-spacing: -0.107692px !important;
+  color: #1d1d1d !important;
+  text-align: center !important;
+}
+
+.inliner {
+  height: 90vh;
+  overflow: auto;
+}
