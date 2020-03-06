@@ -7,6 +7,7 @@ import { withRouter } from 'react-router-dom'
 
 import CustomModal from '../../components/customModal/customModal';
 import backArrow from '../../assets/images/backArrowIcon.svg';
+import { Link } from 'react-router-dom';
 
 
 
