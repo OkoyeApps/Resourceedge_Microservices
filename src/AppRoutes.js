@@ -5,7 +5,7 @@ import MainLayout from './components/mainLayout/mainLayout'
 import EPA from './pages/epa/epa'
 import Login from './pages/authPage/login/login'
 import Register from './pages/authPage/register/register'
-
+import Appraisees from './pages/appraisees/appraisees'
 
 
 const AuthRoute = ({ Component, path, exact, ...rest }) => {
@@ -28,6 +28,7 @@ export default function AppRoutes() {
                 <AuthRoute path="/register" exact Component={Register} />
                 <AuthRoute path="/login" exact Component={Login} />
                 <MainRoute path='/employee_performance_agreement' exact Component={EPA} />
+                <MainRoute path="/appraisees" exact Component={Appraisees} />
             </Switch>
         </Router>
 
