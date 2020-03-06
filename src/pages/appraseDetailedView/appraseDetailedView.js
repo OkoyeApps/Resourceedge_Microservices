@@ -4,6 +4,7 @@ import Avatar from 'react-avatar';
 import './appraseDetailedView.css';
 import CustomModal from '../../components/customModal/customModal';
 import backArrow from '../../assets/images/backArrowIcon.svg';
+import { Link } from 'react-router-dom';
 
 
 
@@ -11,8 +12,10 @@ const AppraseDetailView = () => {
     return (
         <div className="row">
             <div className="col-12 d-flex my-4">
+                <Link>
                 <img src={backArrow} alt="back" className="mr-2"/>
                 <span className="edit-apprais">back</span>
+                </Link>
             </div>
             <div className="col-8">
                 <div className="card w-100 mb-2 p-4">
