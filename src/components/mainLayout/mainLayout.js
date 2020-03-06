@@ -21,7 +21,7 @@ export default function MainLayout(props) {
                 </div>
             </div>
             <div className="row mx-0">
-                <div className="col-1 narrow-bar d-flex justify-content-center align-items-center">
+                <div className="col-1 narrow-bar d-flex justify-content-center align-items-center pl-0">
                     <section>
                         <div className={`my-5 ${position === "dash" ? "clicked" : "un-clicked"}`} onClick={() => { handleSwitch("dash") }}>
                             <img src={DashIcon} alt="dashboard icon" />
