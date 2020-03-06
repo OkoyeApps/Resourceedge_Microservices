@@ -30,7 +30,7 @@ const AppraseDetailView = (props) => {
                     </div>
 
                     <div className="col-8">
-                        <div className="card w-100 mb-2 p-4">
+                        <div className="card w-100 mb-3 p-4">
                             <div className="w-100  d-flex justify-content-center">
                                 <div className="w-50 text-center">
                                     <ul className="appraises-detail-display">
