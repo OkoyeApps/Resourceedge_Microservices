@@ -15,7 +15,10 @@ export default function EpaUpload(props) {
 
             </section>
             <div className="mt-4">
-                <CustomModal content={<div className="text-center"><button className="btn addBtn">+ Start Adding</button></div>} />
+                <CustomModal 
+                content={<div className="text-center"><button className="btn addBtn">+ Start Adding</button></div>}
+                type={"upload-epa-form"} 
+                />
             </div>
         </div>
 

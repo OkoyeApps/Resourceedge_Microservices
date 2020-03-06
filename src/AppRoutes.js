@@ -1,10 +1,11 @@
 import React from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import AuthLayout from './components/authLayout/authLayout'
-import MainLayout from './components/mainLayout/mainLayout'
-import EPA from './pages/epa/epa'
-import Login from './pages/authPage/login/login'
-import Register from './pages/authPage/register/register'
+import AuthLayout from './components/authLayout/authLayout';
+import MainLayout from './components/mainLayout/mainLayout';
+import EPA from './pages/epa/epa';
+import Login from './pages/authPage/login/login';
+import Register from './pages/authPage/register/register';
+import AppraseDetailView from './pages/appraseDetailedView/appraseDetailedView';
 
 
 
@@ -28,6 +29,7 @@ export default function AppRoutes() {
                 <AuthRoute path="/register" exact Component={Register} />
                 <AuthRoute path="/login" exact Component={Login} />
                 <MainRoute path='/employee_performance_agreement' exact Component={EPA} />
+                <MainRoute path='/appraises/details' exact Component={AppraseDetailView} />
             </Switch>
         </Router>
 
