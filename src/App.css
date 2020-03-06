@@ -1,5 +1,9 @@
 body{
-  font-family: AvenirMedium;
+  font-family: AvenirRegular;
+}
+@font-face {
+  font-family: AvenirRegular;
+  src: url("./assets/fonts/AvenirNext-Regular.ttf");
 }
 @font-face {
   font-family: AvenirMedium;
