@@ -7,7 +7,7 @@ import Login from './pages/authPage/login/login'
 import Register from './pages/authPage/register/register'
 import Appraisees from './pages/appraisees/appraisees'
 import AppraseDetailView from './pages/appraseDetailedView/appraseDetailedView';
-
+import Appraisal from './pages/appraisal/appraisal'
 
 
 const AuthRoute = ({ Component, path, exact, ...rest }) => {
@@ -32,6 +32,7 @@ export default function AppRoutes() {
                 <MainRoute path='/employee_performance_agreement' exact Component={EPA} />
                 <MainRoute path="/appraisees" exact Component={Appraisees} />
                 <MainRoute path='/appraisees/details' exact Component={AppraseDetailView} />
+                <MainRoute path="/appraisal" exact Component={Appraisal} />
             </Switch>
         </Router>
 
