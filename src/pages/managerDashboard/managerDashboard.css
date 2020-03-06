@@ -1,0 +1,42 @@
+.manager-back-select {
+    width: 36px;
+    height: 22px;
+    margin: 21px 0px 21px 52px;
+    font-size: 16px;
+}
+.manager-appraisee-name {
+    width: 726px;
+    height: 250px;
+    background: #FFFFFF;
+}
+.manager-appraisee-icon-container {
+    width: 200px;
+    height: 182px;
+    margin: auto;
+    margin-top: 9px;
+    text-align: center;
+}
+.ic {
+    margin: auto;
+    width: 100px;
+}
+.manager-appraisee-icon-container > h2 {
+    font-weight: 500;
+    font-size: 20px;
+    color: #323130;
+    font-weight: 500;
+    margin-top: 9px;
+}
+.manager-appraisee-icon-container > h5 {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    color: #1D1D1D;
+}
+.manager-appraisee-icon-container > p {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    color: #797775;
+
+}
