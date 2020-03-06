@@ -3,7 +3,7 @@ import React from 'react'
 const ScoreBoard = (props) => {
     return (
         <div className="row mx-0">
-            <div className="appraisal-score">
+            <div className="appraisal-score py-2">
                 <p>Q1 2020 Overall Appraisal Score</p>
                 <div>
                     <h1>0.0</h1>

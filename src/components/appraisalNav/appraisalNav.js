@@ -1,5 +1,5 @@
 import React from 'react'
-import EpaAvatar from '../../assets/images/epaAvatar.svg'
+import appraisalAvatar from '../../assets/images/appraisalAvatar.svg'
 
 const appraisalNav = (props) => {
 
@@ -11,7 +11,7 @@ const appraisalNav = (props) => {
     return (
         <div className="inner-sidebar text-center">
             <div>
-                <img src={EpaAvatar} alt="EPA Avatar" />
+                <img src={appraisalAvatar} alt="EPA Avatar" />
             </div>
             <div>
                 Appraisal
