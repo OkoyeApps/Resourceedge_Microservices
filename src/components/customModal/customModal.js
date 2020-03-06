@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ModalBody from './modalBody';
 import EpaForm from '../addEpaForm/addEpaForm';
 import RejectAppraisal from '../rejectAppraisal/rejectAppraisal';
+import AppraiseSelf from '../appraiseSelf/appraiseSelf';
 
 const CustomModal = (props) => {
     var [openModal, setOpenModal] = useState(false);
@@ -17,10 +18,14 @@ const CustomModal = (props) => {
                     props.type === "reject-appraisal" ?
                     <RejectAppraisal/>
                     :
+                    props.type === "appraise-self-modal" ?
+                    <AppraiseSelf/>
+                    :
                     ""
                 }
                 closeModal={() => setOpenModal(false)}
                 keepOpen={() => setOpenModal(true)}
+                showArrow={props.showArrow}
             />
         )
     } else {

@@ -19,10 +19,10 @@ const AppraseDetailView = (props) => {
     }
     return (
         <div className="row">
-            <div className="col-3 px-0">
+            <div className="col-2 px-0">
                 <AppraiseNav tab={tab} setTab={setTab} />
             </div>
-            <div className="col-9 inliner">
+            <div className="col-10 inliner">
                 <div className="row mx-0">
                     <div className="col-12 d-flex my-4">
                         <img src={backArrow} alt="back" className="mr-2" onClick={handleBack} />
