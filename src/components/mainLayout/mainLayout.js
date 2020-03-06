@@ -21,7 +21,7 @@ export default function MainLayout(props) {
                 </div>
             </div>
             <div className="w-100 d-flex content-wrapper">
-                <div className="narrow-bar d-flex justify-content-center align-items-center" style={{width:"6%"}}>
+                <div className="narrow-bar d-flex justify-content-center align-items-center" style={{width:"5%"}}>
                     <section>
                         <div className={`my-5 ${position === "dash" ? "clicked" : "un-clicked"}`} onClick={() => { handleSwitch("dash") }}>
                             <img src={DashIcon} alt="dashboard icon" />
@@ -34,7 +34,7 @@ export default function MainLayout(props) {
                         </div>
                     </section>
                 </div>
-                <div className="main-content" style={{width:"94%"}}>
+                <div className="main-content" style={{width:"95%"}}>
                     <div className="row m-0">
                         <div className="col-12 pl-0">
                         {props.children}

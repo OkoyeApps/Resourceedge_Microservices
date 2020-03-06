@@ -18,7 +18,7 @@ const AppraseDetailView = (props) => {
         props.history.push({ pathname: "/appraisees" })
     }
     return (
-        <div className="row">
+        <div className="row mx-0">
             <div className="col-2 px-0">
                 <AppraiseNav tab={tab} setTab={setTab} />
             </div>

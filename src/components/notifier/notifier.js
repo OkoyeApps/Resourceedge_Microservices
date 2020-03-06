@@ -7,13 +7,13 @@ import searchIcon from '../../assets/images/Search.svg'
 export default function notifier(props) {
     return (
         <div className="notifier d-flex">
-                <div className="py-2 d-flex justify-content-center pl-0" style={{width:"6%"}}>
+                <div className="py-2 d-flex justify-content-center pl-0" style={{width:"5%"}}>
                     {/* <div className="row mx-0 logo">
                         <div className="col-4"></div>
                     </div> */}
                     <img src={Logo} alt="logo" />
                 </div>
-                <div className="py-2 pl-0" style={{width:"94%"}}>
+                <div className="py-2 pl-0" style={{width:"95%"}}>
                     {/* <div className="col-8"><div>Resource<br />Edge</div></div>
                     <div className="row mx-0">
                         <div className="col-6"><img src={Bell} alt="notification bell" /></div>

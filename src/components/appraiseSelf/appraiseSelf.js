@@ -3,7 +3,7 @@ import './appraiseSelf.css'
 
 const AppraiseSelf = () => {
     return (
-        <div className="appraise-self-wrapper">
+        <div className="appraise-self-wrapper w-100">
             <div className="row">
                 <div className="col-10 text-left py-4">
                     <div className="row mb-2">
