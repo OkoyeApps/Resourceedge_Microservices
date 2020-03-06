@@ -31,7 +31,7 @@ export default function AppRoutes() {
                 <AuthRoute path="/login" exact Component={Login} />
                 <MainRoute path='/employee_performance_agreement' exact Component={EPA} />
                 <MainRoute path="/appraisees" exact Component={Appraisees} />
-                <MainRoute path='/appraises/details' exact Component={AppraseDetailView} />
+                <MainRoute path='/appraisees/details' exact Component={AppraseDetailView} />
             </Switch>
         </Router>
 
