@@ -1,0 +1,22 @@
+.reject-appraisal-wrapper{
+    width: 25vw;
+}
+.reject-appraisal-wrapper textarea{
+    background: #F5F6F9;
+    border-radius: 5px;
+    border: none;
+}
+.reject-appraisal-wrapper .intro-text{
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 22px;
+    color: #000000;
+}
+.reject-appraisal-wrapper .instruction-text{
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 19px;
+    color: #999999;
+}

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ModalBody from './modalBody';
 import EpaForm from '../addEpaForm/addEpaForm';
+import RejectAppraisal from '../rejectAppraisal/rejectAppraisal';
 
 const CustomModal = (props) => {
     var [openModal, setOpenModal] = useState(false);
@@ -8,7 +9,16 @@ const CustomModal = (props) => {
     if (openModal === true) {
         return (
             <ModalBody
-                content={<EpaForm/>}
+                // content={<EpaForm/>}
+                content={
+                    props.type === "upload-epa-form" ?
+                    <EpaForm/>
+                    :
+                    props.type === "reject-appraisal" ?
+                    <RejectAppraisal/>
+                    :
+                    ""
+                }
                 closeModal={() => setOpenModal(false)}
                 keepOpen={() => setOpenModal(true)}
             />
