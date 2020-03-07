@@ -2,7 +2,7 @@ import React from 'react'
 import './epaView.css'
 import tick from '../../assets/images/Online.svg'
 import Avatar from 'react-avatar';
-import Notification from '../notifications/notifications';
+import Activity from '../activity/activity';
 
 export default function EpaView(props) {
     var { data } = props
@@ -60,7 +60,7 @@ export default function EpaView(props) {
                         }
 
                     </div>
-                    <Notification/>
+                    <Activity />
                 </section>
             </div>
         )

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Notification from '../../components/notifications/notifications'
+import Activity from '../../components/activity/activity'
 import Avatar from 'react-avatar';
 import './appraseDetailedView.css';
 import AppraiseNav from '../../components/appraiseNav/appraiseNav'
@@ -30,7 +30,7 @@ const AppraseDetailView = (props) => {
                     </div>
 
                     <div className="col-8">
-                        <div className="card w-100 mb-3 p-4">
+                        <div className="card w-100 mb-4 p-4 border-0">
                             <div className="w-100  d-flex justify-content-center">
                                 <div className="w-50 text-center">
                                     <ul className="appraises-detail-display">
@@ -42,7 +42,7 @@ const AppraseDetailView = (props) => {
                                 </div>
                             </div>
                         </div>
-                        <div className="card w-100 p-3">
+                        <div className="card w-100 p-3 border-0">
                             <div className="row w-100 mb-2">
                                 <div className="col-10 apprais-header">Learnable Physical Internship </div>
                                 <div className="col-2">
@@ -57,8 +57,6 @@ const AppraseDetailView = (props) => {
                                     <span className="appraise-weights">Weight: <b>56%</b></span>
                                     <span className="ml-2 appraise-weights">Appraiser: <b>Ositadinma Nwangwu</b></span>
                                     <span className="ml-2 appraise-weights">HOD: <b>Ekene Odum</b></span>
-                                    {/* <span className="ml-2 appraise-weights">Weight: <b>56%</b></span>
-                                    <span className="ml-2 appraise-weights">Weight: <b>56%</b></span> */}
                                 </div>
                             </div>
                             <div className="row mb-3">
@@ -66,19 +64,19 @@ const AppraseDetailView = (props) => {
                                     <table className="w-100 keyoutcome-table">
                                         <tr>
                                             <th style={{ width: "60%" }}>Key Outcomes</th>
-                                            <th className="text-center">Deadline</th>
+                                            <th className="pl-5">Deadline</th>
                                         </tr>
                                         <tr>
                                             <td className="d-flex"><span className="mr-1">1.</span><span> Supervise and facilitate the preparation of Learnable 2020’s curriculum</span></td>
-                                            <td className="text-center">15 November 2020</td>
+                                            <td className="pl-5">15 November 2020</td>
                                         </tr>
                                         <tr>
                                             <td className="d-flex"><span className="mr-1">2.</span><span> Supervise and facilitate the preparation of Learnable 2020’s curriculum</span></td>
-                                            <td className="text-center">15 November 2020</td>
+                                            <td className="pl-5">15 November 2020</td>
                                         </tr>
                                         <tr>
                                             <td className="d-flex"><span className="mr-1">3.</span><span> Supervise and facilitate the preparation of Learnable 2020’s curriculum</span></td>
-                                            <td className="text-center">15 November 2020</td>
+                                            <td className="pl-5">15 November 2020</td>
                                         </tr>
                                     </table>
                                 </div>
@@ -96,7 +94,7 @@ const AppraseDetailView = (props) => {
                             </div>
                         </div>
                     </div>
-                    <Notification />
+                    <Activity />
                 </div>
             </div>
         </div>
