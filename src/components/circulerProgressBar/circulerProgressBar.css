@@ -1,12 +1,7 @@
-.RCP {
-  width: 100% !important;
-}
-.RCP svg:first-child{
-  width: 100%;
-}
-.RCP__track {}
-.RCP__progress {}
-.RCP__pointer {}
-.progress{
-  
+.radial-bar-ratio{
+  font-style: normal;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 25px;
+  color: #1D1D1D;
 }
