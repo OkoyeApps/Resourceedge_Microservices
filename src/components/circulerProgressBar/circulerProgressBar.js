@@ -1,26 +1,33 @@
 import React from 'react';
-import './circulerProgressBar.css'
+import './circulerProgressBar.css';
+import {
+    CircularProgressbar,
+    CircularProgressbarWithChildren,
+    buildStyles
+} from "react-circular-progressbar";
+
 
 const CirculerProgressBar = (props) => {
-    var formatAppraiseesParcent = `c100 p${props.appraiseesPercent} orange`;
-    var formatAppraiserParcent = `c100 p${props.appraiserPercent} small green`;
-    console.log(formatAppraiseesParcent, formatAppraiserParcent)
+
     return (
-        <div>
-            <div className={formatAppraiseesParcent}>
-                <div className="slice">
-                    <div className="bar"></div>
-                    <div className="fill"></div>
-                </div>
+        <CircularProgressbarWithChildren
+            value={90}
+            styles={buildStyles({
+                pathColor: "rgba(29, 29, 29, 0.8)",
+                trailColor: "inherit"
+            })}>
+            <div className="w-75">
+                <CircularProgressbarWithChildren
+                    value={80}
+                    styles={buildStyles({
+                        pathColor: "rgba(81, 163, 163, 0.6)",
+                        trailColor: "innherit"
+                    })}
+                >
+                    2.0
+                </CircularProgressbarWithChildren>
             </div>
-            <div className={formatAppraiserParcent} style={{ position: "absolute", top: "16%", left: "31%", zIndex: "7" }}>
-                <span>{props.rate}</span>
-                <div className="slice">
-                    <div className="bar" ></div>
-                    <div className="fill"></div>
-                </div>
-            </div>
-        </div>
+        </CircularProgressbarWithChildren>
     )
 }
 

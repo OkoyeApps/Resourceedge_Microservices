@@ -1,0 +1,33 @@
+.personal-card {
+  background: #ffffff;
+  padding: 1.1rem 1rem;
+}
+
+.personal-card h4 {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 27px;
+  color: #323130;
+}
+
+.personal-card h6 {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 20px;
+  color: #1d1d1d;
+}
+
+.personal-card address {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 20px;
+  color: #797775;
+}
+
+.wrap-view {
+  height: 90vh;
+  overflow: auto;
+}

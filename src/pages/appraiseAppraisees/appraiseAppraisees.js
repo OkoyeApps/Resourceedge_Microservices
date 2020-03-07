@@ -3,7 +3,7 @@ import Notification from '../../components/notifications/notifications'
 import AppraiseNav from '../../components/appraiseNav/appraiseNav'
 import CirculerProgressBar from '../../components/circulerProgressBar/circulerProgressBar';
 import Avatar from 'react-avatar';
-import './appraiseAppraisees.css'
+import './appraiseAppraisees.css';
 
 
 
@@ -33,9 +33,9 @@ const AppraiseAppraisees = () => {
                                         </div>
                                     </div>
                                     <div className="row mb-4">
-                                        <div className="col-12">
-                                            <div className="d-flex justify-content-center align-items-center">
-                                                <CirculerProgressBar rate={1.2} appraiseesPercent={90} appraiserPercent={30} />
+                                        <div className="col-12 d-flex justify-content-center">
+                                            <div className={"w-50"}>
+                                            <CirculerProgressBar rate={1.2} appraiseesPercent={90} appraiserPercent={30} />
                                             </div>
                                         </div>
                                     </div>
@@ -67,9 +67,9 @@ const AppraiseAppraisees = () => {
                                         </div>
                                     </div>
                                     <div className="row mb-4">
-                                        <div className="col-12">
-                                            <div className="d-flex justify-content-center align-items-center">
-                                                <CirculerProgressBar rate={1.2} appraiseesPercent={90} appraiserPercent={100} />
+                                        <div className="col-12 d-flex justify-content-center">
+                                            <div className={"w-50"}>
+                                            <CirculerProgressBar rate={1.2} appraiseesPercent={90} appraiserPercent={30} />
                                             </div>
                                         </div>
                                     </div>
@@ -101,9 +101,9 @@ const AppraiseAppraisees = () => {
                                         </div>
                                     </div>
                                     <div className="row mb-4">
-                                        <div className="col-12">
-                                            <div className="d-flex justify-content-center align-items-center">
-                                                <CirculerProgressBar rate={1.2} appraiseesPercent={90} appraiserPercent={100} />
+                                        <div className="col-12 d-flex justify-content-center">
+                                            <div className={"w-50"}>
+                                            <CirculerProgressBar rate={1.2} appraiseesPercent={90} appraiserPercent={30} />
                                             </div>
                                         </div>
                                     </div>
@@ -135,9 +135,9 @@ const AppraiseAppraisees = () => {
                                         </div>
                                     </div>
                                     <div className="row mb-4">
-                                        <div className="col-12">
-                                            <div className="d-flex justify-content-center align-items-center">
-                                                <CirculerProgressBar rate={1.2} appraiseesPercent={90} appraiserPercent={100} />
+                                        <div className="col-12 d-flex justify-content-center">
+                                            <div className={"w-50"}>
+                                            <CirculerProgressBar rate={1.2} appraiseesPercent={90} appraiserPercent={30} />
                                             </div>
                                         </div>
                                     </div>
@@ -154,6 +154,7 @@ const AppraiseAppraisees = () => {
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
