@@ -24,7 +24,7 @@ const CirculerProgressBar = (props) => {
                         trailColor: "innherit"
                     })}
                 >
-                    2.0
+                    <span className="radial-bar-ratio">2.0</span>
                 </CircularProgressbarWithChildren>
             </div>
         </CircularProgressbarWithChildren>
