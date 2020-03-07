@@ -1,11 +1,19 @@
 import React from 'react'
 import './resultSheet.css'
 import tick from '../../assets/images/Online.svg'
+import { withRouter } from 'react-router-dom'
 
-function AppraisalResultSheet() {
+function AppraisalResultSheet(props) {
     return (
         <div className="result-card my-3">
-            <span className="category">Social Media</span><span><img src={tick} alt="verified" className="ml-1" /></span>
+            <div className="row mx-0">
+                <div className="col-9">
+                    <span className="category">Social Media</span>{props.location.pathname === "/employee_performance_agreement/view" ? <></> : <span><img src={tick} alt="verified" className="ml-1" /></span>}
+                </div>
+                <div className="col-3">
+                    {props.location.pathname === "/employee_performance_agreement/view" ? <div className="editable">Edit</div> : <></>}
+                </div>
+            </div>
             <div className="mt-3">
                 <span className="appraise-weights">Weight: <b>56%</b></span>
                 <span className="ml-2 appraise-weights">Appraiser: <b>Ositadinma Nwangwu</b></span>
@@ -61,4 +69,4 @@ function AppraisalResultSheet() {
     )
 }
 
-export default AppraisalResultSheet
+export default withRouter(AppraisalResultSheet)

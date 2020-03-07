@@ -9,6 +9,7 @@ import Appraisees from './pages/appraisees/appraisees'
 import AppraseDetailView from './pages/appraseDetailedView/appraseDetailedView';
 import Appraisal from './pages/appraisal/appraisal'
 import AppraisalResult from './pages/appraisalResult/appraisalResult';
+import EmployeePerformanceForAppraiser from './pages/employeePerfomance/employeePerfomance'
 
 
 
@@ -36,6 +37,7 @@ export default function AppRoutes() {
                 <MainRoute path='/appraisees/details' exact Component={AppraseDetailView} />
                 <MainRoute path="/appraisal" exact Component={Appraisal} />
                 <MainRoute path='/employee_performance_result' exact Component={AppraisalResult} />
+                <MainRoute path="/employee_performance_agreement/view" exact Component={EmployeePerformanceForAppraiser} />
             </Switch>
         </Router>
 

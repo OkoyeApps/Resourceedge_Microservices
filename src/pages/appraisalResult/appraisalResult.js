@@ -5,7 +5,7 @@ import AppraisalNav from '../../components/appraisalNav/appraisalNav'
 import QuarterBar from '../../components/quarterBar/quarterBar'
 import ResultCard from '../../components/appraisalResultSheet/appraisalResultSheet'
 export default function AppraisalResult() {
-    var [tab, setTab] = useState("self")
+    var [tab, setTab] = useState("appraisal")
     return (
         <div className="row mx-0 ">
             <div className="col-2 px-0">
