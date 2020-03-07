@@ -10,6 +10,7 @@ import AppraseDetailView from './pages/appraseDetailedView/appraseDetailedView';
 import Appraisal from './pages/appraisal/appraisal'
 import AppraisalResult from './pages/appraisalResult/appraisalResult';
 import AppraiseAppraisees from './pages/appraiseAppraisees/appraiseAppraisees';
+import ManagerDashboard from './pages/managerDashboard/managerDashboard';
 
 
 
@@ -38,6 +39,9 @@ export default function AppRoutes() {
                 <MainRoute path="/appraisal" exact Component={Appraisal}/>
                 <MainRoute path='/employee_performance_result' exact Component={AppraisalResult}/>
                 <MainRoute path='/appraise/appraisees' exact Component={AppraiseAppraisees}/>
+                <MainRoute path="/appraisal" exact Component={Appraisal} />
+                <MainRoute path='/employee_performance_result' exact Component={AppraisalResult} />
+                <MainRoute path='/manager_dashboard' exact Component={ManagerDashboard} />
             </Switch>
         </Router>
 
