@@ -1,0 +1,70 @@
+.notification-card {
+  background-color: #ffffff;
+  /* width: 50%; */
+  padding: 1rem 1rem;
+}
+
+.notification-card > h4 {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 23px;
+  color: #000000;
+}
+
+.notification-card > p {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 19px;
+  color: #999999;
+}
+
+.note {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 19px;
+  color: #000000;
+  width: 16vw;
+}
+
+.note-time {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 16px;
+  color: #999999;
+}
+
+.n-no-slide {
+  position: fixed;
+  top: 9%;
+  animation: slideOut 1s ease-out;
+  right: -15%;
+}
+.n-slide {
+  display: unset;
+  position: fixed;
+  top: 9%;
+  animation: slideIn 1s linear;
+  right: 2%;
+}
+
+@keyframes n-slideIn {
+  0% {
+    right: -10%;
+  }
+  100% {
+    right: 2%;
+  }
+}
+
+@keyframes n-slideOut {
+  0% {
+    right: 2%;
+  }
+  100% {
+    right: -15%;
+  }
+}

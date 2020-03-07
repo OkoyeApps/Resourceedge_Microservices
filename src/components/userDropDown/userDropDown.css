@@ -4,17 +4,18 @@
 }
 
 .no-slide {
-  position: fixed;
+  /* position: fixed;
   top: 9%;
   animation: slideOut 1s ease-out;
-  right: -15%;
+  right: -15%; */
+  display: none;
 }
 .slide {
   display: unset;
   position: fixed;
   top: 9%;
-  animation: slideIn 1s ease-in;
-  right: 2%;
+  animation: slideIn 1s linear;
+  right: 1%;
 }
 
 @keyframes slideIn {
@@ -22,16 +23,7 @@
     right: -10%;
   }
   100% {
-    right: 2%;
-  }
-}
-
-@keyframes slideOut {
-  0% {
-    right: 2%;
-  }
-  100% {
-    right: -15%;
+    right: 1%;
   }
 }
 

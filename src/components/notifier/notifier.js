@@ -5,14 +5,19 @@ import Avatar from 'react-avatar';
 import UserDropDown from '../userDropDown/userDropDown'
 import './notifier.css'
 import searchIcon from '../../assets/images/Search.svg'
+import NotificationCard from '../notificationCard/notificationCard'
 export default function Notifier(props) {
 
-    var [card, setCard] = useState(false)
+    var [userCard, setUserCard] = useState(false)
+    var [notificationCard, setNotificationCard] = useState(false)
 
-
-    const showCard = () => {
-        setCard(!card)
+    const showUserCard = () => {
+        setUserCard(!userCard)
     }
+    const showNotificationCard = () => {
+        setNotificationCard(!notificationCard)
+    }
+
 
     return (
         <div className="notifier d-flex">
@@ -44,9 +49,9 @@ export default function Notifier(props) {
                             </div>
                             <div className="col-6 d-flex align-items-center">
                                 <div className="mx-0 d-flex align-items-center justify-content-end w-100 pr-2">
-                                    <img src={Bell} alt="notification bell" />
+                                    <img src={Bell} alt="notification bell" onClick={showNotificationCard} />
 
-                                    <Avatar name="Emma Okoye" className="rounded-circle ml-2" size={"25px"} onClick={showCard} style={{ cursor: "pointer" }} />
+                                    <Avatar name="Emma Okoye" className="rounded-circle ml-2" size={"25px"} onClick={showUserCard} style={{ cursor: "pointer" }} />
 
                                     {/* <div className="col-6"><img src={Bell} alt="notification bell" /></div> */}
                                     {/* <div className="col-6"><Avatar name="Emma Okoye" className="rounded-circle" size={"25px"} /></div> */}
@@ -56,8 +61,11 @@ export default function Notifier(props) {
                     </div>
                 </div>
             </div>
-            <div className={`${card ? 'slide' : 'no-slide'}`}>
+            <div className={`${userCard ? 'slide' : 'no-slide'}`}>
                 <UserDropDown />
+            </div>
+            <div className={`${notificationCard ? 'slide' : 'no-slide'}`}>
+                <NotificationCard />
             </div>
         </div>
     )
