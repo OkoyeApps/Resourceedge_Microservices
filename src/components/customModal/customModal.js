@@ -21,6 +21,9 @@ const CustomModal = (props) => {
                     props.type === "appraise-self-modal" ?
                     <AppraiseSelf/>
                     :
+                    props.type === "apprainseAppraisee" ?
+                    <AppraiseSelf/>
+                    :
                     ""
                 }
                 closeModal={() => setOpenModal(false)}

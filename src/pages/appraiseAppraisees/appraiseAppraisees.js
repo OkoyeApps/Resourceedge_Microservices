@@ -5,6 +5,7 @@ import AppraiserAppraisalNav from '../../components/appraiser-appraisalNav/appra
 import CirculerProgressBar from '../../components/circulerProgressBar/circulerProgressBar';
 import Avatar from 'react-avatar';
 import './appraiseAppraisees.css';
+import CustomModal from '../../components/customModal/customModal';
 
 
 
@@ -81,8 +82,8 @@ const AppraiseAppraisees = () => {
                                         </div>
                                     </div>
                                     <div className="row">
-                                        <div className="col-12 d-flex justify-content-center">
-                                            <button className="form-control w-50 epa-submit-btn">Appraise</button>
+                                        <div className="col-12">
+                                            <CustomModal showArrow={true} type="apprainseAppraisee" content={<button className="form-control w-50 epa-submit-btn mx-auto">Appraise</button>}/>
                                         </div>
                                     </div>
                                 </div>
