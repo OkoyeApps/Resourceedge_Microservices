@@ -42,19 +42,18 @@
 }
 .manager-info-list {
     height: 22px;
-    width: 726px;
+    width: 100%;
     margin: 85px 0px 25px 0px;
     display: grid;
-    /* grid-template-columns: 61px 65px 82px 156px; */
-    grid-template-columns: 20% 20% 20% 40%;
-    margin-left: -21px;
+    grid-template-columns: 23% 23% 23% 31%;
 }
 .manager-info-list > div{
     height: 22px;
     padding-left: 21px;
 }
 .manager-info-list > div > p {
-    font-style: bold;
+    font-style: normal;
+    font-weight: bolder;
     font-weight: 500;
     font-size: 13px;
     color: #000000;
@@ -72,7 +71,7 @@
 }
 .manager-employee-designation {
     width: 725px;
-    height: 222px;
+    min-height: 222px;
     background: #FFFFFF;
     border: 1px solid rgba(205, 208, 227, 0.2955);
     box-sizing: border-box;
@@ -110,13 +109,23 @@
     height: 20px;
     margin-bottom: 30px;
 }
-.manager-key-outcomes p {
+.manager-key-outcomes-head p {
     font-size: 14px;
     color: #1D1D1D;
+    margin: 0;
+    /* font-weight: bold; */
 }
 .manager-key-outcomes {
-    height: 22px;
-    margin-bottom: 16px;
+    width: 653px;
+    height: initial;
+    display: grid;
+    grid-template-columns: 60% 27%;
+    grid-gap: 13%;
+    border: 1px solid black;
+}
+.manager-key-outcomes > div {
+    border: 1px solid black;
+    /* height: 100%; */
 }
 .manager-aprrove-buttons {
     width: 80px;
@@ -127,8 +136,20 @@
     font-size: 14px;
     text-align: center;
     margin-bottom: 35px;
+    margin-top: 16px;
 }
 .manager-aprrove-buttons:first-child {
     margin-right: 14px;
     margin-left: 479px;
+}
+.this-head-margin {
+    /* margin-top: 41px; */
+    margin: 0;
+}
+.this-head-margin p {
+    margin: 0;
+    padding: 0;
+}
+.adjust-manager-outcomes {
+    padding-left: 22%;
 }
