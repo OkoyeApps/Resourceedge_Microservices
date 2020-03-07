@@ -5,11 +5,16 @@ import AppraiserAppraisalNav from '../../components/appraiser-appraisalNav/appra
 import CirculerProgressBar from '../../components/circulerProgressBar/circulerProgressBar';
 import Avatar from 'react-avatar';
 import './appraiseAppraisees.css';
+import { withRouter } from "react-router-dom"
 
 
-
-const AppraiseAppraisees = () => {
+const AppraiseAppraisees = (props) => {
     const [tab, setTab] = useState("appraise")
+
+
+    const handleLink = () => {
+        props.history.push({ pathname: "/employee_performance_agreement/view" })
+    }
     return (
         <div className="row mx-0">
             <div className="col-2 px-0">
@@ -82,7 +87,7 @@ const AppraiseAppraisees = () => {
                                     </div>
                                     <div className="row">
                                         <div className="col-12 d-flex justify-content-center">
-                                            <button className="form-control w-50 epa-submit-btn">Appraise</button>
+                                            <button className="form-control w-50 epa-submit-btn-reverse" onClick={handleLink}>View</button>
                                         </div>
                                     </div>
                                 </div>
@@ -95,4 +100,4 @@ const AppraiseAppraisees = () => {
     )
 }
 
-export default AppraiseAppraisees;
+export default withRouter(AppraiseAppraisees);
