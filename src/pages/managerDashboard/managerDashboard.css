@@ -70,3 +70,65 @@
     padding-left: 106px;
     cursor: pointer;
 }
+.manager-employee-designation {
+    width: 725px;
+    height: 222px;
+    background: #FFFFFF;
+    border: 1px solid rgba(205, 208, 227, 0.2955);
+    box-sizing: border-box;
+    border-radius: 4px;
+    padding: 27px 0px 0px 39px;
+}
+.employee-designation-box {
+    height: 27px;
+    width: 653px;
+    display: grid;
+    grid-template-columns: 70% 10%;
+    grid-gap: 20%;
+    margin-bottom: 13px;
+}
+.employee-designation-box > div {
+    height: 100%;
+}
+.employee-designation-box p {
+    color: #1A73E8;
+    font-weight: 500;
+    font-size: 11px;
+    margin: 0;
+    margin-left: 12px;
+}
+.employee-designation-box h3 {
+    color: #1D1D1D;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+}
+.manager-appraiser-details {
+    font-weight: normal;
+    font-size: 14px;
+    color: #000000;
+    height: 20px;
+    margin-bottom: 30px;
+}
+.manager-key-outcomes p {
+    font-size: 14px;
+    color: #1D1D1D;
+}
+.manager-key-outcomes {
+    height: 22px;
+    margin-bottom: 16px;
+}
+.manager-aprrove-buttons {
+    width: 80px;
+    height: 32px;
+    background: #DDDDDD;
+    color: #999999;
+    font-weight: 600;
+    font-size: 14px;
+    text-align: center;
+    margin-bottom: 35px;
+}
+.manager-aprrove-buttons:first-child {
+    margin-right: 14px;
+    margin-left: 479px;
+}
