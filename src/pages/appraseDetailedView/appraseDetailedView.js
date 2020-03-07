@@ -18,11 +18,11 @@ const AppraseDetailView = (props) => {
         props.history.push({ pathname: "/appraisees" })
     }
     return (
-        <div className="row">
-            <div className="col-3 px-0">
+        <div className="row mx-0">
+            <div className="col-2 px-0">
                 <AppraiseNav tab={tab} setTab={setTab} />
             </div>
-            <div className="col-9 inliner">
+            <div className="col-10 inliner">
                 <div className="row mx-0">
                     <div className="col-12 d-flex my-4">
                         <img src={backArrow} alt="back" className="mr-2" onClick={handleBack} />
@@ -30,7 +30,7 @@ const AppraseDetailView = (props) => {
                     </div>
 
                     <div className="col-8">
-                        <div className="card w-100 mb-2 p-4">
+                        <div className="card w-100 mb-3 p-4">
                             <div className="w-100  d-flex justify-content-center">
                                 <div className="w-50 text-center">
                                     <ul className="appraises-detail-display">

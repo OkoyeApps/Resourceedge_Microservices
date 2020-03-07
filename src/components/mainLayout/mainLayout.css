@@ -1,5 +1,5 @@
 .main-content {
-  background-color: #e5e5e5;
+  /* background-color: #e5e5e5; */
   min-height: 90.5vh;
 }
 
@@ -17,4 +17,7 @@
   position: sticky;
   top: 0;
   z-index: 2;
+}
+.content-wrapper{
+  background: #F5F6F9;
 }

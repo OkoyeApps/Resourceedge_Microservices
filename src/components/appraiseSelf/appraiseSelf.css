@@ -1,0 +1,28 @@
+.appraise-self-wrapper{
+    width: 50vw;
+}
+.score-header{
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 22px;
+    color: #000000;
+    padding-bottom: 15px;
+}
+.scores label{
+    font-style: normal;
+    font-weight: normal;
+    font-size: 8.6563px;
+    /* line-height: 18px; */
+    color: #747474;
+    margin: 0;
+}
+.appraise-self-btn{
+    background: #1A73E8;
+    /* border-radius: 2px; */
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 19px;
+    color: #FFFFFF;
+}

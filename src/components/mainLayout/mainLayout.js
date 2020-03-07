@@ -20,8 +20,8 @@ export default function MainLayout(props) {
                     <Notifier />
                 </div>
             </div>
-            <div className="row mx-0">
-                <div className="col-1 narrow-bar d-flex justify-content-center align-items-center pl-0">
+            <div className="w-100 d-flex content-wrapper">
+                <div className="narrow-bar d-flex justify-content-center align-items-center" style={{width:"5%"}}>
                     <section>
                         <div className={`my-5 ${position === "dash" ? "clicked" : "un-clicked"}`} onClick={() => { handleSwitch("dash") }}>
                             <img src={DashIcon} alt="dashboard icon" />
@@ -34,8 +34,12 @@ export default function MainLayout(props) {
                         </div>
                     </section>
                 </div>
-                <div className="col-11 main-content pl-0">
-                    {props.children}
+                <div className="main-content" style={{width:"95%"}}>
+                    <div className="row m-0">
+                        <div className="col-12 pl-0">
+                        {props.children}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
