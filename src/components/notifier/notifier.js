@@ -33,8 +33,8 @@ export default function notifier(props) {
                                         </form>
                                     </div>
                                 </div>
-                                <div className="col-6">
-                                    <div className="row mx-0 d-flex align-items-center justify-content-end">
+                                <div className="col-6 d-flex align-items-center">
+                                    <div className="mx-0 d-flex align-items-center justify-content-end w-100 pr-2">
                                         <img src={Bell} alt="notification bell" />
                                         <Avatar name="Emma Okoye" className="rounded-circle ml-2" size={"25px"} />
                                         {/* <div className="col-6"><img src={Bell} alt="notification bell" /></div> */}
