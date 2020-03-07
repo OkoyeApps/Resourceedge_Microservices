@@ -1,155 +1,154 @@
 .manager-back-select {
-    width: 36px;
-    height: 22px;
-    margin: 21px 0px 21px 52px;
-    font-size: 16px;
+  width: 36px;
+  height: 22px;
+  margin: 21px 0px 21px 52px;
+  font-size: 16px;
 }
 .manager-appraisee-name {
-    width: 726px;
-    height: 250px;
-    background: #FFFFFF;
+  width: 726px;
+  height: 250px;
+  background: #ffffff;
 }
 .manager-appraisee-icon-container {
-    width: 200px;
-    height: 182px;
-    margin: auto;
-    margin-top: 9px;
-    text-align: center;
+  width: 200px;
+  height: 182px;
+  margin: auto;
+  margin-top: 9px;
+  text-align: center;
 }
 .ic {
-    margin: auto;
-    width: 100px;
+  margin: auto;
+  width: 100px;
 }
 .manager-appraisee-icon-container > h2 {
-    font-weight: bolder !important;
-    font-size: 20px;
-    color: #323130;
-    font-weight: 500;
-    margin-top: 9px;
+  font-weight: bolder !important;
+  font-size: 20px;
+  color: #323130;
+  font-weight: 500;
+  margin-top: 9px;
 }
 .manager-appraisee-icon-container > h5 {
-    font-style: normal;
-    font-weight: bold;
-    font-size: 14px;
-    color: #1D1D1D;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 14px;
+  color: #1d1d1d;
 }
 .manager-appraisee-icon-container > p {
-    font-style: normal;
-    font-weight: normal;
-    font-size: 14px;
-    color: #797775;
-
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  color: #797775;
 }
 .manager-info-list {
-    height: 22px;
-    width: 100%;
-    margin: 85px 0px 25px 0px;
-    display: grid;
-    grid-template-columns: 23% 23% 23% 31%;
+  height: 22px;
+  width: 100%;
+  margin: 85px 0px 25px 0px;
+  display: grid;
+  grid-template-columns: 23% 23% 23% 31%;
 }
-.manager-info-list > div{
-    height: 22px;
-    padding-left: 21px;
+.manager-info-list > div {
+  height: 22px;
+  padding-left: 21px;
 }
 .manager-info-list > div > p {
-    font-style: normal;
-    font-weight: bolder;
-    font-weight: 500;
-    font-size: 13px;
-    color: #000000;
+  font-style: normal;
+  font-weight: bolder;
+  font-weight: 500;
+  font-size: 13px;
+  color: #000000;
 }
 .manager-info-list > div > div > p {
-    color: #1A73E8;
-    font-size: 13px;
-    font-weight: bold;
+  color: #1a73e8;
+  font-size: 13px;
+  font-weight: bold;
 }
 .manager-add > div {
-    display: grid;
-    grid-template-columns: 25% 75%;
-    padding-left: 106px;
-    cursor: pointer;
+  display: grid;
+  grid-template-columns: 25% 75%;
+  /* padding-left: 106px; */
+  cursor: pointer;
 }
 .manager-employee-designation {
-    width: 725px;
-    min-height: 222px;
-    background: #FFFFFF;
-    border: 1px solid rgba(205, 208, 227, 0.2955);
-    box-sizing: border-box;
-    border-radius: 4px;
-    padding: 27px 0px 0px 39px;
+  width: 725px;
+  min-height: 222px;
+  background: #ffffff;
+  border: 1px solid rgba(205, 208, 227, 0.2955);
+  box-sizing: border-box;
+  border-radius: 4px;
+  padding: 27px 0px 0px 39px;
 }
 .employee-designation-box {
-    height: 27px;
-    width: 653px;
-    display: grid;
-    grid-template-columns: 70% 10%;
-    grid-gap: 20%;
-    margin-bottom: 13px;
+  height: 27px;
+  width: 653px;
+  display: grid;
+  grid-template-columns: 70% 10%;
+  grid-gap: 20%;
+  margin-bottom: 13px;
 }
 .employee-designation-box > div {
-    height: 100%;
+  height: 100%;
 }
 .employee-designation-box p {
-    color: #1A73E8;
-    font-weight: 500;
-    font-size: 11px;
-    margin: 0;
-    margin-left: 12px;
+  color: #1a73e8;
+  font-weight: 500;
+  font-size: 11px;
+  margin: 0;
+  margin-left: 12px;
 }
 .employee-designation-box h3 {
-    color: #1D1D1D;
-    font-size: 18px;
-    font-weight: bold;
-    margin: 0;
+  color: #1d1d1d;
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0;
 }
 .manager-appraiser-details {
-    font-weight: normal;
-    font-size: 14px;
-    color: #000000;
-    height: 20px;
-    margin-bottom: 30px;
+  font-weight: normal;
+  font-size: 14px;
+  color: #000000;
+  height: 20px;
+  margin-bottom: 30px;
 }
 .manager-key-outcomes-head p {
-    font-size: 14px;
-    color: #1D1D1D;
-    margin: 0;
-    /* font-weight: bold; */
+  font-size: 14px;
+  color: #1d1d1d;
+  margin: 0;
+  /* font-weight: bold; */
 }
 .manager-key-outcomes {
-    width: 653px;
-    height: initial;
-    display: grid;
-    grid-template-columns: 60% 27%;
-    grid-gap: 13%;
-    border: 1px solid black;
+  width: 653px;
+  height: initial;
+  display: grid;
+  grid-template-columns: 60% 27%;
+  grid-gap: 13%;
+  border: 1px solid black;
 }
 .manager-key-outcomes > div {
-    border: 1px solid black;
-    /* height: 100%; */
+  border: 1px solid black;
+  /* height: 100%; */
 }
 .manager-aprrove-buttons {
-    width: 80px;
-    height: 32px;
-    background: #DDDDDD;
-    color: #999999;
-    font-weight: 600;
-    font-size: 14px;
-    text-align: center;
-    margin-bottom: 35px;
-    margin-top: 16px;
+  width: 80px;
+  height: 32px;
+  background: #dddddd;
+  color: #999999;
+  font-weight: 600;
+  font-size: 14px;
+  text-align: center;
+  margin-bottom: 35px;
+  margin-top: 16px;
 }
 .manager-aprrove-buttons:first-child {
-    margin-right: 14px;
-    margin-left: 479px;
+  margin-right: 14px;
+  margin-left: 479px;
 }
 .this-head-margin {
-    /* margin-top: 41px; */
-    margin: 0;
+  /* margin-top: 41px; */
+  margin: 0;
 }
 .this-head-margin p {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 }
 .adjust-manager-outcomes {
-    padding-left: 22%;
+  padding-left: 22%;
 }
