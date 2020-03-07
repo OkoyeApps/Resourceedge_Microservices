@@ -16,10 +16,10 @@ function Appraisees(props) {
 
     return (
         <div className="row mx-0">
-            <div className="col-3  px-0" >
+            <div className="col-2  px-0" >
                 <AppraiseNav tab={tab} setTab={setTab} />
             </div>
-            <div className="col-9">
+            <div className="col-10">
                 <div className="row mx-0 mt-4">
 
 

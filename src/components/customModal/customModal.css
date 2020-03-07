@@ -10,3 +10,6 @@
 .modal__btn{
     width: 20vmin
 }
+.modal-arrow{
+    cursor: pointer;
+}

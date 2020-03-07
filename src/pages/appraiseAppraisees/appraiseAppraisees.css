@@ -1,0 +1,21 @@
+.appraisees-detail span:first-child{
+    font-style: normal;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 27px;
+    color: #323130;
+}
+.appraisees-detail span:last-child{
+    font-style: normal;
+    font-weight: normal;
+    font-size: 10px;
+    line-height: 19px;
+    color: #797775;
+}
+.appraisees-detail span:nth-child(2){
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 19px;
+    color: #1D1D1D;
+}

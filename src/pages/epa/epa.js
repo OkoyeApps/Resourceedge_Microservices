@@ -14,7 +14,7 @@ export default function Epa() {
     }
     return (
         <div className="row mx-0">
-            <div className="col-3 px-0 inner-sidebar text-center">
+            <div className="col-2 px-0 inner-sidebar text-center">
                 <div>
                     <img src={EpaAvatar} alt="EPA Avatar" />
                 </div>
@@ -29,7 +29,7 @@ export default function Epa() {
                     </ul>
                 </section>
             </div>
-            <div className="col-9 epa-content">
+            <div className="col-10 epa-content">
                 {tab === "view" ? <EpaView data={[1, 2, 3, 4]} /> : <EpaUpload />}
             </div>
 
