@@ -30,7 +30,7 @@ function AppraiseNav(props) {
 
             <section className="tab-section">
                 <ul style={{ marginTop: "1rem" }}>
-                    <li className="subs"><img src={youIcon} alt="you" className="mr-3" />You</li>
+                    <li className="subs"><img src={youIcon} alt="you" className="mr-4" />You</li>
                     <li onClick={() => { handleTab("view") }} className={`${tab === "view" ? "tabbed" : ""}`}>View</li>
                     <li onClick={() => { handleTab("upload") }} className={`${tab === "upload" ? "tabbed" : ""}`}>Upload</li>
                 </ul>

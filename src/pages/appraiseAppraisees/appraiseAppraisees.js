@@ -9,7 +9,7 @@ import './appraiseAppraisees.css'
 
 
 const AppraiseAppraisees = () => {
-    const [tab, setTab] = useState("view")
+    const [tab, setTab] = useState("self")
     return (
         <div className="row mx-0">
             <div className="col-2 px-0">

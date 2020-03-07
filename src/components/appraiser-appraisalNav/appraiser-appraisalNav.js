@@ -27,15 +27,15 @@ const AppraiserAppraisalNav = (props) => {
             <section className="tab-section">
                 <ul style={{ marginTop: "1rem" }}>
                     <li className="subs"><img src={youIcon} alt="you" className="mr-3" />You</li>
-                    <li onClick={() => { handleTab("self", "") }} className={`${tab === "self" ? "tabbed" : ""}`}>Appraise Self</li>
-                    <li onClick={() => { handleTab("appraisal", "") }} className={`${tab === "appraisal" ? "tabbed" : ""}`}>Appraisal Results</li>
+                    <li onClick={() => { handleTab("self", "employee_performance_agreement/view") }} className={`${tab === "self" ? "tabbed" : ""}`}>Appraise Self</li>
+                    <li onClick={() => { handleTab("appraisal", "employee_performance_agreement/view") }} className={`${tab === "appraisal" ? "tabbed" : ""}`}>Appraisal Results</li>
                 </ul>
             </section>
 
             <section className="tab-section">
                 <ul style={{ marginTop: "1rem" }}>
                     <li className="subs"><img src={peopleIcon} alt="people" className="mr-3" />People (5)</li>
-                    <li onClick={() => { handleTab("employeePerformance", "employee_performance_agreement/view") }} className={`${tab === "employeePerformance" ? "tabbed" : ""}`}>Your Appraisees</li>
+                    <li onClick={() => { handleTab("employeePerformance", "appraise/appraisees") }} className={`${tab === "employeePerformance" ? "tabbed" : ""}`}>Your Appraisees</li>
                 </ul>
             </section>
         </div>

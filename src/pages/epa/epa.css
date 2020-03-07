@@ -61,6 +61,10 @@
   font-size: 13px;
   line-height: 18px;
   color: #1a73e8;
+  padding-top: 0.6rem;
+  padding-bottom: 0.6rem;
+  background-color: #ffffff;
+  width: 30%;
 }
 
 .epa-content {

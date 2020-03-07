@@ -13,3 +13,7 @@
   height: 90vh;
   overflow: auto;
 }
+
+.text-avatar {
+  text-transform: capitalize;
+}

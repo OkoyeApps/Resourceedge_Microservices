@@ -23,8 +23,8 @@ const AppraisalNav = (props) => {
 
             <section className="tab-section">
                 <ul style={{ marginTop: "1rem" }}>
-                    <li onClick={() => { handleTab("self", "appraisal") }} className={`${tab === "self" ? "tabbed" : ""}`}>Self-Assessment</li>
-                    <li onClick={() => { handleTab("appraisal", "employee_performance_result") }} className={`${tab === "appraisal" ? "tabbed" : ""}`}>Appraisal Results</li>
+                    <li onClick={() => { handleTab("self", "appraisal/self-evaluation") }} className={`${tab === "self" ? "tabbed" : ""}`}>Self-Assessment</li>
+                    <li onClick={() => { handleTab("appraisal", "employee_performance_result/view") }} className={`${tab === "appraisal" ? "tabbed" : ""}`}>Appraisal Results</li>
                 </ul>
             </section>
         </div>

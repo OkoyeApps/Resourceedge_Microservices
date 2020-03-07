@@ -34,7 +34,7 @@ const AppraseDetailView = (props) => {
                             <div className="w-100  d-flex justify-content-center">
                                 <div className="w-50 text-center">
                                     <ul className="appraises-detail-display">
-                                        <li><Avatar size={"15vmin"} name="Eliezer Ajah" className="rounded-circle" /></li>
+                                        <li><Avatar size={"15vmin"} name="Eliezer Ajah" className="rounded-circle text-avatar" /></li>
                                         <li className="name">Eliezer Ajah</li>
                                         <li className="department">Genesys</li>
                                         <li className="email">e.ajah@genesystechhub.com</li>
@@ -45,7 +45,12 @@ const AppraseDetailView = (props) => {
                         <div className="card w-100 p-3">
                             <div className="row w-100 mb-2">
                                 <div className="col-10 apprais-header">Learnable Physical Internship </div>
-                                <div className="col-2 edit-apprais">Edit</div>
+                                <div className="col-2">
+                                    <CustomModal
+                                        content={<div className=" edit-apprais">Edit</div>}
+                                        type={"upload-epa-form"}
+                                    />
+                                </div>
                             </div>
                             <div className="row mb-3">
                                 <div className="col-12 d-flex" >

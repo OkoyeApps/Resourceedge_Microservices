@@ -105,7 +105,7 @@ function Appraisees(props) {
                             <div className="row mx-0">
                                 <div className="col-3">
                                     <div>
-                                        <Avatar size={"40px"} name="Nnenna Okibe" className="rounded-circle" />
+                                        <Avatar size={"40px"} name="Nnenna Okibe" className="rounded-circle text-avatar" />
                                     </div>
                                 </div>
                                 <div className="col-9">
