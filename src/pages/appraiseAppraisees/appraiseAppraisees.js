@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Notification from '../../components/notifications/notifications'
+import Activity from '../../components/activity/activity'
 import AppraiserAppraisalNav from '../../components/appraiser-appraisalNav/appraiser-appraisalNav'
 
 import CirculerProgressBar from '../../components/circulerProgressBar/circulerProgressBar';
@@ -9,7 +9,7 @@ import './appraiseAppraisees.css';
 
 
 const AppraiseAppraisees = () => {
-    const [tab, setTab] = useState("self")
+    const [tab, setTab] = useState("appraise")
     return (
         <div className="row mx-0">
             <div className="col-2 px-0">

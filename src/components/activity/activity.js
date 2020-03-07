@@ -13,7 +13,7 @@ const Notification = () => {
                         <div className="col-2 pl-0"><Avatar size={"30px"} name="Susan Onu" className="rounded-circle" /></div>
                         <div className="col-10">
                             <div className="activity-text">
-                                <b>Susan Onuorah</b> approved your Employee Performance Agreement
+                                <span className="b-name">Susan Onuorah</span> approved your Employee Performance Agreement
                                 <div className="timer">3 days ago</div>
                             </div>
                         </div>
@@ -22,7 +22,7 @@ const Notification = () => {
                         <div className="col-2 pl-0"><Avatar size={"30px"} name="Emma Okoye" className="rounded-circle" /></div>
                         <div className="col-10">
                             <div className="activity-text">
-                                <b>You</b> accepted your Employee Performance Agreement
+                                <span className="b-name">You</span> accepted your Employee Performance Agreement
                                             <div className="timer">3 days ago</div>
                             </div>
                         </div>
@@ -36,7 +36,7 @@ const Notification = () => {
                         <div className="col-2 pl-0"><Avatar size={"30px"} name="Ekene Onu" className="rounded-circle" /></div>
                         <div className="col-10">
                             <div className="activity-text">
-                                <b>Susan Onuorah</b> approved your Employee Performance Agreement
+                                <span className="b-name">Susan Onuorah</span> approved your Employee Performance Agreement
                                             <div className="timer">3 days ago</div>
                             </div>
                         </div>

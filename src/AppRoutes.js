@@ -41,8 +41,6 @@ export default function AppRoutes() {
                 <MainRoute path='/employee_performance_result/view' exact Component={AppraisalResult} />
                 <MainRoute path="/employee_performance_agreement/view" exact Component={EmployeePerformanceForAppraiser} />
                 <MainRoute path='/appraise/appraisees' exact Component={AppraiseAppraisees} />
-                <MainRoute path="/appraisal" exact Component={Appraisal} />
-                <MainRoute path='/appraise/appraisees' exact Component={AppraiseAppraisees} />
                 <MainRoute path='/manager_dashboard' exact Component={ManagerDashboard} />
             </Switch>
         </Router>

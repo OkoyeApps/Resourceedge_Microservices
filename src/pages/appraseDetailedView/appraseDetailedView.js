@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Notification from '../../components/notifications/notifications'
+import Activity from '../../components/activity/activity'
 import Avatar from 'react-avatar';
 import './appraseDetailedView.css';
 import AppraiseNav from '../../components/appraiseNav/appraiseNav'
@@ -96,7 +96,7 @@ const AppraseDetailView = (props) => {
                             </div>
                         </div>
                     </div>
-                    <Notification />
+                    <Activity />
                 </div>
             </div>
         </div>

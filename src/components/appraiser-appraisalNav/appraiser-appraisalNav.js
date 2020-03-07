@@ -35,7 +35,7 @@ const AppraiserAppraisalNav = (props) => {
             <section className="tab-section">
                 <ul style={{ marginTop: "1rem" }}>
                     <li className="subs"><img src={peopleIcon} alt="people" className="mr-3" />People (5)</li>
-                    <li onClick={() => { handleTab("employeePerformance", "appraise/appraisees") }} className={`${tab === "employeePerformance" ? "tabbed" : ""}`}>Your Appraisees</li>
+                    <li onClick={() => { handleTab("appraise", "appraise/appraisees") }} className={`${tab === "appraise" ? "tabbed" : ""}`}>Your Appraisees</li>
                 </ul>
             </section>
         </div>
