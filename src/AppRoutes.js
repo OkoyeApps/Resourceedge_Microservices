@@ -35,12 +35,12 @@ export default function AppRoutes() {
                 <AuthRoute path="/" exact Component={Register} />
                 <AuthRoute path="/register" exact Component={Register} />
                 <AuthRoute path="/login" exact Component={Login} />
-                <MainRoute path='/employee_performance_agreement' exact Component={EPA} />
+                <MainRoute path='/employee_performance_agreement' exact Component={EPA} purpose="epa" />
                 <MainRoute path="/appraisees" exact Component={Appraisees} purpose="appraisal" />
                 <MainRoute path='/appraisees/details' exact Component={AppraseDetailView} purpose="appraisal" />
                 <MainRoute path="/appraisal/self-evaluation" exact Component={Appraisal} purpose="appraisal" />
-                <MainRoute path='/employee_performance_result/view' exact Component={AppraisalResult} />
-                <MainRoute path="/employee_performance_agreement/view" exact Component={EmployeePerformanceForAppraiser} />
+                <MainRoute path='/employee_performance_result/view' exact Component={AppraisalResult} purpose='appraisal' />
+                <MainRoute path="/employee_performance_agreement/view" exact Component={EmployeePerformanceForAppraiser} purpose="epa" />
                 <MainRoute path='/appraise/appraisees' exact Component={AppraiseAppraisees} purpose="appraisal" />
                 <MainRoute path='/manager_dashboard' exact Component={ManagerDashboard} purpose="dash" />
             </Switch>
