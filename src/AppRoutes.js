@@ -21,9 +21,10 @@ const AuthRoute = ({ Component, path, exact, ...rest }) => {
     }} />
 }
 
-const MainRoute = ({ Component, path, exact, ...rest }) => {
+const MainRoute = ({ Component, path, exact, purpose, ...rest }) => {
+    console.log('back', purpose)
     return <Route exact={exact} path={path} {...rest} render={props => {
-        return <MainLayout><Component /></MainLayout>
+        return <MainLayout purpose={purpose}><Component /></MainLayout>
     }} />
 }
 
@@ -35,13 +36,13 @@ export default function AppRoutes() {
                 <AuthRoute path="/register" exact Component={Register} />
                 <AuthRoute path="/login" exact Component={Login} />
                 <MainRoute path='/employee_performance_agreement' exact Component={EPA} />
-                <MainRoute path="/appraisees" exact Component={Appraisees} />
-                <MainRoute path='/appraisees/details' exact Component={AppraseDetailView} />
-                <MainRoute path="/appraisal/self-evaluation" exact Component={Appraisal} />
+                <MainRoute path="/appraisees" exact Component={Appraisees} purpose="appraisal" />
+                <MainRoute path='/appraisees/details' exact Component={AppraseDetailView} purpose="appraisal" />
+                <MainRoute path="/appraisal/self-evaluation" exact Component={Appraisal} purpose="appraisal" />
                 <MainRoute path='/employee_performance_result/view' exact Component={AppraisalResult} />
                 <MainRoute path="/employee_performance_agreement/view" exact Component={EmployeePerformanceForAppraiser} />
-                <MainRoute path='/appraise/appraisees' exact Component={AppraiseAppraisees} />
-                <MainRoute path='/manager_dashboard' exact Component={ManagerDashboard} />
+                <MainRoute path='/appraise/appraisees' exact Component={AppraiseAppraisees} purpose="appraisal" />
+                <MainRoute path='/manager_dashboard' exact Component={ManagerDashboard} purpose="dash" />
             </Switch>
         </Router>
 
