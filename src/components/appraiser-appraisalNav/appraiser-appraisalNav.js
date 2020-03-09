@@ -14,6 +14,16 @@ const AppraiserAppraisalNav = (props) => {
     }
 
 
+    useEffect(() => {
+        if (props.location.pathname === '/appraisal/self-evaluation') {
+            setTab("self")
+        } else if (props.location.pathname === '/employee_performance_agreement/view') {
+            setTab("appraisal")
+        } else if (props.location.pathname === '/appraise/appraisees') {
+            setTab('appraise')
+        }
+    }, [props.location.pathname])
+
 
     return (
         <div className="inner-sidebar">
@@ -40,7 +50,7 @@ const AppraiserAppraisalNav = (props) => {
                         <div className="w-75 mx-auto">
                             <div className="row">
                                 <span className="col-3"></span>
-                                <span className="col-9 d-flex align-items-center inner_sidebar_tabs">Appraise Self</span>
+                                <span className="col-9 d-flex align-items-center inner_sidebar_tabs">Appraise Self </span>
                             </div>
                         </div>
                     </li>

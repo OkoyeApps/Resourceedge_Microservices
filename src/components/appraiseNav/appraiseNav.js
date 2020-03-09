@@ -14,9 +14,12 @@ function AppraiseNav(props) {
     }
 
     useEffect(() => {
-        console.log("props", props)
         if (props.location.pathname === '/appraisees/details' || props.location.pathname === '/appraisees') {
             setTab("appraise")
+        } else if (props.location.pathname === '/epa/view') {
+            setTab("view")
+        } else if (props.location.pathname === '/epa/upload') {
+            setTab('upload')
         }
     }, [props.location.pathname])
     return (
@@ -34,7 +37,6 @@ function AppraiseNav(props) {
             <section className="tab-section">
                 <ul style={{ marginTop: "1rem" }}>
                     <li className="subs">
-                        {/* <img src={youIcon} alt="you" className="mr-4" />You */}
                         <div className="w-75 mx-auto">
                             <div className="row">
                                 <div className="col-3"><img src={youIcon} alt="you" /></div>
@@ -42,8 +44,7 @@ function AppraiseNav(props) {
                             </div>
                         </div>
                     </li>
-                    <li onClick={() => { handleTab("view", 'epa/view') }} className={`${tab === "view" ? "tabbed" : ""}`}>
-                        {/* View */}
+                    <li onClick={() => { handleTab("view", '/epa/view') }} className={`${tab === "view" ? "tabbed" : ""}`}>
                         <div className="w-75 mx-auto">
                             <div className="row">
                                 <span className="col-3"></span>
@@ -51,7 +52,7 @@ function AppraiseNav(props) {
                             </div>
                         </div>
                     </li>
-                    <li onClick={() => { handleTab("upload", 'epa/upload') }} className={`${tab === "upload" ? "tabbed" : ""}`}>
+                    <li onClick={() => { handleTab("upload", '/epa/upload') }} className={`${tab === "upload" ? "tabbed" : ""}`}>
                         <div className="w-75 mx-auto">
                             <div className="row">
                                 <span className="col-3"></span>
@@ -65,7 +66,6 @@ function AppraiseNav(props) {
             <section className="tab-section">
                 <ul style={{ marginTop: "1rem" }}>
                     <li className="subs">
-                        {/* <img src={peopleIcon} alt="people" className="mr-3" />People (5) */}
                         <div className="w-75 mx-auto">
                             <div className="row">
                                 <div className="col-3"><img src={peopleIcon} alt="people" /></div>
