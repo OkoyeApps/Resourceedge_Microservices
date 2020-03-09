@@ -16,26 +16,63 @@ const AppraiserAppraisalNav = (props) => {
 
 
     return (
-        <div className="inner-sidebar text-center">
-            <div>
-                <img src={appraisalAvatar} alt="EPA Avatar" />
-            </div>
-            <div>
-                Appraisal
+        <div className="inner-sidebar">
+            <div className="text-center mb-5">
+                <div>
+                    <img src={appraisalAvatar} alt="EPA Avatar" />
                 </div>
+                <div>
+                    Appraisal
+                </div>
+            </div>
 
             <section className="tab-section">
                 <ul style={{ marginTop: "1rem" }}>
-                    <li className="subs"><img src={youIcon} alt="you" className="mr-3" />You</li>
-                    <li onClick={() => { handleTab("self", "employee_performance_agreement/view") }} className={`${tab === "self" ? "tabbed" : ""}`}>Appraise Self</li>
-                    <li onClick={() => { handleTab("appraisal", "employee_performance_agreement/view") }} className={`${tab === "appraisal" ? "tabbed" : ""}`}>Appraisal Results</li>
+                    <li className="subs">
+                        <div className="w-75 mx-auto">
+                            <div className="row">
+                                <div className="col-3"><img src={youIcon} alt="you" /></div>
+                                <div className="col-9 subs d-flex align-items-center">You</div>
+                            </div>
+                        </div>
+                    </li>
+                    <li onClick={() => { handleTab("self", "employee_performance_agreement/view") }} className={`${tab === "self" ? "tabbed" : ""}`}>
+                        <div className="w-75 mx-auto">
+                            <div className="row">
+                                <span className="col-3"></span>
+                                <span className="col-9 d-flex align-items-center inner_sidebar_tabs">Appraise Self</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li onClick={() => { handleTab("appraisal", "employee_performance_agreement/view") }} className={`${tab === "appraisal" ? "tabbed" : ""}`}>
+                        <div className="w-75 mx-auto">
+                            <div className="row">
+                                <span className="col-3"></span>
+                                <span className="col-9 d-flex align-items-center inner_sidebar_tabs">Appraisal Results</span>
+                            </div>
+                        </div>
+                    </li>
                 </ul>
             </section>
 
             <section className="tab-section">
                 <ul style={{ marginTop: "1rem" }}>
-                    <li className="subs"><img src={peopleIcon} alt="people" className="mr-3" />People (5)</li>
-                    <li onClick={() => { handleTab("appraise", "appraise/appraisees") }} className={`${tab === "appraise" ? "tabbed" : ""}`}>Your Appraisees</li>
+                    <li className="subs">
+                        <div className="w-75 mx-auto">
+                            <div className="row">
+                                <div className="col-3"><img src={peopleIcon} alt="people" /></div>
+                                <div className="col-9 subs d-flex align-items-center">People (5)</div>
+                            </div>
+                        </div>
+                    </li>
+                    <li onClick={() => { handleTab("appraise", "appraise/appraisees") }} className={`${tab === "appraise" ? "tabbed" : ""}`}>
+                        <div className="w-75 mx-auto">
+                            <div className="row">
+                                <span className="col-3"></span>
+                                <span className="col-9 d-flex align-items-center inner_sidebar_tabs">Your Appraisees</span>
+                            </div>
+                        </div>
+                    </li>
                 </ul>
             </section>
         </div>
