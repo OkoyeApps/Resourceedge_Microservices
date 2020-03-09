@@ -2,7 +2,7 @@ import React from 'react'
 import './epaView.css'
 import tick from '../../assets/images/Online.svg'
 import Avatar from 'react-avatar';
-import Activity from '../activity/activity';
+import Activity from '../../components/activity/activity';
 
 export default function EpaView(props) {
     var { data } = props

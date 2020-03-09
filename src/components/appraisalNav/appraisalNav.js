@@ -11,6 +11,14 @@ const AppraisalNav = (props) => {
     }
 
 
+    useEffect(() => {
+        if (props.location.pathname === '/appraisal/self-evaluation') {
+            setTab("self")
+        } else if (props.location.pathname === '/employee_performance_result/view') {
+            setTab('appraisal')
+        }
+    }, [props.location.pathname])
+
 
     return (
         <div className="inner-sidebar text-center">
@@ -21,7 +29,7 @@ const AppraisalNav = (props) => {
                 Appraisal
                 </div>
 
-            <section className="tab-section">
+            <section className="tab-section pt-4">
                 <ul style={{ marginTop: "1rem" }}>
                     <li onClick={() => { handleTab("self", "appraisal/self-evaluation") }} className={`${tab === "self" ? "tabbed" : ""}`}>Self-Assessment</li>
                     <li onClick={() => { handleTab("appraisal", "employee_performance_result/view") }} className={`${tab === "appraisal" ? "tabbed" : ""}`}>Appraisal Results</li>

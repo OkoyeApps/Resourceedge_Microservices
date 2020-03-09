@@ -8,7 +8,8 @@ import { withRouter } from 'react-router-dom'
 function AppraiseNav(props) {
     var { setTab, tab } = props
 
-    const handleTab = (selectedTab) => {
+    const handleTab = (selectedTab, link) => {
+        props.history.push({ pathname: `${link}` })
         setTab(selectedTab)
     }
 
@@ -17,7 +18,7 @@ function AppraiseNav(props) {
         if (props.location.pathname === '/appraisees/details' || props.location.pathname === '/appraisees') {
             setTab("appraise")
         }
-    }, [])
+    }, [props.location.pathname])
     return (
 
         <div className="inner-sidebar text-center">
@@ -31,15 +32,15 @@ function AppraiseNav(props) {
             <section className="tab-section">
                 <ul style={{ marginTop: "1rem" }}>
                     <li className="subs"><img src={youIcon} alt="you" className="mr-4" />You</li>
-                    <li onClick={() => { handleTab("view") }} className={`${tab === "view" ? "tabbed" : ""}`}>View</li>
-                    <li onClick={() => { handleTab("upload") }} className={`${tab === "upload" ? "tabbed" : ""}`}>Upload</li>
+                    <li onClick={() => { handleTab("view", '/epa/view') }} className={`${tab === "view" ? "tabbed" : ""}`}>View</li>
+                    <li onClick={() => { handleTab("upload", '/epa/upload') }} className={`${tab === "upload" ? "tabbed" : ""}`}>Upload</li>
                 </ul>
             </section>
 
             <section className="tab-section">
                 <ul style={{ marginTop: "1rem" }}>
                     <li className="subs"><img src={peopleIcon} alt="people" className="mr-3" />People (5)</li>
-                    <li onClick={() => { handleTab("appraise") }} className={`${tab === "appraise" ? "tabbed" : ""}`}>Your Appraisees</li>
+                    <li onClick={() => { handleTab("appraise", '/appraisees') }} className={`${tab === "appraise" ? "tabbed" : ""}`}>Your Appraisees</li>
                 </ul>
             </section>
         </div>

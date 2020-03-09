@@ -1,17 +1,13 @@
 import React, { useState } from 'react';
 import './appraisalResult.css';
 import ScoreBoard from '../../components/scoreBoard/scoreBoard'
-import AppraisalNav from '../../components/appraisalNav/appraisalNav'
 import QuarterBar from '../../components/quarterBar/quarterBar'
 import ResultCard from '../../components/appraisalResultSheet/appraisalResultSheet'
 export default function AppraisalResult() {
     var [tab, setTab] = useState("appraisal")
     return (
         <div className="row mx-0 ">
-            <div className="col-2 px-0">
-                <AppraisalNav tab={tab} setTab={setTab} />
-            </div>
-            <div className="col-10 page-sizing appraisal-result">
+            <div className="col-12 page-sizing appraisal-result pl-0">
                 <div className="d-flex justify-content-center">
                     <QuarterBar />
                 </div>

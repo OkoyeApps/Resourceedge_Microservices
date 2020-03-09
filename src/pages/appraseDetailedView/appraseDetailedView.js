@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Activity from '../../components/activity/activity'
 import Avatar from 'react-avatar';
 import './appraseDetailedView.css';
-import AppraiseNav from '../../components/appraiseNav/appraiseNav'
 import { withRouter } from 'react-router-dom'
 
 import CustomModal from '../../components/customModal/customModal';
@@ -19,12 +18,10 @@ const AppraseDetailView = (props) => {
     }
     return (
         <div className="row mx-0">
-            <div className="col-2 px-0">
-                <AppraiseNav tab={tab} setTab={setTab} />
-            </div>
-            <div className="col-10 inliner">
+
+            <div className="col-12 inliner pl-0">
                 <div className="row mx-0">
-                    <div className="col-12 d-flex my-4">
+                    <div className="col-12 d-flex my-4 pl-0">
                         <img src={backArrow} alt="back" className="mr-2" onClick={handleBack} />
                         <span className="edit-apprais" onClick={handleBack}>back</span>
                     </div>

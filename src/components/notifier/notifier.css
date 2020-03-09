@@ -9,20 +9,21 @@
 .narrow-bar {
   color: white;
   background-color: #0000af;
+  height: 92vh;
 }
 
 .notifier {
   background-color: #ffffff;
 }
-.search-field{
-  background: #F5F6F9;
+.search-field {
+  background: #f5f6f9;
   border-radius: 4px;
   border: none;
 }
-.search-field input{
+.search-field input {
   border: none;
   background: inherit;
 }
-.search-field input:focus{
+.search-field input:focus {
   outline: none;
 }

@@ -27,8 +27,8 @@ const AppraiserAppraisalNav = (props) => {
             <section className="tab-section">
                 <ul style={{ marginTop: "1rem" }}>
                     <li className="subs"><img src={youIcon} alt="you" className="mr-3" />You</li>
-                    <li onClick={() => { handleTab("self", "employee_performance_agreement/view") }} className={`${tab === "self" ? "tabbed" : ""}`}>Appraise Self</li>
-                    <li onClick={() => { handleTab("appraisal", "employee_performance_agreement/view") }} className={`${tab === "appraisal" ? "tabbed" : ""}`}>Appraisal Results</li>
+                    <li onClick={() => { handleTab("self", "appraisal/self-evaluation") }} className={`${tab === "self" ? "tabbed" : ""}`}>Appraise Self</li>
+                    <li onClick={() => { handleTab("appraisal", "employee_performance_result/view") }} className={`${tab === "appraisal" ? "tabbed" : ""}`}>Appraisal Results</li>
                 </ul>
             </section>
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import CustomModal from '../customModal/customModal';
+import CustomModal from '../../components/customModal/customModal';
 import Add from '../../assets/images/add.svg'
 
 export default function EpaUpload(props) {

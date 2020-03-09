@@ -8,10 +8,9 @@ function EmployeePerfomance() {
     var [tab, setTab] = useState('employeePerformance')
 
     return (
-        <div className='row mx-0'>
-            <div className="col-2 px-0"><AppraiserAppraisalNav tab={tab} setTab={setTab} /></div>
-            <div className="col-10 wrap-view">
-                <div className="row mx-0">
+        <div className='row mx-0 pl-0'>
+            <div className="col-12 wrap-view pl-0">
+                <div className="row mx-0 pl-0">
                     <div className='col-6'>
                         <div className="personal-card mt-4">
                             <div className="text-center">

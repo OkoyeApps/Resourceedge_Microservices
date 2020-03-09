@@ -17,10 +17,8 @@ const AppraiseAppraisees = (props) => {
     }
     return (
         <div className="row mx-0">
-            <div className="col-2 px-0">
-                <AppraiserAppraisalNav tab={tab} setTab={setTab} />
-            </div>
-            <div className="col-10 inliner pt-5">
+
+            <div className="col-12 inliner pt-5 pl-0">
                 <div className="row mx-0">
                     <div className="col-12">
                         <div className="row mx-0">

@@ -2,7 +2,6 @@ import React from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import AuthLayout from './components/authLayout/authLayout'
 import MainLayout from './components/mainLayout/mainLayout'
-import EPA from './pages/epa/epa'
 import Login from './pages/authPage/login/login'
 import Register from './pages/authPage/register/register'
 import Appraisees from './pages/appraisees/appraisees'
@@ -12,7 +11,8 @@ import AppraisalResult from './pages/appraisalResult/appraisalResult';
 import EmployeePerformanceForAppraiser from './pages/employeePerfomance/employeePerfomance'
 import AppraiseAppraisees from './pages/appraiseAppraisees/appraiseAppraisees';
 import ManagerDashboard from './pages/managerDashboard/managerDashboard';
-
+import EpaView from './pages/epaView/epaView'
+import EpaUpload from './pages/epaUpload/epaUpload'
 
 
 const AuthRoute = ({ Component, path, exact, ...rest }) => {
@@ -24,7 +24,7 @@ const AuthRoute = ({ Component, path, exact, ...rest }) => {
 const MainRoute = ({ Component, path, exact, purpose, ...rest }) => {
     console.log('back', purpose)
     return <Route exact={exact} path={path} {...rest} render={props => {
-        return <MainLayout purpose={purpose}><Component /></MainLayout>
+        return <MainLayout purpose={purpose} role={"appraiser"}><Component /></MainLayout>
     }} />
 }
 
@@ -35,12 +35,13 @@ export default function AppRoutes() {
                 <AuthRoute path="/" exact Component={Register} />
                 <AuthRoute path="/register" exact Component={Register} />
                 <AuthRoute path="/login" exact Component={Login} />
-                <MainRoute path='/employee_performance_agreement' exact Component={EPA} purpose="epa" />
-                <MainRoute path="/appraisees" exact Component={Appraisees} purpose="appraisal" />
-                <MainRoute path='/appraisees/details' exact Component={AppraseDetailView} purpose="appraisal" />
+                <MainRoute path='/epa/view' exact={true} Component={EpaView} purpose="epa" />
+                <MainRoute path="/epa/upload" exact={true} Component={EpaUpload} purpose="epa" />
+                <MainRoute path="/appraisees" exact Component={Appraisees} purpose="epa" />
+                <MainRoute path='/appraisees/details' exact Component={AppraseDetailView} purpose="epa" />
                 <MainRoute path="/appraisal/self-evaluation" exact Component={Appraisal} purpose="appraisal" />
                 <MainRoute path='/employee_performance_result/view' exact Component={AppraisalResult} purpose='appraisal' />
-                <MainRoute path="/employee_performance_agreement/view" exact Component={EmployeePerformanceForAppraiser} purpose="epa" />
+                <MainRoute path="/employee_performance_agreement/view" exact Component={EmployeePerformanceForAppraiser} purpose="appraisal" />
                 <MainRoute path='/appraise/appraisees' exact Component={AppraiseAppraisees} purpose="appraisal" />
                 <MainRoute path='/manager_dashboard' exact Component={ManagerDashboard} purpose="dash" />
             </Switch>
