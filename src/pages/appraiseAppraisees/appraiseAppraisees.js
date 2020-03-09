@@ -6,6 +6,7 @@ import CirculerProgressBar from '../../components/circulerProgressBar/circulerPr
 import Avatar from 'react-avatar';
 import './appraiseAppraisees.css';
 import { withRouter } from "react-router-dom"
+import CustomModal from '../../components/customModal/customModal';
 
 
 const AppraiseAppraisees = (props) => {

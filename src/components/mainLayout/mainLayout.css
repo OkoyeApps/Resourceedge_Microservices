@@ -22,4 +22,6 @@
 }
 .content-wrapper {
   background: #f5f6f9;
+  position: fixed;
+  height: 100vh;
 }

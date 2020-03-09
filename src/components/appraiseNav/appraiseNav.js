@@ -21,26 +21,66 @@ function AppraiseNav(props) {
     }, [props.location.pathname])
     return (
 
-        <div className="inner-sidebar text-center">
-            <div>
-                <img src={EpaAvatar} alt="EPA Avatar" />
-            </div>
-            <div>
-                Employment performance<br /> agreement
+        <div className="inner-sidebar">
+            <div className="text-center mb-5">
+                <div>
+                    <img src={EpaAvatar} alt="EPA Avatar" />
                 </div>
+                <div>
+                    Employment performance<br /> agreement
+                </div>
+            </div>
 
             <section className="tab-section">
                 <ul style={{ marginTop: "1rem" }}>
-                    <li className="subs"><img src={youIcon} alt="you" className="mr-4" />You</li>
-                    <li onClick={() => { handleTab("view", '/epa/view') }} className={`${tab === "view" ? "tabbed" : ""}`}>View</li>
-                    <li onClick={() => { handleTab("upload", '/epa/upload') }} className={`${tab === "upload" ? "tabbed" : ""}`}>Upload</li>
+                    <li className="subs">
+                        {/* <img src={youIcon} alt="you" className="mr-4" />You */}
+                        <div className="w-75 mx-auto">
+                            <div className="row">
+                                <div className="col-3"><img src={youIcon} alt="you" /></div>
+                                <div className="col-9 subs d-flex align-items-center">You</div>
+                            </div>
+                        </div>
+                    </li>
+                    <li onClick={() => { handleTab("view", 'epa/view') }} className={`${tab === "view" ? "tabbed" : ""}`}>
+                        {/* View */}
+                        <div className="w-75 mx-auto">
+                            <div className="row">
+                                <span className="col-3"></span>
+                                <span className="col-9 d-flex align-items-center inner_sidebar_tabs">View</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li onClick={() => { handleTab("upload", 'epa/upload') }} className={`${tab === "upload" ? "tabbed" : ""}`}>
+                        <div className="w-75 mx-auto">
+                            <div className="row">
+                                <span className="col-3"></span>
+                                <span className="col-9 d-flex align-items-center inner_sidebar_tabs">Upload</span>
+                            </div>
+                        </div>
+                    </li>
                 </ul>
             </section>
 
             <section className="tab-section">
                 <ul style={{ marginTop: "1rem" }}>
-                    <li className="subs"><img src={peopleIcon} alt="people" className="mr-3" />People (5)</li>
-                    <li onClick={() => { handleTab("appraise", '/appraisees') }} className={`${tab === "appraise" ? "tabbed" : ""}`}>Your Appraisees</li>
+                    <li className="subs">
+                        {/* <img src={peopleIcon} alt="people" className="mr-3" />People (5) */}
+                        <div className="w-75 mx-auto">
+                            <div className="row">
+                                <div className="col-3"><img src={peopleIcon} alt="people" /></div>
+                                <div className="col-9 subs d-flex align-items-center">People (5)</div>
+                            </div>
+                        </div>
+                    </li>
+                    <li onClick={() => { handleTab("appraise", "/appraisees") }} className={`${tab === "appraise" ? "tabbed" : ""}`}>
+                        <div className="w-75 mx-auto">
+                            <div className="row">
+                                <span className="col-3"></span>
+                                <span className="col-9 d-flex align-items-center inner_sidebar_tabs">Your Appraisees</span>
+                            </div>
+                        </div>
+                    </li>
                 </ul>
             </section>
         </div>
