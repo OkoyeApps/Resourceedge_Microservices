@@ -25,3 +25,10 @@
   line-height: 27px;
   color: #323130;
 }
+
+.ticked {
+  position: absolute;
+  top: 24px;
+  left: 47px;
+  z-index: 3;
+}
