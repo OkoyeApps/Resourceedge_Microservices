@@ -4,6 +4,7 @@ import Avatar from 'react-avatar'
 import AppraiseNav from '../../components/appraiseNav/appraiseNav'
 import './appraisees.css'
 import { withRouter } from 'react-router-dom'
+import smallTick from '../../assets/images/small-tick.svg'
 
 function Appraisees(props) {
     const [tab, setTab] = useState("view")
@@ -25,8 +26,12 @@ function Appraisees(props) {
                         <div className="small-card py-2">
                             <div className="row mx-0">
                                 <div className="col-2 pr-0">
-                                    <div>
-                                        <Avatar size={"45px"} name="Eliezer Ajah" className="rounded-circle" />
+
+                                    <div style={{ height: "45px", width: "45px" }}>
+                                        <Avatar size={"100%"} name="Eliezer Ajah" className="rounded-circle" />
+                                        <div className="ticked">
+                                            <img src={smallTick} alt="appraised" />
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="col-10">
@@ -43,8 +48,11 @@ function Appraisees(props) {
                         <div className="small-card py-2">
                             <div className="row mx-0">
                                 <div className="col-2 pr-0">
-                                    <div>
-                                        <Avatar size={"45px"} name="Eliezer Ajah" className="rounded-circle" />
+                                    <div style={{ height: "45px", width: "45px" }}>
+                                        <Avatar size={"100%"} name="Eliezer Ajah" className="rounded-circle" />
+                                        <div className="ticked">
+                                            <img src={smallTick} alt="appraised" />
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="col-10">
@@ -61,8 +69,11 @@ function Appraisees(props) {
                         <div className="small-card py-2">
                             <div className="row mx-0">
                                 <div className="col-2 pr-0">
-                                    <div>
-                                        <Avatar size={"45px"} name="Eliezer Ajah" className="rounded-circle" />
+                                    <div style={{ height: "45px", width: "45px" }}>
+                                        <Avatar size={"100%"} name="Eliezer Ajah" className="rounded-circle" />
+                                        <div className="ticked">
+                                            <img src={smallTick} alt="appraised" />
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="col-10">
@@ -79,8 +90,11 @@ function Appraisees(props) {
                         <div className="small-card py-2">
                             <div className="row mx-0">
                                 <div className="col-2 pr-0">
-                                    <div>
-                                        <Avatar size={"45px"} name="Eliezer Ajah" className="rounded-circle" />
+                                    <div style={{ height: "45px", width: "45px" }}>
+                                        <Avatar size={"100%"} name="Eliezer Ajah" className="rounded-circle" />
+                                        <div className="ticked">
+                                            <img src={smallTick} alt="appraised" />
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="col-10">
@@ -97,8 +111,11 @@ function Appraisees(props) {
                         <div className="small-card py-2">
                             <div className="row mx-0">
                                 <div className="col-2 pr-0">
-                                    <div>
-                                        <Avatar size={"45px"} name="Eliezer Ajah" className="rounded-circle" />
+                                    <div style={{ height: "45px", width: "45px" }}>
+                                        <Avatar size={"100%"} name="Eliezer Ajah" className="rounded-circle" />
+                                        <div className="ticked">
+                                            <img src={smallTick} alt="appraised" />
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="col-10">
