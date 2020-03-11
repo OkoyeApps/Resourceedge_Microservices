@@ -25,7 +25,7 @@ function Appraisees(props) {
                     <section className="col-4 my-2" onClick={handleLink}>
                         <div className="small-card py-2">
                             <div className="row mx-0">
-                                <div className="col-2 pr-0">
+                                <div className="col-3 pr-0">
 
                                     <div style={{ height: "45px", width: "45px" }}>
                                         <Avatar size={"100%"} name="Eliezer Ajah" className="rounded-circle" />
@@ -34,7 +34,7 @@ function Appraisees(props) {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col-10">
+                                <div className="col-9 pl-1">
                                     <div>
                                         <div className="card-name">Eliezer Ajah</div>
                                         <div className="group">Genesys</div>
@@ -47,7 +47,7 @@ function Appraisees(props) {
                     <section className="col-4 my-2" onClick={handleLink}>
                         <div className="small-card py-2">
                             <div className="row mx-0">
-                                <div className="col-2 pr-0">
+                                <div className="col-3 pr-0">
                                     <div style={{ height: "45px", width: "45px" }}>
                                         <Avatar size={"100%"} name="Eliezer Ajah" className="rounded-circle" />
                                         <div className="ticked">
@@ -55,7 +55,7 @@ function Appraisees(props) {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col-10">
+                                <div className="col-9 pl-1">
                                     <div>
                                         <div className="card-name">Eliezer Ajah</div>
                                         <div className="group">Genesys</div>
@@ -68,7 +68,7 @@ function Appraisees(props) {
                     <section className="col-4 my-2" onClick={handleLink}>
                         <div className="small-card py-2">
                             <div className="row mx-0">
-                                <div className="col-2 pr-0">
+                                <div className="col-3 pr-0">
                                     <div style={{ height: "45px", width: "45px" }}>
                                         <Avatar size={"100%"} name="Eliezer Ajah" className="rounded-circle" />
                                         <div className="ticked">
@@ -76,7 +76,7 @@ function Appraisees(props) {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col-10">
+                                <div className="col-9 pl-1">
                                     <div>
                                         <div className="card-name">Eliezer Ajah</div>
                                         <div className="group">Genesys</div>
@@ -89,7 +89,7 @@ function Appraisees(props) {
                     <section className="col-4 my-2" onClick={handleLink}>
                         <div className="small-card py-2">
                             <div className="row mx-0">
-                                <div className="col-2 pr-0">
+                                <div className="col-3 pr-0">
                                     <div style={{ height: "45px", width: "45px" }}>
                                         <Avatar size={"100%"} name="Eliezer Ajah" className="rounded-circle" />
                                         <div className="ticked">
@@ -97,7 +97,7 @@ function Appraisees(props) {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col-10">
+                                <div className="col-9 pl-1">
                                     <div>
                                         <div className="card-name">Eliezer Ajah</div>
                                         <div className="group">Genesys</div>
@@ -110,7 +110,7 @@ function Appraisees(props) {
                     <section className="col-4 my-2" onClick={handleLink}>
                         <div className="small-card py-2">
                             <div className="row mx-0">
-                                <div className="col-2 pr-0">
+                                <div className="col-3 pr-0">
                                     <div style={{ height: "45px", width: "45px" }}>
                                         <Avatar size={"100%"} name="Eliezer Ajah" className="rounded-circle" />
                                         <div className="ticked">
@@ -118,7 +118,7 @@ function Appraisees(props) {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col-10">
+                                <div className="col-9 pl-1">
                                     <div>
                                         <div className="card-name">Eliezer Ajah</div>
                                         <div className="group">Genesys</div>
