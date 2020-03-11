@@ -1,6 +1,8 @@
+import Constants from '../constants/index'
+
 export default (state = {}, action) => {
     switch (action.type) {
-        case 'SIMPLE_ACTION':
+        case Constants.AUTH:
             return {
                 result: action.payload
             }
