@@ -6,22 +6,21 @@ using System.Text;
 
 namespace Resourceedge.Appraisal.Domain.Entities
 {
-    class KeyResultAreas
+    
+    public class KeyResultAreas
     {
         public ObjectId Id { get; set; }
-        [BsonElement("KeyResultAreaId")]
-        public int KeyResultAreaId { get; set; }
         [BsonElement("Name")]
-        public string Name { get; set; }
+        public string Name { get; set; } = "Strenght";
         [BsonElement("Weight")]
-        public decimal Weight { get; set; }
+        public decimal Weight { get; set; } = 50;
         [BsonElement("AppraiserUserId")]
-        public string AppraiserUserId { get; set; }
+        public string AppraiserUserId { get; set; } = "9276363";
         [BsonElement("AppraiserEmail")]
-        public string AppraiserEmail { get; set; }
+        public string AppraiserEmail { get; set; } = "uhfafjkadnfj";
         [BsonElement("HodUserId")]
-        public string HodUserId { get; set; }
+        public string HodUserId { get; set; } = "kaeyi92932";
         [BsonElement("HodEmail")]
-        public string HodEmail { get; set; }
+        public string HodEmail { get; set; } = "khafkjdafjkadf";
     }
 }
