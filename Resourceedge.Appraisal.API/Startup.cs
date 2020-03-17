@@ -9,7 +9,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Resourceedge.Appraisal.API.Interfaces;
+using Resourceedge.Appraisal.API.Services;
 using Resourceedge.Appraisal.Domain.DBContexts;
+using Resourceedge.Appraisal.Domain.Entities;
 
 namespace Resourceedge.Appraisal.API
 {
@@ -28,7 +31,11 @@ namespace Resourceedge.Appraisal.API
             services.AddTransient<IDbContext, EdgeAppraisalContext>(ctx => EdgeAppraisalContext.Create(
                 Configuration.GetSection("DefualtConnection:ConnectionString").Value,
                 Configuration.GetSection("DefualtConnection:DataBaseName").Value));
+            
+            services.AddTransient<IKeyResultArea, KeyResultAreaService>();
+
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
             services.AddControllers(setupAction =>
             {
                 setupAction.ReturnHttpNotAcceptable = true;

@@ -7,7 +7,7 @@ using System.Text;
 namespace Resourceedge.Appraisal.Domain.Entities
 {
 
-    public class KeyResultAreas
+    public class KeyResultArea
     {
         public ObjectId Id { get; set; }
         [BsonElement("Name")]

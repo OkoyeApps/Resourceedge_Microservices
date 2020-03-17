@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
+using Resourceedge.Appraisal.API.Interfaces;
+using Resourceedge.Appraisal.API.Services;
 using Resourceedge.Appraisal.Domain.DBContexts;
 using Resourceedge.Appraisal.Domain.Entities;
 using System;
+using System.Threading.Tasks;
 
 namespace Resourceedge.Appraisal.API.Controllers
 {
@@ -10,32 +13,23 @@ namespace Resourceedge.Appraisal.API.Controllers
     [Route("api/resultarea")]
     public class ResultAreaController : ControllerBase
     {
-        private readonly IDbContext ctx;
+        private readonly IKeyResultArea resultArea;
 
-        public ResultAreaController(IDbContext _ctx)
+        public ResultAreaController(IKeyResultArea _resultArea)
         {
-            ctx = _ctx;
+            this.resultArea = _resultArea;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index(int? pageSize, int pageNumber)
         {
-            var collection = ctx.Database.GetCollection<KeyResultAreas>("KeyResultArea");
-            var aa = new KeyResultAreas()
-            {
-                AppraiserDetails = new NameEmail { Name = "Emmanuel", Id = "11111", Email = "appraisal@test.com" },
-                HodDetails = new NameEmail { Name = "EmmanuelHod", Id = "11111", Email = "Hod@test.com" },
-                keyOutcomes =
-                {
-                    new KeyOutcome{ Question = "Test question 1", TimeLimit = BsonDateTime.Create(DateTime.Now).ToString(), Status = new KeyOutcomeApprovalStatus  { Employee =true, Hod = true, IsAccepted = true } },
-                    new KeyOutcome{ Question = "Test question 2", TimeLimit = BsonDateTime.Create(DateTime.Now).ToString(), Status = new KeyOutcomeApprovalStatus { Employee =true, Hod = false, IsAccepted = true }},
-                    new KeyOutcome{ Question = "Test question 3", TimeLimit = BsonDateTime.Create(DateTime.Now).ToString(), Status =  new KeyOutcomeApprovalStatus{ Employee =false, Hod = true, IsAccepted = true }},
-                }, 
-                Weight = 50, Approved = true, Name = "School Manager"
-            };
-            collection.InsertOne(aa); 
 
-
-            return Ok(true);
+            var data = await resultArea.Get(pageSize, pageNumber);           
+            return Ok(data);
+        }
+     
+        public async Task<IActionResult> Edit()
+        {
+            return Ok();
         }
 
     }

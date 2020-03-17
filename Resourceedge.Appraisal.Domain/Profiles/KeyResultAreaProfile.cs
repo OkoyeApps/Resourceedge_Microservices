@@ -11,7 +11,7 @@ namespace Resourceedge.Appraisal.Domain.Profiles
     {
         public KeyResultAreaProfile()
         {
-            CreateMap<KeyResultAreas, KeyResultAreaDto>();
+            CreateMap<KeyResultArea, KeyResultAreaDto>();
         }
     }
 }
