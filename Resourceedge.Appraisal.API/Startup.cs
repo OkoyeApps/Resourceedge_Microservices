@@ -25,9 +25,9 @@ namespace Resourceedge.Appraisal.API
         }
         public void ConfigureServices(IServiceCollection services)
         {
-            var aa = Configuration.GetSection("DefualtConnection:ConnectionString").Value;
             services.AddTransient<IDbContext, EdgeAppraisalContext>(ctx => EdgeAppraisalContext.Create(
-                Configuration.GetSection("DefualtConnection:ConnectionString").Value, Configuration.GetSection("DefualtConnection:DataBaseName").Value));
+                Configuration.GetSection("DefualtConnection:ConnectionString").Value,
+                Configuration.GetSection("DefualtConnection:DataBaseName").Value));
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddControllers(setupAction =>
             {
