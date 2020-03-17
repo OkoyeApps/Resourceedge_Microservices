@@ -30,7 +30,7 @@ namespace Resourceedge.Appraisal.API.Interfaces
 
         }
 
-        public void update(TEntity entity)
+        public Task<TEntity> Update(ObjectId Id, TEntity entity)
         {
             throw new NotImplementedException();
         }
