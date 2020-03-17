@@ -4,4 +4,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Resourceedge.Appraisal.Domain\Resourceedge.Appraisal.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
