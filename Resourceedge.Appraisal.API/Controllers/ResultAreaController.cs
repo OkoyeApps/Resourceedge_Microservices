@@ -18,51 +18,35 @@ namespace Resourceedge.Appraisal.API.Controllers
     [Route("api/resultarea")]
     public class ResultAreaController : ControllerBase
     {
-        private readonly IDbContext ctx;
         private readonly IMapper mapper;
+        private readonly IKeyResultArea resultArea;
 
-        public ResultAreaController(IDbContext _ctx, IMapper _mapper)
+        public ResultAreaController(IDbContext _ctx, IMapper _mapper, IKeyResultArea _resultArea)
         {
-            ctx = _ctx;
             mapper = _mapper;
+            this.resultArea = _resultArea;
+        }
+        public async Task<IActionResult> Index(int? pageSize, int pageNumber)
+        {
+            var data = await resultArea.Get(pageSize, pageNumber);
+            return Ok(data);
         }
 
 
         [HttpGet("{id}", Name = "Mykpi")]
         public ActionResult<IEnumerable<KeyResultAreaDtoForCreation>> GetPersonalKpis(string id)
         {
-            var collection = ctx.Database.GetCollection<KeyResultArea>("KeyResultArea").AsQueryable();
-            var resultFromMap = collection.Where(x => x.UserId == id).ToList();
+            var resultFromMap = resultArea.GetPersonalkpis(id);
             var mapInstance = mapper.Map<IEnumerable<KeyResultAreaDtoForCreation>>(resultFromMap);
             return Ok(mapInstance);
         }
 
-        [HttpGet(Name = "CreateKeyOutcomes")]
+        [HttpPost(Name = "CreateKeyOutcomes")]
         public IActionResult Index(IEnumerable<KeyResultAreaDtoForCreation> model)
         {
-            var collection = ctx.Database.GetCollection<KeyResultAreaDtoForCreation>("KeyResultArea");
-            var resultFromMap = mapper.Map<IEnumerable<KeyResultAreaDtoForCreation>, IEnumerable<KeyResultAreaDtoForCreation>>(model);
-            collection.InsertMany(resultFromMap);
-
-            return CreatedAtRoute("Mykpi", new { id = model.ToArray()[0].myId }, resultFromMap);
-        }
-        private readonly IKeyResultArea resultArea;
-
-        public ResultAreaController(IKeyResultArea _resultArea)
-        {
-            this.resultArea = _resultArea;
-        }
-
-        public async Task<IActionResult> Index(int? pageSize, int pageNumber)
-        {
-
-            var data = await resultArea.Get(pageSize, pageNumber);
-            return Ok(data);
-        }
-
-        public async Task<IActionResult> Edit()
-        {
-            return Ok();
+            var entityToAdd = mapper.Map<IEnumerable<KeyResultAreaDtoForCreation>, IEnumerable<KeyResultArea>>(model);
+            resultArea.AddKeyOutcomes(entityToAdd);
+            return CreatedAtRoute("Mykpi", new { id = model.ToArray()[0].myId }, entityToAdd);
         }
 
     }

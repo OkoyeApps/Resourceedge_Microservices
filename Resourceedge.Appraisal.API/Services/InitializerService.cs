@@ -18,7 +18,7 @@ namespace Resourceedge.Appraisal.API.Services
             var dbContext = service.ApplicationServices.GetRequiredService(typeof(IDbContext)) as IDbContext;
             if (dbContext != null)
             {
-                var collection = dbContext.Database.GetCollection<KeyResultArea>("KeyResultArea");
+                var collection = dbContext.Database.GetCollection<KeyResultArea>($"{nameof(KeyResultArea)}s");
                 if (!collection.AsQueryable().Any())
                 {
 
