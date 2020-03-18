@@ -17,4 +17,15 @@ namespace Resourceedge.Appraisal.Domain.Profiles
                 .ForMember(dest => dest.Total, to => to.MapFrom(src => src.TotalCycle));
         }
     }
+
+    public class AppraisalCycleClassProfile : Profile
+    {
+        public AppraisalCycleClassProfile()
+        {
+            CreateMap<AppraisalCycleClass, AppraisalCycle>().ForMember(dest => dest.StartDate, to => to.MapFrom(src => src.Start))
+                .ForMember(dest =>dest.StopDate, to => to.MapFrom(src => src.Stop));
+            CreateMap<AppraisalCycle, AppraisalCycleClass>().ForMember(dest => dest.Start, to => to.MapFrom(src => src.StartDate))
+                  .ForMember(dest => dest.Stop, to => to.MapFrom(src => src.StartDate));
+        }
+    }
 }

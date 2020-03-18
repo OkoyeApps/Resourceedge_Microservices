@@ -12,6 +12,6 @@ namespace Resourceedge.Appraisal.API.Interfaces
     {
         public Task<IEnumerable<AppraisalConfig>> Get(AppraisalConfigParameters param);
         public bool Insert(AppraisalConfig entity);
-        public Task<AppraisalConfig> Update(ObjectId Id, AppraisalConfig entity);
+        public Task<AppraisalConfig> Update(ObjectId Id, AppraisalCycle entity);
     }
 }
