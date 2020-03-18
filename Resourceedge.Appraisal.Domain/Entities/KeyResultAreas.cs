@@ -16,6 +16,8 @@ namespace Resourceedge.Appraisal.Domain.Entities
         public NameEmail HodDetails { get; set; }
         public NameEmail AppraiserDetails { get; set; }
         public bool? Approved { get; set; }
+        public int Year { get; set; }
+        public bool IsActive { get; set; }
         public ICollection<KeyOutcome> keyOutcomes { get; set; } = new List<KeyOutcome>();
 
 
