@@ -18,7 +18,7 @@ namespace Resourceedge.Appraisal.API.Services
         public readonly IQueryable<AppraisalConfig> QueryableCollection;
         private readonly ILogger logger;
 
-        public AppraisalConfigService(IDbContext context, ILogger _logger)
+        public AppraisalConfigService(IDbContext context, ILogger<AppraisalConfig> _logger)
         {
             Collection = context?.Database.GetCollection<AppraisalConfig>($"{nameof(AppraisalConfig)}s") ?? throw new ArgumentNullException(nameof(context));
             QueryableCollection = Collection.AsQueryable<AppraisalConfig>();
@@ -56,12 +56,12 @@ namespace Resourceedge.Appraisal.API.Services
             }
         }
 
-        public async Task<AppraisalConfig> Update(ObjectId Id, AppraisalConfig entity)
+        public async Task<AppraisalConfig> Update(ObjectId Id, AppraisalCycle entity)
         {
             try
             {
                 var filter = Builders<AppraisalConfig>.Filter.Eq("Id", Id);
-                var update = Builders<AppraisalConfig>.Update.Set("Id", entity);
+                var update = Builders<AppraisalConfig>.Update.Set("Cycles", entity);
                 var result = await Collection.FindOneAndUpdateAsync(filter, update, options: new FindOneAndUpdateOptions<AppraisalConfig, AppraisalConfig> { ReturnDocument = ReturnDocument.After });
                 if (result != null)
                 {

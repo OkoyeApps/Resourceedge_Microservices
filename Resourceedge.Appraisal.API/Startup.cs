@@ -36,6 +36,7 @@ namespace Resourceedge.Appraisal.API
                 Configuration.GetSection("DefualtConnection:DataBaseName").Value));
             
             services.AddTransient<IKeyResultArea, KeyResultAreaService>();
+            services.AddTransient<IAppraisalConfig, AppraisalConfigService>();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

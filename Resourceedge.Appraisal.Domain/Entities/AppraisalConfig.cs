@@ -18,6 +18,7 @@ namespace Resourceedge.Appraisal.Domain.Entities
 
     public class AppraisalCycle
     {
+        public ObjectId Id { get; set; } = ObjectId.GenerateNewId();
         public DateTime StartDate { get; set; } 
         public DateTime StopDate { get; set; }
 

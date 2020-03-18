@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 using Resourceedge.Appraisal.API.Interfaces;
 using Resourceedge.Appraisal.API.ResourceParamters;
 using Resourceedge.Appraisal.Domain.Entities;
@@ -37,9 +39,22 @@ namespace Resourceedge.Appraisal.API.Controllers
             var entity = mapper.Map<AppraisalConfigForCreationDto, AppraisalConfig>(param);
             var result = appraisalConfig.Insert(entity);
 
-            return result ? Ok() : ValidationProblem(ModelState);
+            return result ? CreatedAtRoute("GetAppraisalConfigurations", new { }, mapper.Map<AppraisalConfigForCreationDto>(entity)) : ValidationProblem(ModelState);
         }
 
-        
+        [HttpPatch("{Id}")]
+        public IActionResult UpdateAppraisalConfig(string Id, JsonPatchDocument<AppraisalCycleClass> param)
+        {
+            var appraisalClass = new AppraisalCycleClass();
+            param.ApplyTo(appraisalClass);
+            if (TryValidateModel(appraisalClass))
+            {
+                var entity = mapper.Map<AppraisalCycleClass, AppraisalCycle>(appraisalClass);
+                var result = appraisalConfig.Update(new ObjectId(Id), entity);
+                return NoContent();
+
+            }
+            return ValidationProblem(ModelState);
+        }
     }
 }
