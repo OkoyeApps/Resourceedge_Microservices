@@ -69,5 +69,17 @@ namespace Resourceedge.Appraisal.API.Services
         {
            await Collection.FindOneAndDeleteAsync(Builders<KeyResultArea>.Filter.Where(r => r == entity));
         }
+
+        public async Task<KeyResultArea> QuerySingleByUserId(ObjectId id, string UserId)
+        {
+            if(id != null && UserId != null)
+            {
+                var filter = Builders<KeyResultArea>.Filter.Where(r => r.Id == id && r.UserId == UserId);
+               var result  = await Collection.FindAsync(filter);
+
+                return result.FirstOrDefault();
+            }
+            return null;
+        }
     }
 }

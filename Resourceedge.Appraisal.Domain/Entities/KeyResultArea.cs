@@ -10,13 +10,14 @@ namespace Resourceedge.Appraisal.Domain.Entities
     public class KeyResultArea
     {
         public ObjectId Id { get; set; }
-        [BsonElement("Name")]
+        public string UserId { get; set; }
         public string Name { get; set; }
-        [BsonElement("Weight")]
         public decimal Weight { get; set; }
         public NameEmail HodDetails { get; set; }
         public NameEmail AppraiserDetails { get; set; }
         public bool? Approved { get; set; }
+        public int Year { get; set; }
+        public bool IsActive { get; set; }
         public ICollection<KeyOutcome> keyOutcomes { get; set; } = new List<KeyOutcome>();
 
 

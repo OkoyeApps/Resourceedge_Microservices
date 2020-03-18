@@ -1,22 +1,20 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using Resourceedge.Appraisal.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Resourceedge.Appraisal.Domain.Models
 {
-    public class KeyResultAreaDto
+    public class KeyResultAreaDtoForCreation
     {
         public string Name { get; set; }
-        [BsonElement("Weight")]
+        public string myId { get; set; }
         public decimal Weight { get; set; }
-        [BsonElement("AppraiserUserId")]
-        public string AppraiserUserId { get; set; }
-        [BsonElement("AppraiserEmail")]
-        public string AppraiserEmail { get; set; }
-        [BsonElement("HodUserId")]
-        public string HodUserId { get; set; }
-        [BsonElement("HodEmail")]
-        public string HodEmail { get; set; }
+        public NameEmail HeadOfDepartment { get; set; }
+        public NameEmail Appraiser { get; set; }
+        public bool? Approved { get; set; }
+        public ICollection<KeyOutcome> keyOutcomes { get; set; } = new List<KeyOutcome>();
     }
 }

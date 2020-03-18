@@ -11,10 +11,10 @@ namespace Resourceedge.Appraisal.Domain.Profiles
     {
         public KeyResultAreaProfile()
         {
-            CreateMap<KeyResultArea, KeyResultAreaDto>();
             CreateMap<KeyResultArea, KeyResultAreaForUpdateDto>()
-                .ForMember(dest => dest.HeadOfDepartment, opt => opt.MapFrom(src => src.HodDetails))
-                .ForMember(dest => dest.Appraiser, opt => opt.MapFrom(src => src.AppraiserDetails));
+               .ForMember(dest => dest.HeadOfDepartment, opt => opt.MapFrom(src => src.HodDetails))
+               .ForMember(dest => dest.Appraiser, opt => opt.MapFrom(src => src.AppraiserDetails));
+
         }
     }
 }

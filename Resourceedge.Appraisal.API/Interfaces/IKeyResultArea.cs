@@ -1,4 +1,5 @@
-﻿using Resourceedge.Appraisal.Domain.Entities;
+﻿using MongoDB.Bson;
+using Resourceedge.Appraisal.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,7 @@ namespace Resourceedge.Appraisal.API.Interfaces
 {
     public interface IKeyResultArea : IGenericRepository<KeyResultArea>
     {
-         
+        Task<KeyResultArea> QuerySingleByUserId(ObjectId id, string UserId);
+
     }
 }
