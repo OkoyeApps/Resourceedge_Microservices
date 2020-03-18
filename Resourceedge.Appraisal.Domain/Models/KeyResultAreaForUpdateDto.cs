@@ -1,10 +1,12 @@
-﻿using Resourceedge.Appraisal.Domain.Entities;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using Resourceedge.Appraisal.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Resourceedge.Appraisal.Domain.Models
 {
+    [BsonIgnoreExtraElements]
     public class KeyResultAreaForUpdateDto
     {
         public NameEmail HeadOfDepartment { get; set; }

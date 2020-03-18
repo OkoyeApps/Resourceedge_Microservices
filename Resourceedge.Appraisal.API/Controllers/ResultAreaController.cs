@@ -33,20 +33,41 @@ namespace Resourceedge.Appraisal.API.Controllers
         }
 
 
-        [HttpGet("{id}", Name = "Mykpi")]
-        public ActionResult<IEnumerable<KeyResultAreaDtoForCreation>> GetPersonalKpis(string id)
+        [HttpGet(Name = "Mykpi")]
+        public ActionResult<IEnumerable<KeyResultAreaDtoForCreation>> GetPersonalKpis(string UserId)
         {
-            var resultFromMap = resultArea.GetPersonalkpis(id);
+            var resultFromMap = resultArea.GetPersonalkpis(UserId);
             var mapInstance = mapper.Map<IEnumerable<KeyResultAreaDtoForCreation>>(resultFromMap);
             return Ok(mapInstance);
         }
 
         [HttpPost(Name = "CreateKeyOutcomes")]
-        public IActionResult Index(IEnumerable<KeyResultAreaDtoForCreation> model)
+        public IActionResult Index(string UserId, IEnumerable<KeyResultAreaDtoForCreation> model)
         {
-            var entityToAdd = mapper.Map<IEnumerable<KeyResultAreaDtoForCreation>, IEnumerable<KeyResultArea>>(model);
+            var entityToAdd = mapper.Map<IEnumerable<KeyResultAreaDtoForCreation>, IEnumerable<KeyResultArea>>(model);            
             resultArea.AddKeyOutcomes(entityToAdd);
-            return CreatedAtRoute("Mykpi", new { id = model.ToArray()[0].myId }, entityToAdd);
+
+            var entityToReturn = mapper.Map<IEnumerable<KeyResultArea>>(entityToAdd);
+            return CreatedAtRoute("Mykpi", new {UserId = UserId}, entityToReturn);
+        }
+
+        [HttpPatch("Update/{KeyResultAreaId}")]
+        public async Task<IActionResult> UpdateKPI(string UserId, string KeyResultAreaId, KeyResultAreaForUpdateDto kpi)
+        {
+            ObjectId Id = new ObjectId(KeyResultAreaId);
+            var keyResult = resultArea.QuerySingle(Id);
+
+            if (keyResult != null)
+            {
+                var resultAreaForUpdate = mapper.Map<KeyResultArea>(kpi);
+
+                var entityToUpdate = await resultArea.Update(Id, resultAreaForUpdate);
+                var entityToReturn = mapper.Map<KeyResultAreaDtoForCreation>(entityToUpdate);
+
+                return CreatedAtRoute("Mykpi", new { UserId = UserId}, entityToReturn);
+            }
+
+            return Ok();
         }
 
         [HttpDelete("Id")]
