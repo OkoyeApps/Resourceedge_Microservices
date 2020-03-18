@@ -6,9 +6,13 @@ using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json.Serialization;
+using Resourceedge.Appraisal.API.Services;
 using Resourceedge.Appraisal.Domain.DBContexts;
 
 namespace Resourceedge.Appraisal.API
@@ -33,10 +37,17 @@ namespace Resourceedge.Appraisal.API
             {
                 setupAction.ReturnHttpNotAcceptable = true;
 
+            }).AddXmlDataContractSerializerFormatters().AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
+
+
+            services.Configure<MvcOptions>(config =>
+            {
+                var newtonsoftJsonOutputFormatter = config.OutputFormatters.OfType<NewtonsoftJsonOutputFormatter>()?.FirstOrDefault();
+                if (newtonsoftJsonOutputFormatter != null)
+                {
+                    newtonsoftJsonOutputFormatter.SupportedMediaTypes.Add("application/vnd.marvin.hateoas+json");
+                }
             });
-
-           
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,6 +64,10 @@ namespace Resourceedge.Appraisal.API
             {
                 endpoints.MapControllers();
             });
+
+
+
+            InitializerService.Seed(app);
         }
     }
 }

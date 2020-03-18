@@ -1,8 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
+using MongoDB.Driver;
 using Resourceedge.Appraisal.Domain.DBContexts;
 using Resourceedge.Appraisal.Domain.Entities;
+using Resourceedge.Appraisal.Domain.Models;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Resourceedge.Appraisal.API.Controllers
 {
@@ -11,31 +16,32 @@ namespace Resourceedge.Appraisal.API.Controllers
     public class ResultAreaController : ControllerBase
     {
         private readonly IDbContext ctx;
+        private readonly IMapper mapper;
 
-        public ResultAreaController(IDbContext _ctx)
+        public ResultAreaController(IDbContext _ctx, IMapper _mapper)
         {
             ctx = _ctx;
+            mapper = _mapper;
         }
 
-        public IActionResult Index()
+
+        [HttpGet("{id}", Name = "Mykpi")]
+        public ActionResult<IEnumerable<KeyResultAreaDtoForCreation>> GetPersonalKpis(string id)
+        {
+            var collection = ctx.Database.GetCollection<KeyResultAreas>("KeyResultArea").AsQueryable();
+            var resultFromMap = collection.Where(x => x.UserId == id).ToList();
+            var mapInstance = mapper.Map<IEnumerable<KeyResultAreaDtoForCreation>>(resultFromMap);
+            return Ok(mapInstance);
+        }
+
+        [HttpGet(Name = "CreateKeyOutcomes")]
+        public IActionResult Index(IEnumerable<KeyResultAreaDtoForCreation> model)
         {
             var collection = ctx.Database.GetCollection<KeyResultAreas>("KeyResultArea");
-            var aa = new KeyResultAreas()
-            {
-                AppraiserDetails = new NameEmail { Name = "Emmanuel", Id = "11111", Email = "appraisal@test.com" },
-                HodDetails = new NameEmail { Name = "EmmanuelHod", Id = "11111", Email = "Hod@test.com" },
-                keyOutcomes =
-                {
-                    new KeyOutcome{ Question = "Test question 1", TimeLimit = BsonDateTime.Create(DateTime.Now).ToString(), Status = new KeyOutcomeApprovalStatus  { Employee =true, Hod = true, IsAccepted = true } },
-                    new KeyOutcome{ Question = "Test question 2", TimeLimit = BsonDateTime.Create(DateTime.Now).ToString(), Status = new KeyOutcomeApprovalStatus { Employee =true, Hod = false, IsAccepted = true }},
-                    new KeyOutcome{ Question = "Test question 3", TimeLimit = BsonDateTime.Create(DateTime.Now).ToString(), Status =  new KeyOutcomeApprovalStatus{ Employee =false, Hod = true, IsAccepted = true }},
-                }, 
-                Weight = 50, Approved = true, Name = "School Manager"
-            };
-            collection.InsertOne(aa); 
+            var resultFromMap = mapper.Map<IEnumerable<KeyResultAreaDtoForCreation>, IEnumerable<KeyResultAreas>>(model);
+            collection.InsertMany(resultFromMap);
 
-
-            return Ok(true);
+            return CreatedAtRoute("Mykpi", new { id = model.ToArray()[0].myId }, resultFromMap);
         }
 
     }
