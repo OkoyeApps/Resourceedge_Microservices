@@ -1,4 +1,5 @@
 ﻿using MongoDB.Bson;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,9 +7,12 @@ using System.Threading.Tasks;
 
 namespace Resourceedge.Appraisal.API.Interfaces
 {
-    public interface IGenericRepository<TEntity> where TEntity : class
+    public interface IGenericRepository<TEntity> where TEntity : class 
     {
-       Task<IEnumerable<TEntity>> Get(int? PageSize, int? PageNumber);
+        //public IMongoCollection<TEntity> Collection { get; }
+        //public IQueryable<TEntity> QueryableCollection   { get; }
+
+        Task<IEnumerable<TEntity>> Get(int? PageSize, int? PageNumber);
         void Insert(TEntity entity);
         void Delete(ObjectId id);
         void Delete(TEntity entity);

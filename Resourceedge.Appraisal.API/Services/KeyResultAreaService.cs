@@ -14,11 +14,12 @@ namespace Resourceedge.Appraisal.API.Services
     public class KeyResultAreaService : IKeyResultArea
     {
         public readonly IMongoCollection<KeyResultArea> Collection;
+        public readonly IQueryable<KeyResultArea> QueryableCollection;
 
         public KeyResultAreaService(IDbContext context)
         {
-            Collection = context.Database.GetCollection<KeyResultArea>($"{nameof(KeyResultArea)}");
-
+            Collection = context.Database.GetCollection<KeyResultArea>($"{nameof(KeyResultArea)}s");
+            QueryableCollection = Collection.AsQueryable<KeyResultArea>();
         }
 
 
@@ -79,7 +80,23 @@ namespace Resourceedge.Appraisal.API.Services
 
                 return result.FirstOrDefault();
             }
-            return null;
+            return null;        
+        }
+        
+        public void AddKeyOutcomes(IEnumerable<KeyResultArea> entity)
+        {
+            Collection.InsertMany(entity);
+            return;
+        }
+
+        public void AddKeyOutcomes(KeyResultArea entity)
+        {
+            Collection.InsertOne(entity);
+        }
+
+        public IEnumerable<KeyResultArea> GetPersonalkpis(string userId)
+        {
+            return  QueryableCollection.Where(x => x.UserId == userId).ToList();
         }
     }
 }
