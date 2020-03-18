@@ -1,0 +1,16 @@
+﻿using Resourceedge.Appraisal.Domain.Entities;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Resourceedge.Appraisal.Domain.Models
+{
+    public class KeyResultAreaForUpdateDto
+    {
+        public NameEmail HeadOfDepartment { get; set; }
+        public NameEmail Appraiser { get; set; }
+        public bool? Approved { get; set; }
+        public ICollection<KeyOutcome> keyOutcomes { get; set; } = new List<KeyOutcome>();
+
+    }
+}

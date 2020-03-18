@@ -35,9 +35,10 @@ namespace Resourceedge.Appraisal.API.Services
             }
         }
 
-        public KeyResultArea QuerySingle(Func<KeyResultArea, bool> func)
+        public async Task<KeyResultArea> QuerySingle(ObjectId Id)
         {
-            throw new NotImplementedException();
+            var filter = Builders<KeyResultArea>.Filter.Where(a => a.Id == Id);
+            return await Collection.Find(filter).FirstOrDefaultAsync();
         }
 
         public IEnumerable<KeyResultArea> QuerySingle(Func<IEnumerable<KeyResultArea>, bool> func)
@@ -62,6 +63,11 @@ namespace Resourceedge.Appraisal.API.Services
             {
                 await Collection.FindOneAndDeleteAsync(a => a.Id == id);
             }
+        }
+
+        public async void Delete(KeyResultArea entity)
+        {
+           await Collection.FindOneAndDeleteAsync(Builders<KeyResultArea>.Filter.Where(r => r == entity));
         }
     }
 }

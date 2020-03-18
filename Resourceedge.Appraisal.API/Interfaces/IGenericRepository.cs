@@ -11,8 +11,9 @@ namespace Resourceedge.Appraisal.API.Interfaces
        Task<IEnumerable<TEntity>> Get(int? PageSize, int? PageNumber);
         void Insert(TEntity entity);
         void Delete(ObjectId id);
+        void Delete(TEntity entity);
         Task<TEntity> Update(ObjectId Id, TEntity entity);
-        TEntity QuerySingle(Func<TEntity, bool> func); 
+        Task<TEntity> QuerySingle(ObjectId id); 
         IEnumerable<TEntity> QuerySingle(Func<IEnumerable<TEntity>, bool> func); 
     }
 }
