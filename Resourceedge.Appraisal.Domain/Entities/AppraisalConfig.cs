@@ -15,7 +15,7 @@ namespace Resourceedge.Appraisal.Domain.Entities
 
     public class AppraisalCycle
     {
-        public DateTime StartDate { get; set; }
+        public DateTime StartDate { get; set; } 
         public DateTime StopDate { get; set; }
 
     }

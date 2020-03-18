@@ -7,11 +7,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Resourceedge.Appraisal.API.Services
+namespace Resourceedge.Appraisal.API.Interfaces
 {
     public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
     {
-        private readonly IDbContext context;
         public readonly IMongoCollection<TEntity> Collection;
 
         public GenericRepository(IDbContext context)
@@ -31,7 +30,7 @@ namespace Resourceedge.Appraisal.API.Services
 
         }
 
-        public void update(TEntity entity)
+        public Task<TEntity> Update(ObjectId Id, TEntity entity)
         {
             throw new NotImplementedException();
         }

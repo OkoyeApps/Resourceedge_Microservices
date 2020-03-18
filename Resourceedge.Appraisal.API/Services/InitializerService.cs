@@ -18,13 +18,13 @@ namespace Resourceedge.Appraisal.API.Services
             var dbContext = service.ApplicationServices.GetRequiredService(typeof(IDbContext)) as IDbContext;
             if (dbContext != null)
             {
-                var collection = dbContext.Database.GetCollection<KeyResultAreas>("KeyResultArea");
-                if (collection.AsQueryable().Any())
+                var collection = dbContext.Database.GetCollection<KeyResultArea>("KeyResultArea");
+                if (!collection.AsQueryable().Any())
                 {
 
-                    var dataToAdd = new List<KeyResultAreas>()
+                    var dataToAdd = new List<KeyResultArea>()
                 {
-                        new KeyResultAreas
+                        new KeyResultArea
                         {
                             UserId = Guid.NewGuid().ToString(),
                             AppraiserDetails = new NameEmail { Name = "Emmanuel", Id = "11111", Email = "appraisal@test.com" },
@@ -39,7 +39,7 @@ namespace Resourceedge.Appraisal.API.Services
                             Approved = true,
                             Name = "School Manager"
                         },
-                        new KeyResultAreas
+                        new KeyResultArea
                         {
                             UserId = Guid.NewGuid().ToString(),
                             AppraiserDetails = new NameEmail { Name = "Test", Id = "11111", Email = "test@test.com" },
