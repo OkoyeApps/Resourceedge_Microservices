@@ -1,0 +1,56 @@
+.active-step {
+  background: #d2e4fb;
+}
+
+.steps {
+  width: 95%;
+  font-family: Avenir Next;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 18px;
+  color: #1d1d1d;
+}
+
+.kra-textbox {
+  width: 80%;
+}
+
+.kra-percent {
+  width: 20%;
+}
+
+.kra-sm-text {
+  font-family: Avenir Next;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 18px;
+  color: #1d1d1d;
+}
+
+.kra-sm-txt-blue {
+  font-family: Avenir Next;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 18px;
+  color: #1a73e8;
+}
+
+.kra-inputs {
+  min-height: 30vh;
+}
+
+.inactive-krad {
+  background: #dadada;
+}
+
+.small-half {
+  font-family: Avenir Next;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 18px;
+  color: #1d1d1d;
+}
