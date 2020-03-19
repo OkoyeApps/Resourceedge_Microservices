@@ -17,7 +17,6 @@ namespace Resourceedge.Appraisal.API.Interfaces
         public IEnumerable<KeyResultArea> GetPersonalkpis(string userId);
         public Task<KeyResultArea> Update(ObjectId Id, KeyResultAreaForUpdateMainDto entity);
         Task<long> UpdateKeyOutcome(ObjectId Id, ObjectId outcomeId, string UserId, KeyOutcomeForUpdateDto entity);
-
         Task<long> HodApproval(ObjectId keyResultAreaId, StatusForUpdateDto entity);
         Task<long> EmpoyleeApproval(ObjectId keyResultAreaId, StatusForUpdateDto entity);
     }

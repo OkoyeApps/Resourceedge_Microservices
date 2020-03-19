@@ -17,12 +17,13 @@ namespace Resourceedge.Appraisal.API.Services
     {
         public readonly IMongoCollection<KeyResultArea> Collection;
         public readonly IQueryable<KeyResultArea> QueryableCollection;
-        private readonly ILogger logger;
+        private readonly ILogger<KeyResultArea> logger;
 
-        public KeyResultAreaService(IDbContext context, ILogger _logger)
+        public KeyResultAreaService(IDbContext context, ILogger<KeyResultArea> _logger)
         {
             Collection = context.Database.GetCollection<KeyResultArea>($"{nameof(KeyResultArea)}s");
             QueryableCollection = Collection.AsQueryable<KeyResultArea>();
+            logger = _logger;
         }
 
 
