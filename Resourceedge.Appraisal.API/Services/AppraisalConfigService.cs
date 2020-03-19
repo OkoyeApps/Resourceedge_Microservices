@@ -16,9 +16,9 @@ namespace Resourceedge.Appraisal.API.Services
     {
         private readonly IMongoCollection<AppraisalConfig> Collection;
         public readonly IQueryable<AppraisalConfig> QueryableCollection;
-        private readonly ILogger logger;
+        private readonly ILogger<AppraisalConfigService> logger;
 
-        public AppraisalConfigService(IDbContext context, ILogger<AppraisalConfig> _logger)
+        public AppraisalConfigService(IDbContext context, ILogger<AppraisalConfigService> _logger)
         {
             Collection = context?.Database.GetCollection<AppraisalConfig>($"{nameof(AppraisalConfig)}s") ?? throw new ArgumentNullException(nameof(context));
             QueryableCollection = Collection.AsQueryable<AppraisalConfig>();
