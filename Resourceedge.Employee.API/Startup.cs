@@ -12,39 +12,39 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Serialization;
-using Resourceedge.Appraisal.API.Interfaces;
-using Resourceedge.Appraisal.API.Services;
-using Resourceedge.Appraisal.Domain.DBContexts;
-using Resourceedge.Appraisal.Domain.Entities;
-
-namespace Resourceedge.Appraisal.API
+using Resourceedge.Employee.API.Services;
+using Resourceedge.Employee.Domain.DbContext;
+using Resourceedge.Employee.Domain.Interfaces;
+namespace Resourceedge.Employee.API
 {
     public class Startup
     {
-        public IConfiguration Configuration { get; set; }
+        private readonly IConfiguration Configuration;
+
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
-
-        public Startup(IConfiguration _config)
-        {
-            Configuration = _config;
-        }
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<IDbContext, EdgeAppraisalContext>(ctx => EdgeAppraisalContext.Create(
-                Configuration.GetSection("DefualtConnection:ConnectionString").Value,
-                Configuration.GetSection("DefualtConnection:DataBaseName").Value));
-            
-            services.AddTransient<IKeyResultArea, KeyResultAreaService>();
-            services.AddTransient<IAppraisalConfig, AppraisalConfigService>();
+            services.AddHttpClient("OldEdge", config =>
+            {
+                config.BaseAddress = new Uri(Configuration["Services:oldResourceedge"]);
+            });
 
+            services.AddTransient<IDbContext, EmployeeDbContext>(ctx => EmployeeDbContext.Create(
+               Configuration.GetSection("DefualtConnection:ConnectionString").Value,
+               Configuration.GetSection("DefualtConnection:DataBaseName").Value));
+            services.AddTransient<IOldEmployee, ArchiveServices>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
             services.AddControllers(setupAction =>
             {
                 setupAction.ReturnHttpNotAcceptable = true;
 
-            }).AddXmlDataContractSerializerFormatters().AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
+            }).AddXmlDataContractSerializerFormatters()
+            .AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
 
 
             services.Configure<MvcOptions>(config =>
@@ -72,9 +72,7 @@ namespace Resourceedge.Appraisal.API
                 endpoints.MapControllers();
             });
 
-
-
-            InitializerService.Seed(app);
+            Initializer.SeedEmployeeDb(app);
         }
     }
 }
