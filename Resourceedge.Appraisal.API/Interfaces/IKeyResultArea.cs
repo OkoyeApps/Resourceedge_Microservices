@@ -19,8 +19,6 @@ namespace Resourceedge.Appraisal.API.Interfaces
         Task<long> UpdateKeyOutcome(ObjectId Id, ObjectId outcomeId, string UserId, KeyOutcomeForUpdateDto entity);
 
         Task<long> HodApproval(ObjectId keyResultAreaId, StatusForUpdateDto entity);
-        Task<long> HodReject(ObjectId keyResultAreaId, StatusForUpdateDto entity);
         Task<long> EmpoyleeApproval(ObjectId keyResultAreaId, StatusForUpdateDto entity);
-        Task<long> EmpoyleeReject(ObjectId keyResultAreaId, StatusForUpdateDto entity);
     }
 }
