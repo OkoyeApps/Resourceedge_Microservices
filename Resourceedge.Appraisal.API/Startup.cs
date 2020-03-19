@@ -41,6 +41,7 @@ namespace Resourceedge.Appraisal.API
                 config.DefaultRequestHeaders.Add("Accept", "application/json");
             }).AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(5, _ => TimeSpan.FromMilliseconds(500))); ;
 
+            var aa = Configuration.GetSection("DefualtConnection:ConnectionString").Value;
 
             services.AddTransient<IDbContext, EdgeAppraisalContext>(ctx => EdgeAppraisalContext.Create(
                 Configuration.GetSection("DefualtConnection:ConnectionString").Value,

@@ -5,6 +5,8 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - Services__employee=http://resourceedge.employee.api
+      - DefualtConnection__ConnectionString=mongodb+srv://chocksy:ewZg5URqMNyal7Xs@lawyerpp-cluster-5faak.mongodb.net/EdgeAppraisal?retryWrites=true
+      - DefualtConnection__DataBaseName=EdgeAppraisal
     ports:
       - "6001:80"
 
@@ -19,6 +21,8 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
+      - DefualtConnection__ConnectionString=mongodb+srv://chocksy:ewZg5URqMNyal7Xs@lawyerpp-cluster-5faak.mongodb.net/EdgeEmployee?retryWrites=true
+      - DefualtConnection__DataBaseName=EdgeEmployee
     ports:
       - "6003:80"
       - "7003:443"

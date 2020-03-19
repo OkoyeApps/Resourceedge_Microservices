@@ -10,9 +10,11 @@ namespace Resourceedge.Appraisal.Domain.DBContexts
 
         public static EdgeAppraisalContext Create(string connectionString, string dbName)
         {
+            //new MongoClientSettings { AllowInsecureTls = true, ConnectionMode = ConnectionMode.ReplicaSet, ConnectTimeout = TimeSpan.FromMinutes(3),UseTls =false}
             var client = new MongoClient(connectionString);
             EdgeAppraisalContext dbcontext = new EdgeAppraisalContext();
             dbcontext.Database = client.GetDatabase(dbName);
+
             return dbcontext;
 
         }
