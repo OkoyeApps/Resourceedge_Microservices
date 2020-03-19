@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Serialization;
+using Polly;
 using Resourceedge.Appraisal.API.Interfaces;
 using Resourceedge.Appraisal.API.Services;
 using Resourceedge.Appraisal.Domain.DBContexts;
@@ -31,13 +33,22 @@ namespace Resourceedge.Appraisal.API
         }
         public void ConfigureServices(IServiceCollection services)
         {
+
+            services.AddHttpClient("EmployeeService", config =>
+            {
+                config.BaseAddress = new Uri(Configuration["Services:employee"]);
+                config.DefaultRequestHeaders.Clear();
+                config.DefaultRequestHeaders.Add("Accept", "application/json");
+            }).AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(5, _ => TimeSpan.FromMilliseconds(500))); ;
+
+
             services.AddTransient<IDbContext, EdgeAppraisalContext>(ctx => EdgeAppraisalContext.Create(
                 Configuration.GetSection("DefualtConnection:ConnectionString").Value,
                 Configuration.GetSection("DefualtConnection:DataBaseName").Value));
             
             services.AddTransient<IKeyResultArea, KeyResultAreaService>();
             services.AddTransient<IAppraisalConfig, AppraisalConfigService>();
-
+            services.AddTransient<ITeamRepository, TeamService>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddControllers(setupAction =>

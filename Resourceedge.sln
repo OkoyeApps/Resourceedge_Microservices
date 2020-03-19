@@ -7,8 +7,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Appraisal", "Appraisal", "{
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Resourceedge.Appraisal.API", "Resourceedge.Appraisal.API\Resourceedge.Appraisal.API.csproj", "{038FF79C-EDC7-4FF4-83AC-CCD0FDFB52F5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Resourceedge.Appraisal.Domain", "Resourceedge.Appraisal.Domain\Resourceedge.Appraisal.Domain.csproj", "{36632640-4D22-4BA4-BC75-8D20D521191C}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Authentication", "Authentication", "{4CA1C01A-F827-4714-89F1-6481E76C0504}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Resourceedge.Authentication.Domain", "Resourceedge.Authentication.Domain\Resourceedge.Authentication.Domain.csproj", "{9F9587E9-24E3-413A-8328-98AD5EC3E7BF}"
@@ -27,6 +25,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{596E3F
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Resourceedge.Common", "Resourceedge.Common\Resourceedge.Common.csproj", "{2EAD26E4-48AD-414B-9F66-92737C12A685}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Resourceedge.Appraisal.Domain", "Resourceedge.Appraisal.Domain\Resourceedge.Appraisal.Domain.csproj", "{F57219B4-B65A-40FB-9A89-FC121AA04887}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,10 +37,6 @@ Global
 		{038FF79C-EDC7-4FF4-83AC-CCD0FDFB52F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{038FF79C-EDC7-4FF4-83AC-CCD0FDFB52F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{038FF79C-EDC7-4FF4-83AC-CCD0FDFB52F5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{36632640-4D22-4BA4-BC75-8D20D521191C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{36632640-4D22-4BA4-BC75-8D20D521191C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{36632640-4D22-4BA4-BC75-8D20D521191C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{36632640-4D22-4BA4-BC75-8D20D521191C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9F9587E9-24E3-413A-8328-98AD5EC3E7BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9F9587E9-24E3-413A-8328-98AD5EC3E7BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F9587E9-24E3-413A-8328-98AD5EC3E7BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -65,19 +61,23 @@ Global
 		{2EAD26E4-48AD-414B-9F66-92737C12A685}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2EAD26E4-48AD-414B-9F66-92737C12A685}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2EAD26E4-48AD-414B-9F66-92737C12A685}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F57219B4-B65A-40FB-9A89-FC121AA04887}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F57219B4-B65A-40FB-9A89-FC121AA04887}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F57219B4-B65A-40FB-9A89-FC121AA04887}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F57219B4-B65A-40FB-9A89-FC121AA04887}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{038FF79C-EDC7-4FF4-83AC-CCD0FDFB52F5} = {F1A0C0FE-25D3-4375-9A6D-09C116558785}
-		{36632640-4D22-4BA4-BC75-8D20D521191C} = {F1A0C0FE-25D3-4375-9A6D-09C116558785}
 		{9F9587E9-24E3-413A-8328-98AD5EC3E7BF} = {4CA1C01A-F827-4714-89F1-6481E76C0504}
 		{AF14CB18-68CA-44E3-951F-105CDE84DB93} = {4CA1C01A-F827-4714-89F1-6481E76C0504}
 		{42B12BFE-D257-43F3-8EAA-AB67772D6741} = {735A3EA3-1B0C-426F-9918-180BC9EAFE99}
 		{A994D79A-F2F4-4132-9898-DB3C94FABDC8} = {735A3EA3-1B0C-426F-9918-180BC9EAFE99}
 		{A279C7C5-F20A-410F-B13E-B79F154ED902} = {735A3EA3-1B0C-426F-9918-180BC9EAFE99}
 		{2EAD26E4-48AD-414B-9F66-92737C12A685} = {596E3F0A-3487-4F50-9DC3-871B8DA421C2}
+		{F57219B4-B65A-40FB-9A89-FC121AA04887} = {F1A0C0FE-25D3-4375-9A6D-09C116558785}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8D69C74D-FE7D-4C07-AA58-6015158E57DE}
