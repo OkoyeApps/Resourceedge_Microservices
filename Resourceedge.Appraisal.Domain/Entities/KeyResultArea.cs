@@ -11,6 +11,7 @@ namespace Resourceedge.Appraisal.Domain.Entities
     {
         public ObjectId Id { get; set; }
         public string UserId { get; set; }
+        public int EmployeeId { get; set; }
         public string Name { get; set; }
         public decimal Weight { get; set; }
         public NameEmail HodDetails { get; set; }
@@ -25,7 +26,7 @@ namespace Resourceedge.Appraisal.Domain.Entities
 
     public class NameEmail
     {
-        public string Id { get; set; }
+        public int EmployeeId { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
     }

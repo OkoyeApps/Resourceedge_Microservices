@@ -1,0 +1,17 @@
+﻿using Resourceedge.Appraisal.Domain.Entities;
+using Resourceedge.Appraisal.Domain.Models;
+using Resourceedge.Common.Archive;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace Resourceedge.Appraisal.API.Interfaces
+{
+    public interface ITeamRepository
+    {
+        Task<IEnumerable<OldEmployeeDto>> GetEmployeesToAppraise(int employeeId);
+        Task<IEnumerable<KeyResultAreaForViewDto>> GetTeamMemberKpi(int MyId, int TeammeberId);
+        IEnumerable<KeyResultAreaForViewDto> UpdateWhoAmIForList(IEnumerable<KeyResultArea> resultArea, int employeeId);
+    }
+}

@@ -10,6 +10,7 @@ using Resourceedge.Common.Util;
 using Resourceedge.Employee.API.Helpers;
 using Resourceedge.Employee.Domain.Dtos;
 using Resourceedge.Employee.Domain.Interfaces;
+using Resourceedge.Common.Archive;
 
 namespace Resourceedge.Employee.API.Controllers
 {
@@ -17,10 +18,10 @@ namespace Resourceedge.Employee.API.Controllers
     [Route("api/employee")]
     public class OldEmployeeController : ControllerBase
     {
-        private readonly IOldEmployee EmployeeRepo;
+        private readonly IEmployee EmployeeRepo;
         private readonly IMapper mapper;
 
-        public OldEmployeeController(IOldEmployee _oldEmployee, IMapper _mapper)
+        public OldEmployeeController(IEmployee _oldEmployee, IMapper _mapper)
         {
             EmployeeRepo = _oldEmployee;
             mapper = _mapper;
@@ -61,6 +62,13 @@ namespace Resourceedge.Employee.API.Controllers
 
             return Ok(mapper.Map<OldEmployeeDto>(EmployeeRepo.GetEmployeeByEmployeeId(Id)));
         }
+
+        [HttpGet("({Ids})")]
+        public IActionResult GetMultipleEmployees ([FromRoute][ModelBinder(BinderType = typeof(ArrayModelBinder))] string Ids)
+        {
+            return Ok();
+        }
+
 
         private IEnumerable<LinkDto> CreateLinksForEmployees(EmployeeResourceParameter employeeResourceParameters, bool hasNext, bool hasPrevious)
         {

@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
 using MongoDB.Bson.IO;
 using MongoDB.Driver;
-using Resourceedge.Employee.Domain.ArchiveEntity;
+using Resourceedge.Common.Archive;
 using Resourceedge.Employee.Domain.DbContext;
 using System;
 using System.Collections.Generic;
@@ -18,13 +18,12 @@ namespace Resourceedge.Employee.API
 {
     public class Initializer
     {
-
         public static void SeedEmployeeDb(IApplicationBuilder service)
         {
             var dbContext = service.ApplicationServices.GetRequiredService(typeof(IDbContext)) as IDbContext;
             if (dbContext != null)
             {
-                var collection = dbContext.Database.GetCollection<OldEmployee>($"{nameof(OldEmployee)}s");
+                var collection = dbContext.Database.GetCollection<Resourceedge.Common.Archive.OldEmployee>($"{nameof(OldEmployee)}s");
                 if (!collection.AsQueryable().Any())
                 {
                     var jsonString = File.ReadAllText("Employees.json");

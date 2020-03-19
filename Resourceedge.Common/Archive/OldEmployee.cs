@@ -1,13 +1,13 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Text.Json.Serialization;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
-namespace Resourceedge.Employee.Domain.ArchiveEntity
+namespace Resourceedge.Common.Archive
 {
     [BsonIgnoreExtraElements]
-    public  class OldEmployee
+    public class OldEmployee
     {
         public int EmployeeId { get; set; }
         public string UserId { get; set; }

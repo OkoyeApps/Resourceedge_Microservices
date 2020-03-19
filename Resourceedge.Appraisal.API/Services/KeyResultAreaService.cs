@@ -80,5 +80,11 @@ namespace Resourceedge.Appraisal.API.Services
         {
             return  QueryableCollection.Where(x => x.UserId == userId).ToList();
         }
+
+        public IEnumerable<KeyResultArea> GetKeyResultAreasForAppraiser(int appraiserId, int employeeId)
+        {
+            var result = QueryableCollection.Where(x => x.HodDetails.EmployeeId == appraiserId || x.AppraiserDetails.EmployeeId == appraiserId && x.EmployeeId == employeeId).ToList();
+            return result;
+        }
     }
 }
