@@ -1,56 +1,105 @@
 .active-step {
   background: #d2e4fb;
+  color: #1d1d1d;
 }
 
 .steps {
   width: 95%;
-  font-family: Avenir Next;
   font-style: normal;
   font-weight: 500;
   font-size: 24px;
   line-height: 18px;
-  color: #1d1d1d;
+  /* color: #1d1d1d; */
 }
 
 .kra-textbox {
   width: 80%;
+  background: #f5f6f7;
+  border-radius: 2px;
 }
 
 .kra-percent {
   width: 20%;
+  background: #f5f6f7;
+  border-radius: 2px;
 }
 
 .kra-sm-text {
-  font-family: Avenir Next;
   font-style: normal;
   font-weight: 500;
   font-size: 13px;
   line-height: 18px;
-  color: #1d1d1d;
+  /* color: #1d1d1d; */
 }
 
 .kra-sm-txt-blue {
-  font-family: Avenir Next;
   font-style: normal;
   font-weight: 600;
   font-size: 13px;
   line-height: 18px;
   color: #1a73e8;
+  cursor: pointer;
 }
 
-.kra-inputs {
+/* .kra-inputs {
   min-height: 30vh;
-}
+} */
 
 .inactive-krad {
   background: #dadada;
+  color: #999999 !important;
 }
 
 .small-half {
-  font-family: Avenir Next;
   font-style: normal;
   font-weight: normal;
   font-size: 16px;
   line-height: 18px;
-  color: #1d1d1d;
+  /* color: #1d1d1d; */
+}
+
+#input-space {
+  min-height: 30vh;
+}
+
+.split-txt {
+  width: 80%;
+}
+
+.next-step-btn {
+  background: #1a73e8;
+  border-radius: 2px !important;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 19px;
+  width: 80%;
+}
+
+input,
+select {
+  border-radius: 2px !important;
+}
+
+.edit-kra {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 25px;
+  color: #1a73e8;
+  cursor: "pointer" !important;
+}
+
+.sub-epa-btn {
+  background: #2ec476;
+  border-radius: 2px;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 19px;
+  width: 80%;
+}
+
+.remove-kra {
+  cursor: pointer;
 }
