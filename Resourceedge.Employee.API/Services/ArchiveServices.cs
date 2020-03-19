@@ -2,7 +2,6 @@
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Resourceedge.Common.Util;
-using Resourceedge.Employee.Domain.ArchiveEntity;
 using Resourceedge.Employee.Domain.DbContext;
 using Resourceedge.Employee.Domain.Interfaces;
 using System;
@@ -10,10 +9,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Resourceedge.Common.Archive;
 
 namespace Resourceedge.Employee.API.Services
 {
-    public class ArchiveServices : IOldEmployee
+    public class ArchiveServices : IEmployee
     {
         private readonly ILogger<ArchiveServices> logger;
         private readonly HttpClient HttpClient;
@@ -64,6 +64,18 @@ namespace Resourceedge.Employee.API.Services
         {
             var paginatedList = PagedList<OldEmployee>.Create(QueryableCollection, param.PageNumber, param.PageSize);
             return paginatedList;
+        }
+
+        public async Task<IEnumerable<OldEmployee>> GetMultipleEmployeesById(IEnumerable<int> Ids)
+        {
+            var filter = Builders<OldEmployee>.Filter.In("EmployeeId", Ids);
+            var result = await Collection.Find(filter).ToListAsync() ;
+
+
+            //Builders<Staff>.Filter.In()
+            //      .ElemMatch(x => x.Entries,
+            //                 y => CategoryFilters.Any(z => y.Categories.Contains(z)))
+            return result;
         }
     }
 }

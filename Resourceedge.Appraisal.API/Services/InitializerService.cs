@@ -27,8 +27,8 @@ namespace Resourceedge.Appraisal.API.Services
                         new KeyResultArea
                         {
                             UserId = Guid.NewGuid().ToString(),
-                            AppraiserDetails = new NameEmail { Name = "Emmanuel", Id = "11111", Email = "appraisal@test.com" },
-                            HodDetails = new NameEmail { Name = "EmmanuelHod", Id = "11111", Email = "Hod@test.com" },
+                            AppraiserDetails = new NameEmail { Name = "Emmanuel", EmployeeId = 1, Email = "appraisal@test.com" },
+                            HodDetails = new NameEmail { Name = "EmmanuelHod", EmployeeId = 4, Email = "Hod@test.com" }, EmployeeId = 1,
                             keyOutcomes =
                             {
                                 new KeyOutcome{ Question = "Test question 1", TimeLimit = BsonDateTime.Create(DateTime.Now).ToString(), Status = new KeyOutcomeApprovalStatus  { Employee =true, Hod = true, IsAccepted = true } },
@@ -42,8 +42,8 @@ namespace Resourceedge.Appraisal.API.Services
                         new KeyResultArea
                         {
                             UserId = Guid.NewGuid().ToString(),
-                            AppraiserDetails = new NameEmail { Name = "Test", Id = "11111", Email = "test@test.com" },
-                            HodDetails = new NameEmail { Name = "TestlHod", Id = "11111", Email = "test@test.com" },
+                            AppraiserDetails = new NameEmail { Name = "Test", EmployeeId = 1, Email = "test@test.com" },
+                            HodDetails = new NameEmail { Name = "TestlHod", EmployeeId = 1, Email = "test@test.com" }, EmployeeId = 1,
                             keyOutcomes =
                             {
                                 new KeyOutcome{ Question = "Test question 4", TimeLimit = BsonDateTime.Create(DateTime.Now).ToString(), Status = new KeyOutcomeApprovalStatus  { Employee =true, Hod = true, IsAccepted = true } },

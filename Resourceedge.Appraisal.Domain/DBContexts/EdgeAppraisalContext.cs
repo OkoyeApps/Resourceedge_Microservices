@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Text;
