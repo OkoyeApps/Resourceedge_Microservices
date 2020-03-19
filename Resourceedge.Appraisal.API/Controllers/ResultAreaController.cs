@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -42,7 +43,7 @@ namespace Resourceedge.Appraisal.API.Controllers
         }
 
         [HttpPost(Name = "CreateKeyOutcomes")]
-        public IActionResult Index(string UserId, IEnumerable<KeyResultAreaDtoForCreation> model)
+        public IActionResult CreateKeyResultArea(string UserId, IEnumerable<KeyResultAreaDtoForCreation> model)
         {
             var entityToAdd = mapper.Map<IEnumerable<KeyResultAreaDtoForCreation>, IEnumerable<KeyResultArea>>(model);            
             resultArea.AddKeyOutcomes(entityToAdd);
@@ -52,14 +53,17 @@ namespace Resourceedge.Appraisal.API.Controllers
         }
 
         [HttpPatch("Update/{KeyResultAreaId}")]
-        public async Task<IActionResult> UpdateKPI(string UserId, string KeyResultAreaId, KeyResultAreaForUpdateDto kpi)
+        public async Task<IActionResult> UpdateKPI(string UserId, string KeyResultAreaId, JsonPatchDocument<KeyResultAreaForUpdateDto> entityForUpdate)
         {
+            var Kpi = new KeyResultAreaForUpdateDto();
+            entityForUpdate.ApplyTo(Kpi);
+
             ObjectId Id = new ObjectId(KeyResultAreaId);
-            var keyResult = resultArea.QuerySingle(Id);
+            var keyResult = await resultArea.QuerySingleByUserId(Id, UserId);
 
             if (keyResult != null)
             {
-                var resultAreaForUpdate = mapper.Map<KeyResultArea>(kpi);
+                var resultAreaForUpdate = mapper.Map<KeyResultAreaForUpdateMainDto>(Kpi);
 
                 var entityToUpdate = await resultArea.Update(Id, resultAreaForUpdate);
                 var entityToReturn = mapper.Map<KeyResultAreaDtoForCreation>(entityToUpdate);
@@ -70,6 +74,48 @@ namespace Resourceedge.Appraisal.API.Controllers
             return Ok();
         }
 
+        [HttpPost("Update/{KeyResultAreaId}")]
+        public async Task<IActionResult> UpdateKPIs(string UserId, string KeyResultAreaId, KeyResultAreaForUpdateDto entityForUpdate)
+        {
+            //var Kpi = new KeyResultAreaForUpdateDto();
+            //entityForUpdate.ApplyTo(Kpi);
+
+            ObjectId Id = new ObjectId(KeyResultAreaId);
+            var keyResult = await resultArea.QuerySingleByUserId(Id, UserId);
+
+            if (keyResult != null)
+            {
+                var resultAreaForUpdate = mapper.Map<KeyResultAreaForUpdateMainDto>(entityForUpdate);
+
+                var entityToUpdate = await resultArea.Update(Id, resultAreaForUpdate);
+                var entityToReturn = mapper.Map<KeyResultAreaDtoForCreation>(entityToUpdate);
+
+                return CreatedAtRoute("Mykpi", new { UserId = UserId }, entityToReturn);
+            }
+
+            return NotFound();
+        }
+
+        [HttpPatch("{KeyResultAreaId}/KeyOutcome/{KeyOutcomeId}")]
+        public async Task<IActionResult> UpdateKeyOutcome(string UserId, string KeyResultAreaId, string KeyOutcomeId, JsonPatchDocument<KeyOutcomeForUpdateDto> entityForUpdate)
+        {
+            var keyOutcomeForUpdate = new KeyOutcomeForUpdateDto();
+            entityForUpdate.ApplyTo(keyOutcomeForUpdate);
+
+            ObjectId Id = new ObjectId(KeyResultAreaId);
+            ObjectId keyOutcomeId = new ObjectId(KeyOutcomeId);
+         
+            var result = await resultArea.UpdateKeyOutcome(Id, keyOutcomeId, UserId, keyOutcomeForUpdate);
+            if(result > 0)
+            {
+                return Ok(result);
+            }            
+
+            return NotFound();
+        }
+
+       
+                     
         [HttpDelete("Id")]
         public async Task<IActionResult> DeleteKeyResultArea (ObjectId Id)
         {
@@ -77,7 +123,7 @@ namespace Resourceedge.Appraisal.API.Controllers
 
             if (keyResult != null)
             {
-                resultArea.Delete(keyResult);
+                resultArea.Delete(Id);
 
                 return NoContent();
             }
