@@ -21,18 +21,18 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Resourceedge.Employee.Domai
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{596E3F0A-3487-4F50-9DC3-871B8DA421C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Resourceedge.Common", "Resourceedge.Common\Resourceedge.Common.csproj", "{2EAD26E4-48AD-414B-9F66-92737C12A685}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Resourceedge.Common", "Resourceedge.Common\Resourceedge.Common.csproj", "{2EAD26E4-48AD-414B-9F66-92737C12A685}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Resourceedge.Appraisal.Domain", "Resourceedge.Appraisal.Domain\Resourceedge.Appraisal.Domain.csproj", "{F57219B4-B65A-40FB-9A89-FC121AA04887}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Resourceedge.Appraisal.Domain", "Resourceedge.Appraisal.Domain\Resourceedge.Appraisal.Domain.csproj", "{F57219B4-B65A-40FB-9A89-FC121AA04887}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{41B8CB39-8A20-4E93-9426-7D5B8EECACAE}"
 	ProjectSection(SolutionItems) = preProject
 		Readme.md = Readme.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Resourceedge.Employee.Tests", "Resourceedge.Employee.Tests\Resourceedge.Employee.Tests.csproj", "{F25B32EA-0EC6-4563-B67B-E413C72329DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Resourceedge.Employee.Tests", "Resourceedge.Employee.Tests\Resourceedge.Employee.Tests.csproj", "{F25B32EA-0EC6-4563-B67B-E413C72329DA}"
 EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{C41BEDB6-08E9-44FB-BFE2-A73909C17833}"
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{BBC6C6A2-84B6-4545-9BEF-C6EA9F33722F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -72,10 +72,10 @@ Global
 		{F25B32EA-0EC6-4563-B67B-E413C72329DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F25B32EA-0EC6-4563-B67B-E413C72329DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F25B32EA-0EC6-4563-B67B-E413C72329DA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C41BEDB6-08E9-44FB-BFE2-A73909C17833}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C41BEDB6-08E9-44FB-BFE2-A73909C17833}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C41BEDB6-08E9-44FB-BFE2-A73909C17833}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C41BEDB6-08E9-44FB-BFE2-A73909C17833}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBC6C6A2-84B6-4545-9BEF-C6EA9F33722F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBC6C6A2-84B6-4545-9BEF-C6EA9F33722F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBC6C6A2-84B6-4545-9BEF-C6EA9F33722F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBC6C6A2-84B6-4545-9BEF-C6EA9F33722F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

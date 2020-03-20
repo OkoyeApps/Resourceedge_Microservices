@@ -35,8 +35,8 @@ namespace Resourceedge.Employee.API
             });
 
             services.AddTransient<IDbContext, EmployeeDbContext>(ctx => EmployeeDbContext.Create(
-               Configuration.GetSection("DefualtConnection:ConnectionString").Value,
-               Configuration.GetSection("DefualtConnection:DataBaseName").Value));
+               Configuration.GetSection("DefaultConnection:ConnectionString").Value,
+               Configuration.GetSection("DefaultConnection:DataBaseName").Value));
             services.AddTransient<IEmployee, ArchiveServices>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddControllers(setupAction =>

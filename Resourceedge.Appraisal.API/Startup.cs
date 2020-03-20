@@ -44,8 +44,8 @@ namespace Resourceedge.Appraisal.API
             var aa = Configuration.GetSection("DefualtConnection:ConnectionString").Value;
 
             services.AddTransient<IDbContext, EdgeAppraisalContext>(ctx => EdgeAppraisalContext.Create(
-                Configuration.GetSection("DefualtConnection:ConnectionString").Value,
-                Configuration.GetSection("DefualtConnection:DataBaseName").Value));
+                Configuration.GetSection("DefaultConnection:ConnectionString").Value,
+                Configuration.GetSection("DefaultConnection:DataBaseName").Value));
             
             services.AddTransient<IKeyResultArea, KeyResultAreaService>();
             services.AddTransient<IAppraisalConfig, AppraisalConfigService>();
