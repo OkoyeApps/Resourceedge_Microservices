@@ -66,7 +66,6 @@ namespace Resourceedge.Employee.API
             }
 
             app.UseRouting();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
