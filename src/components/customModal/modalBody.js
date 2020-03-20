@@ -14,18 +14,18 @@ const ModalBody = (props) => {
         return (
             <div className={"__modal__body__ d-flex justify-content-center align-items-center"} onClick={toCloseModal ? props.closeModal : ""}>
                 <div className={"px-3 d-flex"} onMouseOver={() => { setToCloseModal(false) }} onMouseLeave={() => { setToCloseModal(true) }}>
-                    <img src={leftArrow} alt="arrow" className="modal-arrow"/>
+                    <img src={leftArrow} alt="arrow" className="modal-arrow" />
                     <div className="card px-3 mx-5">
-                    {props.content} 
+                        {props.content}
                     </div>
-                    <img src={rightArrow} alt="arrow" className="modal-arrow"/>
+                    <img src={rightArrow} alt="arrow" className="modal-arrow" />
                 </div>
             </div>
         )
     } else {
         return (
             <div className={"__modal__body__ d-flex justify-content-center align-items-center"} onClick={toCloseModal ? props.closeModal : ""}>
-                <div className={"card px-3 "} onMouseOver={() => { setToCloseModal(false) }} onMouseLeave={() => { setToCloseModal(true) }}>
+                <div className={"card"} onMouseOver={() => { setToCloseModal(false) }} onMouseLeave={() => { setToCloseModal(true) }}>
                     <div className={"position-absolute justify-content-between"} style={{ width: "95%", textAlign: "right", zIndex: "3" }}>
                         <div></div>
                         <div onClick={props.closeModal} >
