@@ -28,7 +28,3 @@ services:
       - DefualtConnection__DataBaseName=EdgeEmployee
     ports:
       - "80/http"
-      - "443/Https"
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:C:\Users\ContainerUser\AppData\Roaming\Microsoft\UserSecrets:ro
-      - ${APPDATA}/ASP.NET/Https:C:\Users\ContainerUser\AppData\Roaming\ASP.NET\Https:ro
