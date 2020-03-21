@@ -1,11 +1,11 @@
 version: '3.4'
-
+# former url for reverse proxy http://10.0.0.4:19081/lil/employee/
 services:
   appraisal:
     image : okoyeapps/resourceedgeappraisalapi:latest
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - Services__employee=http://10.0.0.4:19081/lil/employee/
+      - Services__employee=http://lil/employee/
       - DefualtConnection__ConnectionString=mongodb+srv://chocksy:ewZg5URqMNyal7Xs@lawyerpp-cluster-5faak.mongodb.net/EdgeAppraisal?retryWrites=true
       - DefualtConnection__DataBaseName=EdgeAppraisal
     ports:
