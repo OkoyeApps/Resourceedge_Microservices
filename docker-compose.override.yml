@@ -6,7 +6,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Production
       - DefaultConnection__ConnectionString=mongodb+srv://chocksy:ewZg5URqMNyal7Xs@lawyerpp-cluster-5faak.mongodb.net/EdgeAppraisal?retryWrites=true
       - DefaultConnection__DataBaseName=EdgeAppraisal
-      - Services__employee=http://resourceedge.employee.api/api
+      - Services__employee=http://resourceedgeemployee.uksouth.azurecontainer.io/api
     ports:
       - "6001:80"
       
