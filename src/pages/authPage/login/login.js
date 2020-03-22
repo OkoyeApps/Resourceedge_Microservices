@@ -8,10 +8,6 @@ import { auth } from '../../../reduxStore/actions/authAction';
 const Login = (props) => {
     const [stage, setStage] = useState(1);
 
-    const changeStage = (newStage) => {
-        props.auth()
-    }
-    console.log(stage)
     return (
         <div>
             {
@@ -20,12 +16,10 @@ const Login = (props) => {
                     :
                     <Password checkForStep={() => { setStage(2) }} />
             }
-            <button onClick={changeStage}>testing</button>
         </div>
     )
 }
 const mapStateToProps = (state) => {
-    console.log(state)
     return state
 }
 

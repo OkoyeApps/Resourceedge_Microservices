@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import './twoStepEpaForm.css'
 import remove from '../../assets/images/remove.svg'
+import EpaInputField from '../epaInputField/epaInputField'
+import CustomEpaField from '../customEpaFeild/customEpaFeild'
 function TwoStepEpaForm(props) {
     var [filled, setFilled] = useState(false)
     var [next, setNext] = useState(false)
@@ -55,18 +57,7 @@ function TwoStepEpaForm(props) {
                     <p className="ml-1 kra-sm-text">Weight</p>
                 </article>
                 <div id="input-space">
-                    <div id="kra-inputs">
-                        <article className="d-flex kra-inputs" id="kra-0">
-                            <input type="text" className="form-control mr-2 kra-textbox" />
-                            <input type="text" className="form-control kra-percent" placeholder="00%" />
-                            <div><img src={remove} alt="remove kra" className="remove-kra mt-2 ml-1" onClick={() => { removeKra('kra-0') }} /></div>
-                        </article>
-                    </div>
-
-
-                    <div className="kra-sm-txt-blue pt-1" onClick={AddKRA}>
-                        <span>+</span> <span>Add Key Result Area</span>
-                    </div>
+                    <EpaInputField/>
                 </div>
 
                 <div className="d-flex justify-content-end kra-sm-text">
