@@ -1,0 +1,51 @@
+.appraisees-detail span:first-child {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 15px;
+  /* line-height: 27px; */
+  color: #323130;
+}
+.appraisees-detail span:last-child {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 10px;
+  /* line-height: 19px; */
+  color: #797775;
+}
+.appraisees-detail span:nth-child(2) {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 11px;
+  /* line-height: 19px; */
+  color: #1d1d1d;
+}
+.appraisees_own_rating {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 16px;
+  color: #000000;
+}
+.appraiser_own_rating {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 16px;
+  color: #000000;
+}
+
+.b-name {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 19px;
+
+  color: #000000;
+}
+
+.epa-submit-btn-reverse {
+  border: 1px solid #1a73e8;
+  border-radius: 2px;
+  background-color: transparent;
+  color: #1a73e8;
+}

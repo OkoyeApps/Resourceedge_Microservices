@@ -1,0 +1,81 @@
+.appraises-detail-display {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+.appraises-detail-display .name {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 27px;
+  color: #323130;
+}
+.appraises-detail-display .email {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 20px;
+  color: #797775;
+}
+.appraises-detail-display .department {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 20px;
+  color: #1d1d1d;
+}
+.apprais-header {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 22px;
+  color: #1d1d1d;
+}
+.edit-apprais {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 19px;
+  text-align: right;
+  color: #1a73e8;
+  cursor: pointer;
+}
+.appraise-weights {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 20px;
+  color: #1d1d1d;
+}
+.keyoutcome-table td {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 19px;
+  color: #1d1d1d;
+  padding-bottom: 15px;
+}
+.keyoutcome-table th {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 22px;
+  color: #000000;
+  padding-bottom: 15px;
+}
+.reject-btn {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 19px;
+  color: #1a73e8;
+  border: 1px solid #1a73e8;
+}
+.approve-btn {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 19px;
+  color: #ffffff;
+  background: #1a73e8;
+}

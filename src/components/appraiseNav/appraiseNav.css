@@ -1,0 +1,30 @@
+.subs {
+  text-align: left !important;
+  font-style: normal !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  line-height: 45px !important;
+  letter-spacing: -0.107692px !important;
+  color: #1d1d1d !important;
+  /* text-align: center !important; */
+}
+.inner_sidebar_tabs {
+  /* padding: 0.4rem 0; */
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 45px;
+  /* text-align: center; */
+  letter-spacing: -0.107692px;
+  color: #999999;
+  cursor: pointer;
+}
+
+.inliner {
+  height: 90vh;
+  overflow: auto;
+}
+
+.text-avatar {
+  text-transform: capitalize;
+}

@@ -1,0 +1,69 @@
+.user-card {
+  background-color: #ffffff;
+  padding: 1rem 2rem;
+}
+
+.no-slide {
+  /* position: fixed;
+  top: 9%;
+  animation: slideOut 1s ease-out;
+  right: -15%; */
+  display: none;
+}
+.slide {
+  display: unset;
+  position: fixed;
+  top: 9%;
+  animation: slideIn 0.5s linear;
+  right: 1%;
+}
+
+@keyframes slideIn {
+  0% {
+    right: -10%;
+  }
+  100% {
+    right: 1%;
+  }
+}
+
+.user-card > div {
+  text-align: center;
+}
+
+.user-card h5 {
+  text-align: center;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 27px;
+  color: #323130;
+}
+
+.user-card h6 {
+  text-align: center;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 20px;
+  color: #1d1d1d;
+}
+
+.user-card address {
+  text-align: center;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 20px;
+  color: #797775;
+}
+
+.user-card p {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 18px;
+  text-align: center;
+  color: #1a73e8;
+  margin-top: 2rem;
+}

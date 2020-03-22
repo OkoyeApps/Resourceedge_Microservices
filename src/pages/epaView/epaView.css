@@ -1,0 +1,174 @@
+.view-intro-txt {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 18px;
+  color: #999999;
+}
+
+.btn-disabled {
+  background: #dddddd;
+  border-radius: 2px;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 18px;
+  text-align: center;
+  color: #999999;
+}
+
+.epa-card {
+  background-color: #ffffff;
+  border-radius: 4px;
+  padding: 1rem 2rem;
+}
+
+.epa-card h4 {
+  display: inline;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 22px;
+  color: #1d1d1d;
+}
+.view-epa {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 18px;
+  color: #1a73e8;
+}
+
+.epa-mains span:first-child {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 20px;
+  color: #1d1d1d;
+}
+
+.epa-mains span:last-child {
+  font-style: normal;
+  font-weight: 600;
+  margin-left: 3px;
+  font-size: 14px;
+  line-height: 20px;
+  color: #1d1d1d;
+}
+
+.key-outcome {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 22px;
+  color: #1d1d1d;
+}
+.activity-card {
+  background-color: #ffffff;
+  padding: 1rem 2rem;
+}
+.activity-card h4 {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 23px;
+  color: #000000;
+}
+
+.activity-card h6 {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 19px;
+  color: #999999;
+}
+
+.activity-text {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 19px;
+  color: #000000;
+}
+
+.timer {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 16px;
+  color: #999999;
+}
+
+.inner-sidebar {
+  padding-top: 4.7rem;
+  background-color: #ffffff;
+  min-height: 90.5vh;
+}
+
+.inner-sidebar div:nth-child(2) {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 23px;
+  text-align: center;
+  letter-spacing: -0.330769px;
+  color: #19233c;
+}
+
+.tab-section ul {
+  padding: 0;
+  margin: 0;
+  margin-top: 8vh;
+  list-style: none;
+}
+
+.tab-section li {
+  padding: 0.4rem 0;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 45px;
+  text-align: center;
+  letter-spacing: -0.107692px;
+  color: #999999;
+  cursor: pointer;
+}
+
+.tabbed {
+  border-right: 2px solid #006ff9;
+  background: #d2e3fa;
+}
+
+.notice-text {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 18px;
+  color: #1d1d1d;
+}
+
+.little-gray-text {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 18px;
+  text-align: center;
+  color: #999999;
+}
+
+.addBtn {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 18px;
+  color: #1a73e8;
+  padding-top: 0.6rem;
+  padding-bottom: 0.6rem;
+  background-color: #ffffff;
+  width: 30%;
+}
+
+.epa-content {
+  max-height: 89vh;
+  overflow: auto;
+}

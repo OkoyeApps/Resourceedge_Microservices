@@ -1,0 +1,37 @@
+.result-card {
+  background-color: #ffffff;
+  padding: 1rem 1rem;
+}
+
+.result-card p {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 19px;
+  color: #1d1d1d;
+}
+
+.result-comments p:first-child {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 18px;
+  color: #1d1d1d;
+}
+
+.category {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 22px;
+  color: #1d1d1d;
+}
+
+.editable {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 19px;
+  text-align: right;
+  color: #1a73e8;
+}

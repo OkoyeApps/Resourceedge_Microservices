@@ -1,0 +1,38 @@
+.bar {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-gap: 10px;
+  background-color: #ffffff;
+  border-radius: 5px;
+  padding: 0.7rem 1rem;
+  margin: 1.7rem 1.5rem;
+  width: 60%;
+}
+
+.bar select {
+  border: none;
+  background: #d2e4fb;
+  border-radius: 5px;
+}
+.bar div {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 19px;
+  text-align: center;
+  color: #999999;
+  cursor: pointer;
+  padding: 0.4rem 0.2rem;
+}
+
+.bar-q {
+  text-align: center;
+  background: #d2e4fb;
+  border-radius: 5px;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 19px;
+  text-align: center;
+  color: #000000 !important;
+}

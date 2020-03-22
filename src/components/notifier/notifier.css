@@ -1,0 +1,29 @@
+.logo-text {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 21px;
+  color: #000000;
+}
+
+.narrow-bar {
+  color: white;
+  background-color: #0000af;
+  height: 92vh;
+}
+
+.notifier {
+  background-color: #ffffff;
+}
+.search-field {
+  background: #f5f6f9;
+  border-radius: 4px;
+  border: none;
+}
+.search-field input {
+  border: none;
+  background: inherit;
+}
+.search-field input:focus {
+  outline: none;
+}
