@@ -1,12 +1,23 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import './epaView.css'
-import tick from '../../assets/images/Online.svg'
 import Avatar from 'react-avatar';
 import Activity from '../../components/activity/activity';
+import {GetPersonalEpas} from '../../reduxStore/actions/EpaActions'
+import {connect} from 'react-redux';
+import ResultAccordion from './components/accordion';
 
-export default function EpaView(props) {
-    var { data } = props
-    console.log("props", props)
+const EpaView =(props) =>{
+    // var { data } = props
+    const [data, setData] = useState([]);
+    useEffect(() => {
+        props.GetPersonalEpas(1, (success, data) => {
+            if(success){
+                setData(data);
+            }else{
+                //show error message the right way
+            }
+        });
+    }, [])    
 
 
     const viewWithData = () => {
@@ -17,7 +28,7 @@ export default function EpaView(props) {
                         <div className="row mx-0 py-2">
                             <div className="col-11 d-flex align-items-center">
                                 <div className="view-intro-txt">
-                                    Hello Eliezer, this is your Employee Performance Agreement for 2020
+                                    Hello Eliezer, this is your Employee Performance Agreement for {Date.now().year}
                                 </div>
                             </div>
                             <div className="col-1">
@@ -31,32 +42,9 @@ export default function EpaView(props) {
                     <div className="col-8">
                         {
                             data.map((x, i) => (
-                                <div className="epa-card mt-2">
-                                    <div className="row mx-0">
-                                        <div className="col-11 pl-0">
-                                            <h4>Learning Physical Internship</h4><span className="pl-2"><img src={tick} alt="reviewed" /></span>
-                                        </div>
-                                        <div className="col-1">
-                                            <div className="view-epa">View</div>
-                                        </div>
-                                    </div>
-                                    <article className="d-flex">
-                                        <div className="epa-mains">
-                                            <span>Weight:</span><span>56%</span>
-                                        </div>
-                                        <div className="epa-mains mx-3">
-                                            <span>Appraiser:</span><span>Ositadimma Nwangwu</span>
-                                        </div>
-                                        <div className="epa-mains">
-                                            <span>HOD:</span><span>Ekene Odum</span>
-                                        </div>
-                                    </article>
-
-                                    <div className="key-outcome mt-2">
-                                        Key Outcomes (3)
-                                    </div>
-                                </div>
-                            ))
+                                <ResultAccordion epaValue={x} key={`epaview${i}`} />
+                           
+                           ))
                         }
 
                     </div>
@@ -79,3 +67,5 @@ export default function EpaView(props) {
         </div>
     )
 }
+
+export default connect(null, {GetPersonalEpas})(EpaView)

@@ -7,9 +7,18 @@ const GetTeamMembers = (userid) => (dispatch, getState) => {
     });
 };
 
-// const Get
+const GetPersonalEpas = (id=1, callback) => (dispatch, getState) => {
+    RequestProcessor.Get(`/resultarea/${id}`, "", (success, header, status, data) => {
+        if(success){
+            callback(success, data);
+        }else{
+            //show error message;
+        }
+       
+    });
+}
 
-export {GetTeamMembers}
+export {GetTeamMembers, GetPersonalEpas}
 
 
 
