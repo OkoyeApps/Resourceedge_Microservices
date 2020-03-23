@@ -2,59 +2,49 @@ import React, { useState, useEffect } from 'react';
 import remove from '../../assets/images/remove.svg';
 
 
-const EpaInputField = () => {
-    const [epaInput, setEpaInput] = useState([]);
-    const [epaInputValue, setEpaInputValue] = useState([]);
-    // const [epaValues, setEpaValues] = useState([]);
-    const [percentInputValue, setPercentInputValue] = useState([]);
-    const [reMount, setRemount] = useState(false);
-    var epaValues;
-    var percentValues;
+const EpaInputField = ({setTotalWeight, currentTotalWeight, myIndex, setAllKeyResultArea, AllKeyResultAreas, forceUpdate}) => {
+    const removeInputComponent = () => {
+        AllKeyResultAreas.splice(myIndex, 1)
+       setAllKeyResultArea(Array.from(AllKeyResultAreas));
+    }
 
-    const addMoreInputField = () => {
-        console.log(epaValues,percentValues,epaInput)
-        setEpaInput([...epaInput, {
-            value: {
-                epaValue: epaValues,
-                epaPercent: percentValues
+    const AddNewResultArea = (e) => {
+        var tempObj = AllKeyResultAreas[myIndex];
+        var currentObj = tempObj;
+        if(e.target.name === 'weight') {
+            var currentWeight = isNaN(parseInt(tempObj.weight)) ? 0 : parseInt(tempObj.weight)
+            var reducedWeight = currentTotalWeight -  currentWeight;
+            if(reducedWeight > 0){
+                var weightToAdd =  isNaN(parseInt(e.target.value)) ? 0 : parseInt(e.target.value)
+                    var nextTotalWeight = reducedWeight + weightToAdd;
+                    if(nextTotalWeight <= 100){
+                        setTotalWeight(nextTotalWeight);
+                    }else{
+                        e.target.value = 0
+                        var result = currentTotalWeight - currentWeight
+                        setTotalWeight(result)
+                    }
+                }else{
+                    setTotalWeight(isNaN(parseInt(e.target.value)) ? 0 : parseInt(e.target.value));
+                }
             }
-        }])
-        setRemount(!reMount)
+            currentObj = {...currentObj, [e.target.name] : e.target.value}
+            AllKeyResultAreas[myIndex] = currentObj;
+             setAllKeyResultArea(AllKeyResultAreas)
     }
-
-    const removeInputComponent = (index) => {
-        console.log("removed index", index);
-        epaInput.splice(index, 1)
-        console.log("finally", epaInput)
-        setRemount(!reMount)
-    }
-    console.log(epaInput.length)
 
     const renderComponet = () => {
-        console.log(epaInputValue, percentInputValue);
-        if(epaInput.length >= 1){
-            console.log("we cn go ahead")
-            // setEpaValues([...epaValues, epaInputValue, percentInputValue])
-        }
-        return epaInput.map((current, i) => {
-            return (
-                <article className="d-flex kra-inputs mb-2" id="kra-0">
-                    <input type="text" className="form-control mr-2 kra-textbox" id="epatype" onChange={(e) => {epaValues = e.target.value}} />
-                    <input type="text" className="form-control kra-percent" id="epapercent" placeholder="00%" onChange={(e) => { percentValues = e.target.value}} />
-                    <div onClick={() => { removeInputComponent(i) }}><img src={remove} alt="remove kra" className="remove-kra mt-2 ml-1" /></div>
-                </article>
-            )
-        })
+               return (
+               <article className="d-flex kra-inputs mb-2" id="kra-0">
+                    <input type="text" name="name" className="form-control mr-2 kra-textbox"  onChange={AddNewResultArea} />
+                    <input type="number" name="weight" min="0" step="1" className="form-control kra-percent" placeholder="00%" onChange={AddNewResultArea} />
+                    <div onClick={removeInputComponent}><img src={remove} alt="remove kra" className="remove-kra mt-2 ml-1" /></div>
+               </article>)
     }
-    useEffect(() => {
-        console.log(epaInput.length)
-    }, [reMount]);
+
     return (
         <div id="kra-inputs">
             {renderComponet()}
-            <div className="kra-sm-txt-blue pt-1" onClick={addMoreInputField}>
-                <span>+</span> <span>Add Key Result Area</span>
-            </div>
         </div>
     )
 }
