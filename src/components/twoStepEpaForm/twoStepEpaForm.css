@@ -74,6 +74,7 @@
   font-size: 14px;
   line-height: 19px;
   width: 80%;
+  border: none;
 }
 
 input,
@@ -103,3 +104,39 @@ select {
 .remove-kra {
   cursor: pointer;
 }
+
+.kra-display-name {
+  width: 90%;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  line-height: 18px;
+  color: #1d1d1d;
+}
+
+.kra-display-weight {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  line-height: 18px;
+  color: #1d1d1d;
+  width: 10%;
+}
+
+.kra-display-list {
+  list-style: none;
+  padding: 0 !important;
+  margin: 0;
+}
+
+.kra-display-list li {
+  cursor: pointer;
+}
+
+.selected-kra {
+  background-color: #d2e4fb;
+}
+/* .kra-display-list {
+  background-color: #d2e4fb;
+  padding: 0;
+} */
