@@ -1,8 +1,13 @@
 import React from 'react';
 import CustomModal from '../../components/customModal/customModal';
 import Add from '../../assets/images/add.svg'
+import {connect} from 'react-redux';
+import {GetTeamMembers} from '../../reduxStore/actions/EpaActions';
 
-export default function EpaUpload(props) {
+const  EpaUpload =(props) => {
+    
+    props.GetTeamMembers();
+
     return (
 
         <div className="" style={{ marginTop: "38vh" }}>
@@ -25,3 +30,6 @@ export default function EpaUpload(props) {
 
     )
 }
+
+
+export default connect(null, {GetTeamMembers})(EpaUpload)
