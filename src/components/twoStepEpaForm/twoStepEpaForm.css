@@ -129,6 +129,10 @@ select {
   margin: 0;
 }
 
+.kra-display-list li {
+  cursor: pointer;
+}
+
 .selected-kra {
   background-color: #d2e4fb;
 }
