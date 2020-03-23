@@ -28,9 +28,22 @@ const GetTeamMemberEPA = (myId, userid, callback) => (dispatch, getState) => {
 
 };
 
+
+const SearchForSupervisors = (searchVal, callback) => (dispatch, getState) => {
+    console.log(searchVal)
+    RequestProcessor.Get(`/supervisors?searchQuery=${searchVal}`, '', (success, header, status, data) => {
+        console.log("search result", data)
+        if (success) {
+            callback(success, data)
+        } else {
+            callback(success, data)
+        }
+    })
+}
+
 // const Get
 
-export { GetTeamMembers, GetTeamMemberEPA }
+export { GetTeamMembers, GetTeamMemberEPA, SearchForSupervisors }
 
 
 

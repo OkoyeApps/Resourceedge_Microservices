@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './selectiveSearch.css'
 
 export default function Selector(props) {
-    var { dropClass, dropStyle, tagClass, tagStyle, searchClass, searchStyle, result, isSearchable, disableInput } = props
+    var { dropClass, dropStyle, tagClass, tagStyle, searchClass, searchStyle, result, isSearchable, disableInput, searchOnChange } = props
     let $ = window;
     const [data, setData] = useState([]);
     const [show, setShow] = useState(false);
@@ -33,6 +33,7 @@ export default function Selector(props) {
         }
 
         if (e.target.value.trim() !== "") {
+            searchOnChange()
             props.setValue(inputValue.value)
             setShow(true)
         } else {
@@ -52,7 +53,8 @@ export default function Selector(props) {
         document.querySelector('#search').value = " "
         setShow(false)
     }
-    console.log(searchable,"lalalalal",show,)
+    console.log(searchable, "lalalalal", show)
+    console.log("result", result)
     return (
         <div>
             <div className="drop w-100" id="mainInput" style={{ display: 'flex' }} onKeyPress={(e) => { tellCode(e) }}>
@@ -67,7 +69,7 @@ export default function Selector(props) {
                         data.length >= 1 ?
                             ""
                             :
-                            <li style={data.length === 0 ? { width: "100%" } : { width: "auto" }}><input disabled={disableInput} type="text" id='search' className={searchClass ? searchClass : "form-control"} placeholder={"Please search"} onChange={tellCode} autoFocus={true} autoComplete={false} /></li>
+                            <li style={data.length === 0 ? { width: "100%" } : { width: "auto" }}><input disabled={disableInput} type="text" id='search' className={searchClass ? searchClass : "form-control"} placeholder={"Please search"} onChange={tellCode} autoFocus={true} autoComplete="off" /></li>
                     }
                 </ul>
             </div>
@@ -75,7 +77,7 @@ export default function Selector(props) {
                 searchable ?
                     show ? <div className={dropClass ? dropClass : "dropDown w-100"} style={{ ...dropStyle }}>
                         <ul className="w-100">
-                            {result && result.map((item, index) => (<li onClick={handleSelect} key={index} className="w-100">{item.name}</li>))}
+                            {result && result.slice(0, 10).map((item, index) => (<li onClick={handleSelect} key={index} className="w-100">{item.fullName}</li>))}
                         </ul>
                     </div> : <></>
                     : <></>

@@ -1,12 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import CustomModal from '../../components/customModal/customModal';
 import Add from '../../assets/images/add.svg'
-import {connect} from 'react-redux';
-import {GetTeamMembers} from '../../reduxStore/actions/EpaActions';
 
-const  EpaUpload =(props) => {
-    
-    props.GetTeamMembers();
+const EpaUpload = (props) => {
+
+
+
 
     return (
 
@@ -32,4 +31,4 @@ const  EpaUpload =(props) => {
 }
 
 
-export default connect(null, {GetTeamMembers})(EpaUpload)
+export default EpaUpload

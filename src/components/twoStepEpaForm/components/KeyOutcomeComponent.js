@@ -9,7 +9,7 @@ function KeyOutcomeComponent(props) {
         setAllKeyOutcomes(Array.from(allKeyOutcomes));
     }
 
-
+    console.log("rendering in key outcome")
     return (
         <div>
             <article className="d-flex pt-3">

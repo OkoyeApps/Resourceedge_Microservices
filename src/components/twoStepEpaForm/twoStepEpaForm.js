@@ -6,14 +6,14 @@ import KeyResultDetails from './components/KeyResultDetails'
 function TwoStepEpaForm(props) {
     var [filled, setFilled] = useState(false)
     var [next, setNext] = useState(false)
-
+    var [epaData, setEpaData] = useState([]);
     const moveToNext = () => {
         setNext(true)
     }
 
     return (
         <div className="row mx-0">
-            <KeyResultAreaComponent setNextView={setNext} />
+            <KeyResultAreaComponent setNextView={setNext} setEpaData={setEpaData} />
 
             <KeyResultDetails setNext={setNext} next={next} />
         </div>

@@ -8,6 +8,8 @@ import { GetTeamMemberEPA } from '../../reduxStore/actions/EpaActions'
 import CustomModal from '../../components/customModal/customModal';
 import backArrow from '../../assets/images/backArrowIcon.svg';
 import { Link } from 'react-router-dom';
+import Skeleton from 'react-skeleton-loader'
+
 
 
 
@@ -21,6 +23,7 @@ const AppraseDetailView = (props) => {
     console.log("props in details", props)
 
     const getMemberEPA = async () => {
+        setLoading(true)
         await props.GetTeamMemberEPA(1, 1, (success, data) => {
 
             if (success) {
@@ -57,65 +60,66 @@ const AppraseDetailView = (props) => {
                                 <div className="w-50 text-center">
                                     <ul className="appraises-detail-display">
                                         <li><Avatar size={"15vmin"} name={state.fullName} className="rounded-circle text-avatar" /></li>
-                                        <li className="name">{state.fullName}</li>
-                                        <li className="department">{state.subgroup.name}</li>
+                                        <li className="name mt-1">{state.fullName}</li>
+                                        <li className="department my-2">{state.subgroup.name}</li>
                                         <li className="email">{state.email}</li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
-                        {
-                            appraseDetail.map((ad, i) => {
-                                return (
-                                    <div className="card w-100 p-3 border-0 mb-4">
-                                        <div className="row w-100 mb-2">
-                                            <div className="col-10 apprais-header">{ad.name} </div>
-                                            <div className="col-2">
-                                                <CustomModal
-                                                    content={<div className=" edit-apprais">Edit</div>}
-                                                    type={"upload-epa-form"}
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="row mb-3">
-                                            <div className="col-12 d-flex" >
-                                                <span className="appraise-weights">Weight: <b>{ad.weight}%</b></span>
-                                                <span className="ml-2 appraise-weights">Appraiser: <b>{ad.appraiser === undefined || ad.appraiser === null || ad.appraiser === '' ? "none" : ad.appraiser}</b></span>
-                                                <span className="ml-2 appraise-weights">HOD: <b>{ad.headOfDepartment === undefined || ad.headOfDepartment === null || ad.headOfDepartment === '' ? 'none' : ad.headOfDepartment}</b></span>
-                                            </div>
-                                        </div>
-                                        <div className="row mb-3">
-                                            <div className="col-12">
-                                                <table className="w-100 keyoutcome-table">
-                                                    <tr>
-                                                        <th style={{ width: "60%" }}>Key Outcomes</th>
-                                                        <th className="pl-5">Deadline</th>
-                                                    </tr>
-                                                    {
-                                                        ad.keyOutcomes.map((adk, i) => {
-                                                            return <tr>
-                                                                <td className="d-flex"><span className="mr-1">{i + 1}.</span><span>{adk.question}</span></td>
-                                                                <td className="pl-5">{new Date(adk.timeLimit).toLocaleDateString()}</td>
-                                                            </tr>
-                                                        })
-                                                    }
-                                                </table>
-                                            </div>
-                                        </div>
-                                        <div className="row">
-                                            <div className="col-12 d-flex justify-content-end">
-                                                <div className="d-flex">
+                        {loading ? <Skeleton height="40vh" width="50vw" color="lightgray" borderRadius="0" /> :
+                            appraseDetail.length === 0 ? <div>No key outcomes yet</div> :
+                                appraseDetail.map((ad, i) => {
+                                    return (
+                                        <div className="card w-100 p-3 border-0 mb-4">
+                                            <div className="row w-100 mb-2">
+                                                <div className="col-10 apprais-header">{ad.name} </div>
+                                                <div className="col-2">
                                                     <CustomModal
-                                                        content={<button className="form-control reject-btn">Reject</button>}
-                                                        type={"reject-appraisal"}
+                                                        content={<div className=" edit-apprais">Edit</div>}
+                                                        type={"upload-epa-form"}
                                                     />
-                                                    <button className="form-control approve-btn ml-3">Approve</button>
+                                                </div>
+                                            </div>
+                                            <div className="row mb-3">
+                                                <div className="col-12 d-flex" >
+                                                    <span className="appraise-weights">Weight: <b>{ad.weight}%</b></span>
+                                                    <span className="ml-2 appraise-weights">Appraiser: <b>{ad.appraiser === undefined || ad.appraiser === null || ad.appraiser === '' ? "none" : ad.appraiser}</b></span>
+                                                    <span className="ml-2 appraise-weights">HOD: <b>{ad.headOfDepartment === undefined || ad.headOfDepartment === null || ad.headOfDepartment === '' ? 'none' : ad.headOfDepartment}</b></span>
+                                                </div>
+                                            </div>
+                                            <div className="row mb-3">
+                                                <div className="col-12">
+                                                    <table className="w-100 keyoutcome-table">
+                                                        <tr>
+                                                            <th style={{ width: "60%" }}>Key Outcomes</th>
+                                                            <th className="pl-5">Deadline</th>
+                                                        </tr>
+                                                        {
+                                                            ad.keyOutcomes.map((adk, i) => {
+                                                                return <tr>
+                                                                    <td className="d-flex"><span className="mr-1">{i + 1}.</span><span>{adk.question}</span></td>
+                                                                    <td className="pl-5">{new Date(adk.timeLimit).toLocaleDateString()}</td>
+                                                                </tr>
+                                                            })
+                                                        }
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div className="row">
+                                                <div className="col-12 d-flex justify-content-end">
+                                                    <div className="d-flex">
+                                                        <CustomModal
+                                                            content={<button className="form-control reject-btn">Reject</button>}
+                                                            type={"reject-appraisal"}
+                                                        />
+                                                        <button className="form-control approve-btn ml-3">Approve</button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                )
-                            })
+                                    )
+                                })
                         }
 
                     </div>
