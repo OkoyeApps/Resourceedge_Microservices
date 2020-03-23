@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import Selector from '../../selectiveSearch/selectiveSearch';
 import { connect } from 'react-redux'
 import { SearchForSupervisors } from '../../../reduxStore/actions/EpaActions';
+import { UpdateKRA_Supervisors } from '../../../reduxStore/actions/krAction'
 
 function KeyOutcomeSupervisorEntry(props) {
 
@@ -27,11 +28,11 @@ function KeyOutcomeSupervisorEntry(props) {
                     <div className="col-6">
                         <label className="form-label kra-sm-text">Appraiser</label>
                         {/* <input type="text" className="form-control" disabled={next ? false : true} /> */}
-                        <Selector result={searchResult} setValue={setSearchValue} isSearchable={true} searchClass={"form-control"} disableInput={next ? false : true} searchOnChange={searchSupervisor} />
+                        <Selector result={searchResult} setValue={setSearchValue} isSearchable={true} searchClass={"form-control"} disableInput={next ? false : true} searchOnChange={searchSupervisor} currentActive={props.currentActive} UpdateKRA={props.UpdateKRA_Supervisors} supervisorStat="appraiser" />
                     </div>
                     <div className="col-6">
                         <label className="form-label kra-sm-text">Head of Department</label>
-                        <Selector result={searchResult} setValue={setSearchValue} isSearchable={true} searchClass={"form-control"} disableInput={next ? false : true} searchOnChange={searchSupervisor} />
+                        <Selector result={searchResult} setValue={setSearchValue} isSearchable={true} searchClass={"form-control"} disableInput={next ? false : true} searchOnChange={searchSupervisor} currentActive={props.currentActive} UpdateKRA={props.UpdateKRA_Supervisors} supervisorStat="headofdepartment" />
                     </div>
                 </div>
             </article>
@@ -39,4 +40,4 @@ function KeyOutcomeSupervisorEntry(props) {
     )
 }
 
-export default connect(null, { SearchForSupervisors })(KeyOutcomeSupervisorEntry)
+export default connect(null, { SearchForSupervisors, UpdateKRA_Supervisors })(KeyOutcomeSupervisorEntry)

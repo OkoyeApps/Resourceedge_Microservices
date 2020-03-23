@@ -6,8 +6,10 @@ const EpaInputField = ({ setTotalWeight, currentTotalWeight, myIndex, setAllKeyR
 
     console.log("c", c)
     const removeInputComponent = () => {
-        AllKeyResultAreas.splice(myIndex, 1)
+        var deletedValue = AllKeyResultAreas.splice(myIndex, 1)
         setAllKeyResultArea(Array.from(AllKeyResultAreas));
+        currentTotalWeight = currentTotalWeight - (isNaN(parseInt(deletedValue[0].weight)) ? 0 : parseInt(deletedValue[0].weight))
+        setTotalWeight(currentTotalWeight)
     }
 
     const AddNewResultArea = (e) => {

@@ -24,7 +24,7 @@ const AuthRoute = ({ Component, path, exact, ...rest }) => {
 const MainRoute = ({ Component, path, exact, purpose, ...rest }) => {
     console.log('back', purpose)
     return <Route exact={exact} path={path} {...rest} render={props => {
-        return <MainLayout purpose={purpose} role={"appraiser"}><Component /></MainLayout>
+        return <MainLayout purpose={purpose} role={"employee"}><Component /></MainLayout>
     }} />
 }
 

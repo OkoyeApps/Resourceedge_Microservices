@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import KeyOutcomeComponent from './KeyOutcomeComponent';
+import { connect } from 'react-redux'
 
 import SupervisorEntry from './keyOutcomeSupervisorEntry';
 
@@ -23,7 +24,7 @@ function KeyResultDetails(props) {
 
     const RenderKeyOutcome = () => {
         return Array.from({ length: allKeyOutcomes.length }).map((c, index) => {
-            return (<KeyOutcomeComponent next={next} setNext={setNext} allKeyOutcomes={allKeyOutcomes} setAllKeyOutcomes={setAllKeyOutcomes} myIndex={index} />)
+            return (<KeyOutcomeComponent next={next} setNext={setNext} allKeyOutcomes={allKeyOutcomes} setAllKeyOutcomes={setAllKeyOutcomes} myIndex={index} currentActive={props.currentActive} epaData={props.epaData} />)
         })
     }
 
@@ -33,14 +34,14 @@ function KeyResultDetails(props) {
     //     { name: "Nonso", nickname: "nonicalx" }
     // ]
 
-
+    console.log("ttt", props.data)
     return (
         <section id="key-result-area-details" className={`col-7 py-3 ${next ? "active-step" : "inactive-krad"}`}>
             <p className="steps">Step 2<span className="small-half">/2</span></p>
             <p className="kra-sm-text">Now enter the following details for each Key Results Area on the left respectively</p>
 
 
-            <SupervisorEntry next={next} setNext={setNext} />
+            <SupervisorEntry next={next} setNext={setNext} currentActive={props.currentActive} />
 
             {RenderKeyOutcome()}
 
@@ -52,4 +53,6 @@ function KeyResultDetails(props) {
     )
 }
 
-export default KeyResultDetails
+
+
+export default connect()(KeyResultDetails)

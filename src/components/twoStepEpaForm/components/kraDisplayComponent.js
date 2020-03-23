@@ -6,7 +6,8 @@ function KraDisplayComponent(props) {
     console.log("props", props)
     var [tab, setTab] = useState("");
 
-    const switchTab = (clickedTab) => {
+    const switchTab = (clickedTab, index) => {
+        props.setCurrentIndex(index)
         setTab(clickedTab);
     }
 
@@ -19,7 +20,7 @@ function KraDisplayComponent(props) {
             <ul className="kra-display-list">
                 {
                     allKRA.map((k, i) => {
-                        return <li className={`d-flex px-5 py-3 mb-2 ${tab === k.name ? 'selected-kra' : ''}`} onClick={() => { switchTab(k.name) }}>
+                        return <li className={`d-flex px-5 py-3 mb-2 ${tab === k.name ? 'selected-kra' : ''}`} onClick={() => { switchTab(k.name, i) }}>
                             <div className="kra-display-name">{k.name}</div>
                             <div className="kra-display-weight">{k.weight}</div>
                         </li>

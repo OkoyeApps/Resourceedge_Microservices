@@ -48,8 +48,9 @@ export default function Selector(props) {
         setData(data.filter((item) => item !== value))
     }
 
-    const handleSelect = (e) => {
+    const handleSelect = (sentData, e) => {
         setData([...data, e.target.innerText])
+        props.UpdateKRA(props.currentActive, props.supervisorStat, sentData)
         document.querySelector('#search').value = " "
         setShow(false)
     }
@@ -77,7 +78,7 @@ export default function Selector(props) {
                 searchable ?
                     show ? <div className={dropClass ? dropClass : "dropDown w-100"} style={{ ...dropStyle }}>
                         <ul className="w-100">
-                            {result && result.slice(0, 10).map((item, index) => (<li onClick={handleSelect} key={index} className="w-100">{item.fullName}</li>))}
+                            {result && result.slice(0, 10).map((item, index) => (<li onClick={(e) => handleSelect({ email: item.email, EmployeeId: item.employeeId, name: item.fullName }, e)} key={index} className="w-100">{item.fullName}</li>))}
                         </ul>
                     </div> : <></>
                     : <></>

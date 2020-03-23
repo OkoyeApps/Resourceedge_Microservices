@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import EpaInputField from '../../epaInputField/epaInputField'
 import KraDisplayComponent from './kraDisplayComponent'
+import { connect } from 'react-redux'
+import { SeedReducer } from '../../../reduxStore/actions/krAction'
 
 // var lastIndex = 0;
 
@@ -8,7 +10,7 @@ const KeyResultAreaComponent = (props) => {
     var [next, setNext] = useState(false)
     var [totalWeight, setTotalWeight] = useState(0);
     var [AllKeyResultAreas, setAllKeyResultArea] = useState([]);
-    var [currentKey, setCurrentKey] = useState(0);
+    var [isValidForNext, setIsvalidForNext] = useState(false);
 
     const moveToNext = () => {
         setNext(true)
@@ -19,13 +21,9 @@ const KeyResultAreaComponent = (props) => {
         props.setNextView(false)
     }
 
-    const removeKra = (id) => {
-        var kraToRemove = document.getElementById(id)
-        kraToRemove.remove()
-    }
+
 
     const AddKeyResultArea = () => {
-        //  lastIndex = AllKeyResultAreas.length -1;
         var newEmptyObj = new Object();
         setAllKeyResultArea([...AllKeyResultAreas, newEmptyObj]);
     }
@@ -34,12 +32,29 @@ const KeyResultAreaComponent = (props) => {
         setAllKeyResultArea(newResult);
     }
 
+    const validateForNonEmptyFields = () => {
+        var isValid = AllKeyResultAreas.includes(x => x.name === '' && x.weight === '')
+        if (!isValid) {
+            moveToNext();
+            props.SeedReducer(AllKeyResultAreas)
+        } else {
+            alert("one of your key result area field is empty")
+        }
+    }
+
+    useEffect(() => {
+        props.setEpaData(AllKeyResultAreas)
+
+    }, [AllKeyResultAreas])
+
     const RenderEpas = () => {
         return Array.from({ length: AllKeyResultAreas.length }).map((c, index) => {
             return (<EpaInputField setTotalWeight={setTotalWeight} currentTotalWeight={totalWeight} myIndex={index}
                 setAllKeyResultArea={setAllKeyResultArea} AllKeyResultAreas={AllKeyResultAreas} forceUpdate={forceUpdate} c={c} />)
         })
     }
+
+    console.log("ooo", props.allData)
     return (
         <section id="key-result-area" className={`col-5 ${next ? '' : 'active-step'} py-3 px-0`}>
             <article className="d-flex px-3">
@@ -52,7 +67,7 @@ const KeyResultAreaComponent = (props) => {
                 <p className="kra-sm-text">Weight</p>
             </article>
             <div id="input-space">
-                {next === false ? RenderEpas() : <KraDisplayComponent allKRA={AllKeyResultAreas} />}
+                {next === false ? RenderEpas() : <KraDisplayComponent allKRA={AllKeyResultAreas} setCurrentIndex={props.setCurrentIndex} />}
                 <div className="kra-sm-txt-blue pt-1 px-3" onClick={AddKeyResultArea}>
                     {next === false ? <div> <span>+</span> <span>Add Key Result Area</span></div> : <></>}
                 </div>
@@ -64,7 +79,7 @@ const KeyResultAreaComponent = (props) => {
 
             <div className="text-center">
                 {next ? <button className="btn btn-success py-3 sub-epa-btn">Submit EPA</button> :
-                    <button className="btn btn-primary next-step-btn py-3" style={{ background: AllKeyResultAreas.length > 0 ? "" : "gray" }} onClick={moveToNext} disabled={AllKeyResultAreas.length > 0 ? false : true}>Save and Proceed to Step 2</button>}
+                    <button className="btn btn-primary next-step-btn py-3" style={{ background: totalWeight === 100 ? "" : "gray" }} onClick={validateForNonEmptyFields} disabled={totalWeight === 100 ? false : true}>Save and Proceed to Step 2</button>}
             </div>
         </section>
 
@@ -73,4 +88,7 @@ const KeyResultAreaComponent = (props) => {
     );
 };
 
-export default KeyResultAreaComponent;
+
+
+
+export default connect(null, { SeedReducer })(KeyResultAreaComponent);

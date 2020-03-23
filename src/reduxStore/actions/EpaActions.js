@@ -43,7 +43,18 @@ const SearchForSupervisors = (searchVal, callback) => (dispatch, getState) => {
 
 // const Get
 
-export { GetTeamMembers, GetTeamMemberEPA, SearchForSupervisors }
+const GetPersonalEpas = (id = 1, callback) => (dispatch, getState) => {
+    RequestProcessor.Get(`/resultarea/${id}`, "", (success, header, status, data) => {
+        if (success) {
+            callback(success, data);
+        } else {
+            //show error message;
+        }
+
+    });
+}
+
+export { GetTeamMembers, GetPersonalEpas, GetTeamMemberEPA, SearchForSupervisors }
 
 
 

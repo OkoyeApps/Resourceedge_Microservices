@@ -7,15 +7,17 @@ function TwoStepEpaForm(props) {
     var [filled, setFilled] = useState(false)
     var [next, setNext] = useState(false)
     var [epaData, setEpaData] = useState([]);
+    var [currentIndex, setCurrentIndex] = useState(0)
     const moveToNext = () => {
         setNext(true)
     }
-
+    console.log("what", epaData)
+    console.log("current index", currentIndex)
     return (
         <div className="row mx-0">
-            <KeyResultAreaComponent setNextView={setNext} setEpaData={setEpaData} />
+            <KeyResultAreaComponent setNextView={setNext} setEpaData={setEpaData} setCurrentIndex={setCurrentIndex} />
 
-            <KeyResultDetails setNext={setNext} next={next} />
+            <KeyResultDetails setNext={setNext} next={next} currentActive={currentIndex} epaData={epaData} />
         </div>
     )
 }
