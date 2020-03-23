@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using Resourceedge.Appraisal.Domain.Entities;
+using Resourceedge.Appraisal.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,9 @@ namespace Resourceedge.Appraisal.API.Interfaces
         IEnumerable<AppraisalResult> Get(ObjectId AppraisalConfigId, ObjectId CycleId, int? EmployeeId);
 
         void InsertResult(AppraisalResult entity);
-               
+
+        void SubmitAppraisal(AppraisalResultForCreationDto entity);
+
+
     }
 }

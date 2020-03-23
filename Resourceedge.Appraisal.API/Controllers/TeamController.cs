@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Resourceedge.Appraisal.API.Interfaces;
-using Resourceedge.Appraisal.Domain.Entities;
 using Resourceedge.Common.Archive;
+using Resourceedge.Common.Util;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Resourceedge.Appraisal.API.Controllers
 {
@@ -23,7 +21,7 @@ namespace Resourceedge.Appraisal.API.Controllers
             mapper = _mapper;
         }
 
-        [HttpGet(Name ="GetEmployeesToAppraise")]
+        [HttpGet(Name = "GetEmployeesToAppraise")]
         public async Task<IActionResult> GetEmployeesToAppraise(int Id)
         {
             var resultFromRepo = await teamRepo.GetEmployeesToAppraise(Id);
@@ -39,6 +37,20 @@ namespace Resourceedge.Appraisal.API.Controllers
 
         }
 
-        
+        [Route("~/api/Supervisors")]
+        [HttpGet]
+        public async Task<IActionResult> GetAppraisee(string SearchQuery, string  OrderBy )
+        {
+            var aa = Request.Query;
+            var result = await teamRepo.GetSupervisors(SearchQuery, OrderBy);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+
+            return Ok(result);
+        }
+
+
     }
 }

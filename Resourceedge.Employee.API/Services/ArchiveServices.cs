@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using Resourceedge.Common.Archive;
 using Resourceedge.Common.Util;
 using Resourceedge.Employee.Domain.DbContext;
 using Resourceedge.Employee.Domain.Interfaces;
@@ -9,7 +10,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Resourceedge.Common.Archive;
 
 namespace Resourceedge.Employee.API.Services
 {
@@ -69,13 +69,23 @@ namespace Resourceedge.Employee.API.Services
         public async Task<IEnumerable<OldEmployee>> GetMultipleEmployeesById(IEnumerable<int> Ids)
         {
             var filter = Builders<OldEmployee>.Filter.In("EmployeeId", Ids);
-            var result = await Collection.Find(filter).ToListAsync() ;
+            var result = await Collection.Find(filter).ToListAsync();
 
 
             //Builders<Staff>.Filter.In()
             //      .ElemMatch(x => x.Entries,
             //                 y => CategoryFilters.Any(z => y.Categories.Contains(z)))
             return result;
+        }
+
+        public PagedList<OldEmployeeForViewDto> GetEmployeesWithSeachQuery(PaginationResourceParameter resourceParam)
+        {
+
+            var list = QueryableCollection.Where(e => e.FullName.Contains(resourceParam.SearchQuery) || e.EmpEmail.Contains(resourceParam.SearchQuery))
+                                          .Select(a => new OldEmployeeForViewDto() { Email = a.EmpEmail, FullName = a.FullName, EmployeeId = a.EmployeeId });
+            var pagedList = PagedList<OldEmployeeForViewDto>.Create(list, resourceParam.PageNumber, resourceParam.PageSize);
+
+            return pagedList;
         }
     }
 }

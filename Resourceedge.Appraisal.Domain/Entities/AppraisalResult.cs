@@ -18,7 +18,8 @@ namespace Resourceedge.Appraisal.Domain.Entities
     public class AppraisalKeyOutcome
     {
         public ObjectId KeyOutcomeId { get; set; }
-        public int EmployeeScore { get; set; }
-        public string HodScore { get; set; }
+        public int? EmployeeScore { get; set; }
+        public int? AppraisalScore { get; set; }
+        public int? HodScore { get; set; }
     }
 }

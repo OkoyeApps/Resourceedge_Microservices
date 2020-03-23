@@ -2,6 +2,7 @@
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
+using Resourceedge.Appraisal.API.Helpers;
 using Resourceedge.Appraisal.API.Interfaces;
 using Resourceedge.Appraisal.Domain.DBContexts;
 using Resourceedge.Appraisal.Domain.Entities;
@@ -9,6 +10,7 @@ using Resourceedge.Appraisal.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Resourceedge.Appraisal.API.Services
@@ -18,12 +20,14 @@ namespace Resourceedge.Appraisal.API.Services
         public readonly IMongoCollection<KeyResultArea> Collection;
         public readonly IQueryable<KeyResultArea> QueryableCollection;
         private readonly ILogger<KeyResultArea> logger;
+        private readonly HttpClient HttpClient;
 
-        public KeyResultAreaService(IDbContext context, ILogger<KeyResultArea> _logger)
+        public KeyResultAreaService(IDbContext context, ILogger<KeyResultArea> _logger, IHttpClientFactory _httpClientFactory)
         {
             Collection = context.Database.GetCollection<KeyResultArea>($"{nameof(KeyResultArea)}s");
             QueryableCollection = Collection.AsQueryable<KeyResultArea>();
             logger = _logger;
+            HttpClient = _httpClientFactory.CreateClient("EmployeeService");
         }
 
 
@@ -51,9 +55,9 @@ namespace Resourceedge.Appraisal.API.Services
             throw new NotImplementedException();
         }
 
-        public async Task<KeyResultArea> Update(ObjectId Id, KeyResultAreaForUpdateMainDto entity)
+        public KeyResultArea Update(ObjectId Id, KeyResultAreaForUpdateMainDto entity)
         {
-            var filter = Builders<KeyResultArea>.Filter.Where(r => r.Id == Id);        
+            var filter = Builders<KeyResultArea>.Filter.Where(r => r.Id == Id);
             var aa = entity.ToBsonDocument();
             var update = new BsonDocument("$set", aa);
             Collection.UpdateOne(filter, update);
@@ -71,21 +75,21 @@ namespace Resourceedge.Appraisal.API.Services
 
         public async void Delete(KeyResultArea entity)
         {
-           await Collection.FindOneAndDeleteAsync(Builders<KeyResultArea>.Filter.Where(r => r == entity));
+            await Collection.FindOneAndDeleteAsync(Builders<KeyResultArea>.Filter.Where(r => r == entity));
         }
 
-        public async Task<KeyResultArea> QuerySingleByUserId(ObjectId id, string UserId)
+        public async Task<KeyResultArea> QuerySingleByUserId(ObjectId id, int UserId)
         {
-            if(id != null && UserId != null)
+            if (id != null && UserId != 0)
             {
-                var filter = Builders<KeyResultArea>.Filter.Where(r => r.Id == id && r.UserId == UserId);
-               var result  = await Collection.FindAsync(filter);
+                var filter = Builders<KeyResultArea>.Filter.Where(r => r.Id == id && r.EmployeeId == UserId);
+                var result = await Collection.FindAsync(filter);
 
                 return result.FirstOrDefault();
             }
-            return null;        
+            return null;
         }
-        
+
         public void AddKeyOutcomes(IEnumerable<KeyResultArea> entity)
         {
             Collection.InsertMany(entity);
@@ -97,9 +101,15 @@ namespace Resourceedge.Appraisal.API.Services
             Collection.InsertOne(entity);
         }
 
-        public IEnumerable<KeyResultArea> GetPersonalkpis(string userId)
+        public IEnumerable<KeyResultArea> GetPersonalkpis(int userId, string resultId = null)
         {
-            return  QueryableCollection.Where(x => x.UserId == userId).ToList();
+            if (resultId != null)
+            {
+                ObjectId Id = new ObjectId(resultId);
+                return QueryableCollection.Where(x => x.EmployeeId == userId && x.Id == Id).ToList();
+            }
+
+            return QueryableCollection.Where(x => x.EmployeeId == userId).ToList();
         }
 
         public Task<KeyResultArea> Update(ObjectId Id, KeyResultArea entity)
@@ -107,11 +117,11 @@ namespace Resourceedge.Appraisal.API.Services
             throw new NotImplementedException();
         }
 
-        public async Task<KeyResultArea> QuerySingleUserKeyOutcome(ObjectId id, ObjectId outcomeId, string UserId)
+        public async Task<KeyResultArea> QuerySingleUserKeyOutcome(ObjectId id, ObjectId outcomeId, int UserId)
         {
-            if (id != null && UserId != null)
+            if (id != null && UserId != 0)
             {
-                var filter = Builders<KeyResultArea>.Filter.Where(r => r.Id == id && r.UserId == UserId && r.keyOutcomes.Any(a => a.Id == outcomeId));
+                var filter = Builders<KeyResultArea>.Filter.Where(r => r.Id == id && r.EmployeeId == UserId && r.keyOutcomes.Any(a => a.Id == outcomeId));
                 var result = await Collection.FindAsync(filter);
 
                 return result.FirstOrDefault();
@@ -119,62 +129,79 @@ namespace Resourceedge.Appraisal.API.Services
             return null;
         }
 
-        public async Task<long> UpdateKeyOutcome(ObjectId Id, ObjectId outcomeId, string UserId, KeyOutcomeForUpdateDto entity)
+        public async Task<long> UpdateKeyOutcome(ObjectId Id, ObjectId outcomeId, int UserId, KeyOutcomeForUpdateDto entity)
         {
             entity.keyOutcomes.Id = outcomeId;
-            var filter = Builders<KeyResultArea>.Filter.Where(r => r.Id == Id && r.UserId == UserId && r.keyOutcomes.Any(a => a.Id == outcomeId));
+            var filter = Builders<KeyResultArea>.Filter.Where(r => r.Id == Id && r.EmployeeId == UserId && r.keyOutcomes.Any(a => a.Id == outcomeId));
             //var update = new BsonDocument("$set", entity.ToBsonDocument());
             var bsonElement = entity.keyOutcomes.ToBsonDocument();
 
             var update = Builders<KeyResultArea>.Update.Set("keyOutcomes.$", bsonElement);
 
-            var result = await Collection.UpdateOneAsync(filter,update);
+            var result = await Collection.UpdateOneAsync(filter, update);
 
             return result.ModifiedCount;
         }
 
-        public async Task<long> HodApproval(ObjectId keyResultAreaId, StatusForUpdateDto entity)
+        public async Task<KeyResultArea> HodApproval(int empId, ObjectId keyResultAreaId, string whoami, StatusForUpdateDto entity)
         {
             try
             {
-                var filter = Builders<KeyResultArea>.Filter.Where(r => r.keyOutcomes.Any(a => a.Id == keyResultAreaId));
-                var update = Builders<KeyResultArea>.Update.Set("keyOutcomes.Hod", entity.Hod);
-                var result = await Collection.UpdateOneAsync(filter, update);
-             
-                return result.MatchedCount;              
+                var filter = Builders<KeyResultArea>.Filter.Where(r => r.EmployeeId == empId && r.Id == keyResultAreaId);
+                var oldKeyResultArea = Collection.Find(filter).FirstOrDefault();
+
+                if (whoami == "HOD")
+                {
+                    oldKeyResultArea.Status.Hod = entity.Approve;
+                }
+                else
+                {
+                    oldKeyResultArea.Status.IsAccepted = entity.Approve;
+                    oldKeyResultArea.SetActive();
+                }
+                var newKeyResultArea = oldKeyResultArea.ToBsonDocument();
+
+                var update = new BsonDocument("$set", newKeyResultArea);
+                var result = await Collection.FindOneAndUpdateAsync(filter, update, options: new FindOneAndUpdateOptions<KeyResultArea> { ReturnDocument = ReturnDocument.After });
+
+                return result;
             }
             catch (Exception ex)
             {
                 logger.LogError("update of appraisal configuration failed", ex);
-                return 0;
+                return null;
             }
         }
 
-        public async Task<long> EmpoyleeApproval(ObjectId keyResultAreaId, StatusForUpdateDto entity)
+        public async Task<KeyResultArea> EmpoyleeApproval(int empId, ObjectId keyResultAreaId, StatusForUpdateDto entity)
         {
             try
             {
-                var filter = Builders<KeyResultArea>.Filter.Where(r => r.keyOutcomes.Any(a => a.Id == keyResultAreaId));
-                var update = Builders<KeyResultArea>.Update.Set("keyOutcomes.Employee", entity.Employee);
-                var result = await Collection.UpdateOneAsync(filter, update);
+                var filter = Builders<KeyResultArea>.Filter.Where(r => r.EmployeeId == empId && r.Id == keyResultAreaId);
 
-                return result.MatchedCount;
+                var oldKeyResultArea = Collection.Find(filter).FirstOrDefault();
+                oldKeyResultArea.Status.Employee = entity.Approve;
+                var newKeyResultArea = oldKeyResultArea.ToBsonDocument();
+
+                var update = new BsonDocument("$set", newKeyResultArea);
+                var result = await Collection.FindOneAndUpdateAsync(filter, update, options: new FindOneAndUpdateOptions<KeyResultArea> { ReturnDocument = ReturnDocument.After });
+
+                return result;
             }
             catch (Exception ex)
             {
                 logger.LogError("update of appraisal configuration failed", ex);
-                return 0;
+                return null;
             }
         }
 
-        public Task<long> EmpoyleeReject(ObjectId keyResultAreaId, StatusForUpdateDto entity)
-        {
-            throw new NotImplementedException();
-        }
         public IEnumerable<KeyResultArea> GetKeyResultAreasForAppraiser(int appraiserId, int employeeId)
         {
             var result = QueryableCollection.Where(x => x.HodDetails.EmployeeId == appraiserId || x.AppraiserDetails.EmployeeId == appraiserId && x.EmployeeId == employeeId).ToList();
             return result;
         }
+
+
+
     }
 }

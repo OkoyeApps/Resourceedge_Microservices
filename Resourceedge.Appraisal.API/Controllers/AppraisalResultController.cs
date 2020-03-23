@@ -41,22 +41,75 @@ namespace Resourceedge.Appraisal.API.Controllers
             return Ok(result);
         }
 
-        [HttpPost]
-        public IActionResult SumbitApprisal(AppraisalResultForCreationDto appraisalResultForCreation)
+        [HttpPost("{whoami}")]
+        public IActionResult SumbitApprisal(string whoami, AppraisalResultForCreationDtoString appraisalResultForCreation)
         {
             if (appraisalResultForCreation == null)
             {
                 return BadRequest();
             }
 
-            var appraisalResultToAdd = mapper.Map<AppraisalResult>(appraisalResultForCreation);
+            List<AppraisalKeyOutcomeDto> Outcomes = new List<AppraisalKeyOutcomeDto>();
 
-            appraisalResult.InsertResult(appraisalResultToAdd);
-            var appraisalResultToReturn = mapper.Map<AppraisalResult>(appraisalResultForCreation);
+            foreach (var item in appraisalResultForCreation.KeyOutcomeScore)
+            {
+                var outcome = new AppraisalKeyOutcomeDto()
+                {
+                    EmployeeScore = item.EmployeeScore,                  
+                    KeyOutcomeId = new ObjectId(item.KeyOutcomeId)
+                };
+                Outcomes.Add(outcome);
+            }
 
-            return CreatedAtRoute("MyAppraisal", new { employee = appraisalResultToReturn.myId, appraisalConfig = appraisalResultToReturn.AppraisalConfigId, appraisalCycle = appraisalResultToReturn.AppraisalCycleId }, appraisalResultToReturn);
+            var appraisalResultToSubmit = new AppraisalResultForCreationDto()
+            {
+                myId = appraisalResultForCreation.myId,
+                whoami = whoami,
+                AppraisalConfigId = new ObjectId(appraisalResultForCreation.AppraisalConfigId),
+                AppraisalCycleId = new ObjectId(appraisalResultForCreation.AppraisalCycleId),
+                KeyResultAreaId = new ObjectId(appraisalResultForCreation.KeyResultAreaId),
+                KeyOutcomeScore = Outcomes
+            };
+
+            appraisalResult.SubmitAppraisal(appraisalResultToSubmit);
+            //var appraisalResultToReturn = mapper.Map<AppraisalResult>(appraisalResultForCreation);
+
+            return CreatedAtRoute("MyAppraisal", new { employee = appraisalResultToSubmit.myId, appraisalConfig = appraisalResultToSubmit.AppraisalConfigId, appraisalCycle = appraisalResultToSubmit.AppraisalCycleId }, appraisalResultToSubmit);
         }
 
-        public IActionResult
+        [HttpPost]
+        public IActionResult SumbitApprisal(AppraisalResultForCreationDtoString appraisalResultForCreation)
+        {
+            if (appraisalResultForCreation == null)
+            {
+                return BadRequest();
+            }
+
+            List<AppraisalKeyOutcomeDto> Outcomes = new List<AppraisalKeyOutcomeDto>();
+
+            foreach (var item in appraisalResultForCreation.KeyOutcomeScore)
+            {
+                var outcome = new AppraisalKeyOutcomeDto()
+                {
+                    EmployeeScore = item.EmployeeScore,
+                    KeyOutcomeId = new ObjectId(item.KeyOutcomeId)
+                };
+                Outcomes.Add(outcome);
+            }
+
+            var appraisalResultToSubmit = new AppraisalResultForCreationDto()
+            {
+                myId = appraisalResultForCreation.myId,
+                AppraisalConfigId = new ObjectId(appraisalResultForCreation.AppraisalConfigId),
+                AppraisalCycleId = new ObjectId(appraisalResultForCreation.AppraisalCycleId),
+                KeyResultAreaId = new ObjectId(appraisalResultForCreation.KeyResultAreaId),
+                KeyOutcomeScore = Outcomes
+            };
+
+            appraisalResult.SubmitAppraisal(appraisalResultToSubmit);
+            //var appraisalResultToReturn = mapper.Map<AppraisalResult>(appraisalResultForCreation);
+
+            return CreatedAtRoute("MyAppraisal", new { employee = appraisalResultToSubmit.myId, appraisalConfig = appraisalResultToSubmit.AppraisalConfigId, appraisalCycle = appraisalResultToSubmit.AppraisalCycleId }, appraisalResultToSubmit);
+        }
     }
 }

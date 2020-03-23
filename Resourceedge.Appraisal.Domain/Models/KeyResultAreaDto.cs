@@ -16,6 +16,8 @@ namespace Resourceedge.Appraisal.Domain.Models
         public NameEmail Appraiser { get; set; }
         public bool? Approved { get; set; }
         public ICollection<KeyOutcome> keyOutcomes { get; set; } = new List<KeyOutcome>();
+        public ApprovalStatus Status { get; set; }
+
     }
 
     public class KeyResultAreaForViewDto
@@ -29,5 +31,7 @@ namespace Resourceedge.Appraisal.Domain.Models
         public bool? Approved { get; set; }
         public string whoami { get; set; }
         public ICollection<KeyOutcome> keyOutcomes { get; set; } = new List<KeyOutcome>();
+        public ApprovalStatus Status { get; set; }
+
     }
 }

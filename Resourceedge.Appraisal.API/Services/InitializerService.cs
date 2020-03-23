@@ -27,34 +27,38 @@ namespace Resourceedge.Appraisal.API.Services
                         new KeyResultArea
                         {
                             UserId = Guid.NewGuid().ToString(),
+                             EmployeeId = 1,
                             AppraiserDetails = new NameEmail { Name = "Emmanuel", EmployeeId = 1, Email = "appraisal@test.com" },
-                            HodDetails = new NameEmail { Name = "EmmanuelHod", EmployeeId = 4, Email = "Hod@test.com" }, EmployeeId = 1,
+                            HodDetails = new NameEmail { Name = "EmmanuelHod", EmployeeId = 4, Email = "Hod@test.com" },
                             keyOutcomes =
                             {
-                                new KeyOutcome{ Question = "Test question 1", TimeLimit = BsonDateTime.Create(DateTime.Now).ToString(), Status = new KeyOutcomeApprovalStatus  { Employee =true, Hod = true, IsAccepted = true } },
-                                new KeyOutcome{ Question = "Test question 2", TimeLimit = BsonDateTime.Create(DateTime.Now).ToString(), Status = new KeyOutcomeApprovalStatus { Employee =true, Hod = false, IsAccepted = true }},
-                                new KeyOutcome{ Question = "Test question 3", TimeLimit = BsonDateTime.Create(DateTime.Now).ToString(), Status =  new KeyOutcomeApprovalStatus{ Employee =false, Hod = true, IsAccepted = true }},
+                                new KeyOutcome{ Question = "Test question 1", TimeLimit = BsonDateTime.Create(DateTime.Now).ToString() },
+                                new KeyOutcome{ Question = "Test question 2", TimeLimit = BsonDateTime.Create(DateTime.Now).ToString()},
+                                new KeyOutcome{ Question = "Test question 3", TimeLimit = BsonDateTime.Create(DateTime.Now).ToString()},
                             },
                             Weight = 50,
                             Approved = true,
-                            Name = "School Manager"
+                            Name = "School Manager",
+                            Status = new ApprovalStatus  { Employee =true, Hod = true, IsAccepted = true }
                         },
                         new KeyResultArea
                         {
                             UserId = Guid.NewGuid().ToString(),
+                            EmployeeId = 1,
                             AppraiserDetails = new NameEmail { Name = "Test", EmployeeId = 1, Email = "test@test.com" },
-                            HodDetails = new NameEmail { Name = "TestlHod", EmployeeId = 1, Email = "test@test.com" }, EmployeeId = 1,
+                            HodDetails = new NameEmail { Name = "TestlHod", EmployeeId = 1, Email = "test@test.com" },
                             keyOutcomes =
                             {
-                                new KeyOutcome{ Question = "Test question 4", TimeLimit = BsonDateTime.Create(DateTime.Now).ToString(), Status = new KeyOutcomeApprovalStatus  { Employee =true, Hod = true, IsAccepted = true } },
-                                new KeyOutcome{ Question = "Test question 5", TimeLimit = BsonDateTime.Create(DateTime.Now).ToString(), Status = new KeyOutcomeApprovalStatus { Employee =true, Hod = false, IsAccepted = true }},
-                                new KeyOutcome{ Question = "Test question 6", TimeLimit = BsonDateTime.Create(DateTime.Now).ToString(), Status =  new KeyOutcomeApprovalStatus{ Employee =false, Hod = true, IsAccepted = true }},
+                                new KeyOutcome{ Question = "Test question 4", TimeLimit = BsonDateTime.Create(DateTime.Now).ToString()},
+                                new KeyOutcome{ Question = "Test question 5", TimeLimit = BsonDateTime.Create(DateTime.Now).ToString()},
+                                new KeyOutcome{ Question = "Test question 6", TimeLimit = BsonDateTime.Create(DateTime.Now).ToString()},
                             },
                             Weight = 50,
                             Approved = true,
-                            Name = "School Manager"
+                            Name = "School Manager", 
+                            Status = new ApprovalStatus { Employee =true, Hod = false, IsAccepted = true }
                         }
-            };
+                    };
 
                     collection.InsertMany(dataToAdd);
 

@@ -6,8 +6,6 @@ namespace Resourceedge.Appraisal.Domain.Models
 {
     public class StatusForUpdateDto
     {
-        public bool? Hod { get; set; }
-        public bool? Employee { get; set; }
-        public bool? IsAccepted { get; set; }
+        public bool? Approve { get; set; }
     }
 }
