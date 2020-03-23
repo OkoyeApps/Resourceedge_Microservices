@@ -1,7 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react';
+import remove from '../../../assets/images/remove.svg'
 
 function KeyOutcomeComponent(props) {
-    var { next, setNext } = props
+    var { next, setNext, allKeyOutcomes, setAllKeyOutcomes, myIndex } = props
+
+    const removeInputComponent = () => {
+        allKeyOutcomes.splice(myIndex, 1)
+        setAllKeyOutcomes(Array.from(allKeyOutcomes));
+    }
+
 
     return (
         <div>
@@ -14,6 +21,11 @@ function KeyOutcomeComponent(props) {
                     <label className="form-label">Timeline</label>
                     <input type="date" className="form-control" disabled={next ? false : true} name="timeline" />
                 </div>
+                <div className="mt-2">
+                    <label className="form-label"></label>
+                    <div onClick={removeInputComponent}><img src={remove} alt="remove kra" className="remove-kra mt-2 ml-1" /></div>
+                </div>
+
             </article>
         </div>
     )

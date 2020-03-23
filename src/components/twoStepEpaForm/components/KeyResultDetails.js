@@ -13,7 +13,7 @@ function KeyResultDetails(props) {
 
     const RenderKeyOutcome = () => {
         return Array.from({ length: allKeyOutcomes.length }).map((c, index) => {
-            return (<KeyOutcomeComponent next={next} setNext={setNext} />)
+            return (<KeyOutcomeComponent next={next} setNext={setNext} allKeyOutcomes={allKeyOutcomes} setAllKeyOutcomes={setAllKeyOutcomes} myIndex={index} />)
         })
     }
 

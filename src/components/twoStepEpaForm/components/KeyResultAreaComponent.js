@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import EpaInputField from '../../epaInputField/epaInputField'
 import KraDisplayComponent from './kraDisplayComponent'
-import remove from '../../../assets/images/remove.svg'
+
 // var lastIndex = 0;
 
 const KeyResultAreaComponent = (props) => {
