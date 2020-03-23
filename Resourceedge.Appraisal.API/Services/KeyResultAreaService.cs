@@ -76,9 +76,9 @@ namespace Resourceedge.Appraisal.API.Services
             Collection.InsertOne(entity);
         }
 
-        public IEnumerable<KeyResultArea> GetPersonalkpis(string userId)
+        public IEnumerable<KeyResultArea> GetPersonalkpis(int employeeId)
         {
-            return  QueryableCollection.Where(x => x.UserId == userId).ToList();
+            return  QueryableCollection.Where(x => x.EmployeeId == employeeId).ToList();
         }
 
         public IEnumerable<KeyResultArea> GetKeyResultAreasForAppraiser(int appraiserId, int employeeId)

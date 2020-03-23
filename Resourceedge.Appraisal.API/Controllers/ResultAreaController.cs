@@ -34,7 +34,7 @@ namespace Resourceedge.Appraisal.API.Controllers
 
 
         [HttpGet("{id}", Name = "Mykpi")]
-        public ActionResult<IEnumerable<KeyResultAreaDtoForCreation>> GetPersonalKpis(string id)
+        public ActionResult<IEnumerable<KeyResultAreaDtoForCreation>> GetPersonalKpis(int id)
         {
             var resultFromMap = resultArea.GetPersonalkpis(id);
             var mapInstance = mapper.Map<IEnumerable<KeyResultAreaDtoForCreation>>(resultFromMap);

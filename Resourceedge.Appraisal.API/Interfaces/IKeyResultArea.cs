@@ -10,7 +10,7 @@ namespace Resourceedge.Appraisal.API.Interfaces
     {
         void AddKeyOutcomes(KeyResultArea entity);
         public void AddKeyOutcomes(IEnumerable<KeyResultArea> entity);
-        public IEnumerable<KeyResultArea> GetPersonalkpis(string userId);
+        public IEnumerable<KeyResultArea> GetPersonalkpis(int employeeId);
         IEnumerable<KeyResultArea> GetKeyResultAreasForAppraiser(int appraiserId, int employeeId);
     }
 }
