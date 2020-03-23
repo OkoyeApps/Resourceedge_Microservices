@@ -58,6 +58,7 @@ namespace Resourceedge.Appraisal.API
 
             services.AddTransient<IKeyResultArea, KeyResultAreaService>();
             services.AddTransient<IAppraisalConfig, AppraisalConfigService>();
+            services.AddTransient<IAppraisalResult, AppraisalResultService>();
             services.AddTransient<ITeamRepository, TeamService>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

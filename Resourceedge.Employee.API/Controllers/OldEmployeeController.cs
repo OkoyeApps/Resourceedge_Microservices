@@ -88,5 +88,13 @@ namespace Resourceedge.Employee.API.Controllers
 
             return links;
         }
+
+        [HttpGet("SearchEmployee")]
+        public IActionResult GetEmployeeBySearch([FromQuery]PaginationResourceParameter resourceParameters)
+        {
+           var result = EmployeeRepo.GetEmployeesWithSeachQuery(resourceParameters);
+            return Ok(result);
+        }
+        
     }
 }

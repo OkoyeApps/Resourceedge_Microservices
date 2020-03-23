@@ -1,13 +1,12 @@
 ﻿using MongoDB.Driver;
+using Resourceedge.Appraisal.Domain.Entities;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Resourceedge.Appraisal.Domain.DBContexts
 {
     public class EdgeAppraisalContext : IDbContext
     {
-
         public static EdgeAppraisalContext Create(string connectionString, string dbName)
         {
             MongoClientSettings settings = MongoClientSettings.FromUrl(new MongoUrl(connectionString));
@@ -22,6 +21,8 @@ namespace Resourceedge.Appraisal.Domain.DBContexts
             return dbcontext;
 
         }
+
+
         public IMongoDatabase Database { get; set; }
         public IMongoCollection<T> GetCollection<T>(string collectionName)
         {

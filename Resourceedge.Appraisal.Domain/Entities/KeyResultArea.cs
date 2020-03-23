@@ -17,9 +17,10 @@ namespace Resourceedge.Appraisal.Domain.Entities
         public NameEmail HodDetails { get; set; }
         public NameEmail AppraiserDetails { get; set; }
         public bool? Approved { get; set; }
-        public int Year { get; set; }
+        public int Year { get; set; } = DateTime.Now.Year;
         public bool IsActive { get; set; }
         public ICollection<KeyOutcome> keyOutcomes { get; set; } = new List<KeyOutcome>();
+        public ApprovalStatus Status { get; set; }
 
 
     }
@@ -36,11 +37,9 @@ namespace Resourceedge.Appraisal.Domain.Entities
         public ObjectId Id { get; set; } = ObjectId.GenerateNewId();
         public string Question { get; set; }
         public string TimeLimit { get; set; }
-        public KeyOutcomeApprovalStatus Status { get; set; }
-
-
+        public ApprovalStatus Status { get; set; }
     }
-    public class KeyOutcomeApprovalStatus
+    public class ApprovalStatus
     {
         public bool? Hod { get; set; }
         public bool? Employee { get; set; }

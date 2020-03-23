@@ -5,6 +5,7 @@ using Resourceedge.Appraisal.Domain.DBContexts;
 using Resourceedge.Appraisal.Domain.Entities;
 using Resourceedge.Appraisal.Domain.Models;
 using Resourceedge.Common.Archive;
+using Resourceedge.Common.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -85,6 +86,22 @@ namespace Resourceedge.Appraisal.API.Services
                 }
             );
             return result;
+        }
+
+        public async Task<IEnumerable<OldEmployeeForViewDto>> GetSupervisors(string searchParam, string orderParam)
+        {
+
+            var response = await HttpClient.GetAsync($"api/employee/SearchEmployee?SearchQuery={searchParam}&OrderBy={orderParam}");
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsByteArrayAsync();
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                var result = JsonSerializer.Deserialize<IEnumerable<OldEmployeeForViewDto>>(content, options);
+
+                return result;
+            }
+
+            return null;
         }
     }
 }
