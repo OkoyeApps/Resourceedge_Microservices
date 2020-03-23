@@ -26,14 +26,13 @@ function Appraisees(props) {
                 setAppraisees(data)
             } else {
                 setLoading(false)
-                //show error message well
             }
         });
 
     }
 
-    const handleLink = () => {
-        props.history.push({ pathname: "/appraisees/details" })
+    const handleLink = (data) => {
+        props.history.push({ pathname: "/appraisees/details", state: data })
     }
 
     useEffect(() => {
@@ -55,7 +54,7 @@ function Appraisees(props) {
                         appraisees.length > 0 ?
                             appraisees.map((a, i) => {
                                 return (
-                                    <section className="col-4 my-2" onClick={handleLink}>
+                                    <section className="col-4 my-2" onClick={() => handleLink(a)}>
                                         <div className="small-card py-2">
                                             <div className="row mx-0">
                                                 <div className="col-3 pr-0">
