@@ -12,6 +12,7 @@ const EpaView =(props) =>{
     useEffect(() => {
         props.GetPersonalEpas(1, (success, data) => {
             if(success){
+                console.log("data check", data)
                 setData(data);
             }else{
                 //show error message the right way

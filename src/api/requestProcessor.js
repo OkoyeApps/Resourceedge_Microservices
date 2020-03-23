@@ -3,7 +3,7 @@ import axios from 'axios';
 var baseUrl = "http://localhost:5321/api"
 var axiosClient = axios.create({
     baseURL : baseUrl, 
-    headers: { "content-type": 'application/json', 'accept': 'application/json' }, timeout: 3000
+    headers: { "content-type": 'application/json', 'accept': 'application/json' }, timeout: 6000
 });
 
 const RequestProcessor = function (){

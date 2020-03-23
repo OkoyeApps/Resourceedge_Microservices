@@ -22,10 +22,10 @@ const CollapseView = ({ epaValue }) => {
                     <span>Weight:</span><span>{epaValue.weight}%</span>
                 </div>
                 <div className="epa-mains mx-3">
-                    <span>Appraiser:</span><span>{epaValue.appraiser.name}</span>
+                    <span>Appraiser:</span><span>{epaValue?.appraiser?.name}</span>
                 </div>
                 <div className="epa-mains">
-                    <span>HOD:</span><span>{epaValue.headOfDepartment.name}</span>
+                    <span>HOD:</span><span>{epaValue?.headOfDepartment?.name}</span>
                 </div>
             </article>
 

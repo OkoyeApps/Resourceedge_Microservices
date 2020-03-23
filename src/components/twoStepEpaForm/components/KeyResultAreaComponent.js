@@ -8,7 +8,7 @@ const KeyResultAreaComponent = (props) => {
     var [next, setNext] = useState(false)
     var [totalWeight, setTotalWeight] = useState(0);
     var [AllKeyResultAreas, setAllKeyResultArea] = useState([]);
-    var [currentKey, setCurrentKey] = useState(0);
+    var [isValidForNext, setIsvalidForNext] = useState(false);
 
     const moveToNext = () => {
         setNext(true)
@@ -25,13 +25,21 @@ const KeyResultAreaComponent = (props) => {
     }
 
     const AddKeyResultArea = () => {
-        //  lastIndex = AllKeyResultAreas.length -1;
         var newEmptyObj = new Object();
         setAllKeyResultArea([...AllKeyResultAreas, newEmptyObj]);
     }
 
     const forceUpdate = (newResult) => {
         setAllKeyResultArea(newResult);
+    }
+
+    const validateForNonEmptyFields = () => {
+        var isValid = AllKeyResultAreas.includes(x => x.name === '' && x.weight === '')
+        if(isValid){
+            moveToNext();
+        }else{
+            alert("one of your key result area field is empty")
+        }
     }
 
     const RenderEpas = () => {
@@ -64,7 +72,7 @@ const KeyResultAreaComponent = (props) => {
 
             <div className="text-center">
                 {next ? <button className="btn btn-success py-3 sub-epa-btn">Submit EPA</button> :
-                    <button className="btn btn-primary next-step-btn py-3" style={{ background: AllKeyResultAreas.length > 0 ? "" : "gray" }} onClick={moveToNext} disabled={AllKeyResultAreas.length > 0 ? false : true}>Save and Proceed to Step 2</button>}
+                    <button className="btn btn-primary next-step-btn py-3" style={{ background: totalWeight === 100 ? "" : "gray" }} onClick={validateForNonEmptyFields} disabled={totalWeight === 100 ? false : true}>Save and Proceed to Step 2</button>}
             </div>
         </section>
 

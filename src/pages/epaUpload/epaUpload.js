@@ -6,8 +6,6 @@ import {GetTeamMembers} from '../../reduxStore/actions/EpaActions';
 
 const  EpaUpload =(props) => {
     
-    props.GetTeamMembers();
-
     return (
 
         <div className="" style={{ marginTop: "38vh" }}>
