@@ -1,0 +1,26 @@
+version: '3.4'
+
+services:
+  resourceedge.appraisal.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - DefaultConnection__ConnectionString=mongodb+srv://chocksy:ewZg5URqMNyal7Xs@lawyerpp-cluster-5faak.mongodb.net/EdgeAppraisal?retryWrites=true
+      - DefaultConnection__DataBaseName=EdgeAppraisal
+      - Services__employee=http://resourceedgeemployee.centralus.azurecontainer.io/api
+    ports:
+      - "6001:80"
+      
+  resourceedge.authentication.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    ports:
+      - "6002:80"
+
+  resourceedge.employee.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - DefaultConnection__ConnectionString=mongodb+srv://chocksy:ewZg5URqMNyal7Xs@lawyerpp-cluster-5faak.mongodb.net/EdgeEmployee?retryWrites=true
+      - DefaultConnection__DataBaseName=EdgeEmployee
+    ports:
+      - "6003:80"
+     

@@ -1,0 +1,22 @@
+version: '3.4'
+
+services:
+  resourceedge.appraisal.api:
+    image: ${DOCKER_REGISTRY-}resourceedgeappraisalapi
+    build:
+      context: .
+      dockerfile: Resourceedge.Appraisal.API/Dockerfile
+
+  resourceedge.authentication.api:
+    image: ${DOCKER_REGISTRY-}resourceedgeauthenticationapi
+    build:
+      context: .
+      dockerfile: Resourceedge.Authentication.API/Dockerfile
+
+
+  resourceedge.employee.api:
+    image: ${DOCKER_REGISTRY-}resourceedgeemployeeapi
+    build:
+      context: .
+      dockerfile: Resourceedge.Employee.API/Dockerfile
+

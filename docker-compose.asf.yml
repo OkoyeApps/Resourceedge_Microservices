@@ -1,0 +1,30 @@
+version: '3.4'
+# former url for reverse proxy http://10.0.0.4:19081/lil/employee/
+services:
+  appraisal:
+    image : okoyeapps/resourceedgeappraisalapi:latest
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - Services__employee=http://lil/employee/
+      - DefaultConnection__ConnectionString=mongodb+srv://chocksy:ewZg5URqMNyal7Xs@lawyerpp-cluster-5faak.mongodb.net/EdgeAppraisal?retryWrites=true
+      - DefaultConnection__DataBaseName=EdgeAppraisal
+    ports:
+      - "6001:80"
+
+  authentication:
+    image: okoyeapps/resourceedgeauthenticationapi:latest
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    ports:
+      - "80"
+
+  employee:
+    image: okoyeapps/resourceedgeemployeeapi:latest
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - DefaultConnection__ConnectionString=mongodb+srv://chocksy:ewZg5URqMNyal7Xs@lawyerpp-cluster-5faak.mongodb.net/EdgeEmployee?retryWrites=true
+      - DefaultConnection__DataBaseName=EdgeEmployee
+    ports:
+      - "6003:80"
+
+

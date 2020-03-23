@@ -20,6 +20,7 @@ namespace Resourceedge.Employee.API
     public class Startup
     {
         private readonly IConfiguration Configuration;
+        private static readonly string[] Headers = new[] { "X-Operation", "X-Resource", "X-Total-Count" };
 
         public Startup(IConfiguration configuration)
         {
@@ -29,14 +30,22 @@ namespace Resourceedge.Employee.API
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", cors =>
+                        cors.AllowAnyOrigin()
+                            .AllowAnyMethod()
+                            .AllowAnyHeader()
+                            .WithExposedHeaders(Headers));
+            });
             services.AddHttpClient("OldEdge", config =>
             {
                 config.BaseAddress = new Uri(Configuration["Services:oldResourceedge"]);
             });
 
             services.AddTransient<IDbContext, EmployeeDbContext>(ctx => EmployeeDbContext.Create(
-               Configuration.GetSection("DefualtConnection:ConnectionString").Value,
-               Configuration.GetSection("DefualtConnection:DataBaseName").Value));
+               Configuration.GetSection("DefaultConnection:ConnectionString").Value,
+               Configuration.GetSection("DefaultConnection:DataBaseName").Value));
             services.AddTransient<IEmployee, ArchiveServices>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddControllers(setupAction =>
@@ -64,9 +73,9 @@ namespace Resourceedge.Employee.API
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseCors("CorsPolicy");
 
             app.UseRouting();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

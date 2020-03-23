@@ -24,6 +24,8 @@ namespace Resourceedge.Appraisal.API
     public class Startup
     {
         public IConfiguration Configuration { get; set; }
+        private static readonly string[] Headers = new[] { "X-Operation", "X-Resource", "X-Total-Count" };
+
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
 
@@ -34,6 +36,14 @@ namespace Resourceedge.Appraisal.API
         public void ConfigureServices(IServiceCollection services)
         {
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", cors =>
+                        cors.AllowAnyOrigin()
+                            .AllowAnyMethod()
+                            .AllowAnyHeader()
+                            .WithExposedHeaders(Headers));
+            });
             services.AddHttpClient("EmployeeService", config =>
             {
                 config.BaseAddress = new Uri(Configuration["Services:employee"]);
@@ -43,9 +53,9 @@ namespace Resourceedge.Appraisal.API
 
 
             services.AddTransient<IDbContext, EdgeAppraisalContext>(ctx => EdgeAppraisalContext.Create(
-                Configuration.GetSection("DefualtConnection:ConnectionString").Value,
-                Configuration.GetSection("DefualtConnection:DataBaseName").Value));
-            
+                Configuration.GetSection("DefaultConnection:ConnectionString").Value,
+                Configuration.GetSection("DefaultConnection:DataBaseName").Value));
+
             services.AddTransient<IKeyResultArea, KeyResultAreaService>();
             services.AddTransient<IAppraisalConfig, AppraisalConfigService>();
             services.AddTransient<IAppraisalResult, AppraisalResultService>();
@@ -55,9 +65,10 @@ namespace Resourceedge.Appraisal.API
             services.AddControllers(setupAction =>
             {
                 setupAction.ReturnHttpNotAcceptable = true;
+            }).AddXmlDataContractSerializerFormatters()
+            .AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
 
-            }).AddXmlDataContractSerializerFormatters().AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
-
+      
 
             services.Configure<MvcOptions>(config =>
             {
@@ -77,6 +88,7 @@ namespace Resourceedge.Appraisal.API
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors("CorsPolicy");
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>

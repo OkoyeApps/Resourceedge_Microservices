@@ -69,12 +69,7 @@ namespace Resourceedge.Employee.API.Services
         public async Task<IEnumerable<OldEmployee>> GetMultipleEmployeesById(IEnumerable<int> Ids)
         {
             var filter = Builders<OldEmployee>.Filter.In("EmployeeId", Ids);
-            var result = await Collection.Find(filter).ToListAsync();
-
-
-            //Builders<Staff>.Filter.In()
-            //      .ElemMatch(x => x.Entries,
-            //                 y => CategoryFilters.Any(z => y.Categories.Contains(z)))
+            var result = await Collection.Find(filter).ToListAsync() ;
             return result;
         }
 
