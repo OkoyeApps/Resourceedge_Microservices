@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { updateKRA } from '../../../reduxStore/actions/krAction'
 
 function KeyOutcomeComponent(props) {
-    var { next, setNext, allKeyOutcomes, setAllKeyOutcomes, myIndex } = props
+    var { allKeyOutcomes, setAllKeyOutcomes, myIndex, temp } = props
 
     const removeInputComponent = () => {
         allKeyOutcomes.splice(myIndex, 1)
@@ -23,11 +23,11 @@ function KeyOutcomeComponent(props) {
             <article className="d-flex pt-3">
                 <div className="mr-4">
                     <label className="form-label">Key Outcomes</label>
-                    <input type="text" className="form-control" disabled={next ? false : true} name="question" onChange={handleChange} />
+                    <input type="text" className="form-control" disabled={temp ? false : true} name="question" onChange={handleChange} />
                 </div>
                 <div>
                     <label className="form-label">Timeline</label>
-                    <input type="date" className="form-control" disabled={next ? false : true} name="timeLimit" onChange={handleChange} />
+                    <input type="date" className="form-control" disabled={temp ? false : true} name="timeLimit" onChange={handleChange} />
                 </div>
                 <div className="mt-2">
                     <label className="form-label"></label>

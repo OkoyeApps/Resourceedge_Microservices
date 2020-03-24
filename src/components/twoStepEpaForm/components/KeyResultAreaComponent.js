@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import EpaInputField from '../../epaInputField/epaInputField'
 import KraDisplayComponent from './kraDisplayComponent'
 import { connect } from 'react-redux'
-import { SeedReducer } from '../../../reduxStore/actions/krAction'
+import { SeedReducer, UploadkeyResultAreas } from '../../../reduxStore/actions/krAction'
 
 // var lastIndex = 0;
 
@@ -37,15 +37,17 @@ const KeyResultAreaComponent = (props) => {
         if (!isValid) {
             moveToNext();
             props.SeedReducer(AllKeyResultAreas)
+            props.setTotalKrasAdded(AllKeyResultAreas.length);
+            props.setCurrentIndex(0);
         } else {
             alert("one of your key result area field is empty")
         }
     }
 
-    useEffect(() => {
-        props.setEpaData(AllKeyResultAreas)
+    // useEffect(() => {
+    //     props.setEpaData(AllKeyResultAreas)
 
-    }, [AllKeyResultAreas])
+    // }, [AllKeyResultAreas])
 
     const RenderEpas = () => {
         return Array.from({ length: AllKeyResultAreas.length }).map((c, index) => {
@@ -54,7 +56,16 @@ const KeyResultAreaComponent = (props) => {
         })
     }
 
-    console.log("ooo", props.allData)
+    const SubmitFinalUploadOfEPA = () => {
+        props.UploadkeyResultAreas((success, data) => {
+            if(success){
+                alert("key result area added successfully")
+            }else{
+                //show error messages
+            }
+        })
+    }
+
     return (
         <section id="key-result-area" className={`col-5 ${next ? '' : 'active-step'} py-3 px-0`}>
             <article className="d-flex px-3">
@@ -78,7 +89,7 @@ const KeyResultAreaComponent = (props) => {
             </div>
 
             <div className="text-center">
-                {next ? <button className="btn btn-success py-3 sub-epa-btn">Submit EPA</button> :
+                {next ? <button className="btn btn-success py-3 sub-epa-btn" onClick={SubmitFinalUploadOfEPA}>Submit EPA</button> :
                     <button className="btn btn-primary next-step-btn py-3" style={{ background: totalWeight === 100 ? "" : "gray" }} onClick={validateForNonEmptyFields} disabled={totalWeight === 100 ? false : true}>Save and Proceed to Step 2</button>}
             </div>
         </section>
@@ -91,4 +102,4 @@ const KeyResultAreaComponent = (props) => {
 
 
 
-export default connect(null, { SeedReducer })(KeyResultAreaComponent);
+export default connect(null, { SeedReducer, UploadkeyResultAreas })(KeyResultAreaComponent);

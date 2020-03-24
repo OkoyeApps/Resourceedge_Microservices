@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import KeyOutcomeComponent from './KeyOutcomeComponent';
 import { connect } from 'react-redux'
 
@@ -6,7 +6,7 @@ import SupervisorEntry from './keyOutcomeSupervisorEntry';
 
 function KeyResultDetails(props) {
 
-    var { next, setNext } = props
+    var { temp } = props
     var [allKeyOutcomes, setAllKeyOutcomes] = useState([])
 
 
@@ -16,39 +16,28 @@ function KeyResultDetails(props) {
     }
 
 
-
-
-    useEffect(() => {
-        // searchSupervisor()
-    })
-
     const RenderKeyOutcome = () => {
         return Array.from({ length: allKeyOutcomes.length }).map((c, index) => {
-            return (<KeyOutcomeComponent next={next} setNext={setNext} allKeyOutcomes={allKeyOutcomes} setAllKeyOutcomes={setAllKeyOutcomes} myIndex={index} currentActive={props.currentActive} epaData={props.epaData} />)
+            return (<KeyOutcomeComponent temp={temp}  allKeyOutcomes={allKeyOutcomes} setAllKeyOutcomes={setAllKeyOutcomes} myIndex={index} currentActive={props.currentActive} />)
         })
     }
 
-    // const result = [
-    //     { name: "Arthur", nickname: "kidmeeno" },
-    //     { name: "Joshua", nickname: "Josh Sherran" },
-    //     { name: "Nonso", nickname: "nonicalx" }
-    // ]
-
-    console.log("ttt", props.data)
     return (
-        <section id="key-result-area-details" className={`col-7 py-3 ${next ? "active-step" : "inactive-krad"}`}>
+        <section id="key-result-area-details" className={`col-7 py-3 ${temp ? "active-step" : "inactive-krad"}`}>
             <p className="steps">Step 2<span className="small-half">/2</span></p>
             <p className="kra-sm-text">Now enter the following details for each Key Results Area on the left respectively</p>
 
 
-            <SupervisorEntry next={next} setNext={setNext} currentActive={props.currentActive} />
+            <SupervisorEntry temp={temp}  currentActive={props.currentActive} />
 
             {RenderKeyOutcome()}
 
 
-            <div className="kra-sm-txt-blue pt-2 px-3" onClick={AddKeyResultArea}>
-                {next ? <div> <span>+</span> <span>Add Key Outcome</span></div> : <></>}
+            {temp ?  <div className="kra-sm-txt-blue pt-2 px-3" onClick={AddKeyResultArea}>
+                 <div> <span>+</span> <span>Add Key Outcome</span></div> 
             </div>
+            : <></>
+            }
         </section>
     )
 }
