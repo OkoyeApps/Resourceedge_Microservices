@@ -1,25 +1,38 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import './epaView.css'
 import Avatar from 'react-avatar';
 import Activity from '../../components/activity/activity';
-import {GetPersonalEpas} from '../../reduxStore/actions/EpaActions'
-import {connect} from 'react-redux';
+import { GetPersonalEpas } from '../../reduxStore/actions/EpaActions'
+import { connect } from 'react-redux';
 import ResultAccordion from './components/accordion';
 
-const EpaView =(props) =>{
+const EpaView = (props) => {
     // var { data } = props
     const [data, setData] = useState([]);
+    var [accept, setAccept] = useState(false)
     useEffect(() => {
         props.GetPersonalEpas(1, (success, data) => {
-            if(success){
-                console.log("data check", data)
+            if (success) {
                 setData(data);
-            }else{
+                getReadyToAccept(data)
+            } else {
                 //show error message the right way
             }
         });
-    }, [])    
+    }, [])
 
+
+    const getReadyToAccept = (data) => {
+        let status = false;
+        data.map((d) => {
+            status += d.approved
+        })
+        if (status === data.length) {
+            setAccept(true)
+        } else {
+            setAccept(false)
+        }
+    }
 
     const viewWithData = () => {
         return (
@@ -33,7 +46,7 @@ const EpaView =(props) =>{
                                 </div>
                             </div>
                             <div className="col-1">
-                                <button className="btn btn-disabled">Accept</button>
+                                <button className={`btn ${accept ? "btn-primary" : "btn-disabled"}`} disabled={!accept} >Accept</button>
                             </div>
                         </div>
                     </div>
@@ -42,10 +55,15 @@ const EpaView =(props) =>{
                 <section className="row mx-0 mt-2">
                     <div className="col-8">
                         {
-                            data.map((x, i) => (
-                                <ResultAccordion epaValue={x} key={`epaview${i}`} />
-                           
-                           ))
+                            data.map((x, i) => {
+                                return (
+
+                                    < ResultAccordion epaValue={x} key={`epaview${i}`} />
+                                )
+                            }
+
+
+                            )
                         }
 
                     </div>
@@ -57,7 +75,7 @@ const EpaView =(props) =>{
 
     return (
         <div>
-            {data ? viewWithData() : <div className="d-flex align-items-center justify-content-center" style={{ marginTop: "40vh" }}><section className="text-center">
+            {data.length > 0 ? viewWithData() : <div className="d-flex align-items-center justify-content-center" style={{ marginTop: "40vh" }}><section className="text-center">
                 <div className="notice-text">
                     Nothing to see here
                     </div>
@@ -69,4 +87,4 @@ const EpaView =(props) =>{
     )
 }
 
-export default connect(null, {GetPersonalEpas})(EpaView)
+export default connect(null, { GetPersonalEpas })(EpaView)

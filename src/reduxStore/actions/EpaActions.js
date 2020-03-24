@@ -49,12 +49,25 @@ const GetPersonalEpas = (id = 1, callback) => (dispatch, getState) => {
             callback(success, data);
         } else {
             //show error message;
+            callback(success, data);
+
         }
 
     });
 }
 
-export { GetTeamMembers, GetPersonalEpas, GetTeamMemberEPA, SearchForSupervisors }
+
+const ApproveOrRejectBySupervisor = (userid, epaId, approver, data, callback) => (dispatch, getState) => {
+    RequestProcessor.Post(`/resultArea/${userid}/${epaId}/Approval/${approver}`, '', data, (success, header, status, data) => {
+        if (success) {
+            callback(success, data)
+        } else {
+            callback(success, data)
+        }
+    })
+}
+
+export { GetTeamMembers, GetPersonalEpas, GetTeamMemberEPA, SearchForSupervisors, ApproveOrRejectBySupervisor }
 
 
 

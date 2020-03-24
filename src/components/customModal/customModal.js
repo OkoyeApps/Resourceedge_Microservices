@@ -18,7 +18,7 @@ const CustomModal = (props) => {
                         <TwoStepEpaForm />
                         :
                         props.type === "reject-appraisal" ?
-                            <RejectAppraisal />
+                            <RejectAppraisal reject={props.reject} />
                             :
                             props.type === "appraise-self-modal" ?
                                 <AppraiseSelf />

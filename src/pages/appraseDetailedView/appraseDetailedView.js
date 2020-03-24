@@ -4,11 +4,12 @@ import Avatar from 'react-avatar';
 import './appraseDetailedView.css';
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { GetTeamMemberEPA } from '../../reduxStore/actions/EpaActions'
+import { GetTeamMemberEPA, ApproveOrRejectBySupervisor } from '../../reduxStore/actions/EpaActions'
 import CustomModal from '../../components/customModal/customModal';
 import backArrow from '../../assets/images/backArrowIcon.svg';
 import { Link } from 'react-router-dom';
 import Skeleton from 'react-skeleton-loader'
+import tick from '../../assets/images/Online.svg'
 
 
 
@@ -16,7 +17,8 @@ import Skeleton from 'react-skeleton-loader'
 const AppraseDetailView = (props) => {
     const [tab, setTab] = useState("view")
     const [appraseDetail, setAppraseDetail] = useState([])
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false);
+    const [approvalData, setApprovalData] = useState({})
 
     let { state } = props.location
 
@@ -37,9 +39,16 @@ const AppraseDetailView = (props) => {
 
     }
 
+    const approveOrRejectEpa = async (approverId, kraId, approver, decision) => {
+        await props.ApproveOrRejectBySupervisor(approverId, kraId, approver, decision, (success, data) => {
+            setApprovalData(data)
+            console.log("aproved", data)
+        })
+    }
+
     useEffect(() => {
         getMemberEPA()
-    }, [])
+    }, [approvalData])
 
     const handleBack = () => {
         props.history.push({ pathname: "/appraisees" })
@@ -73,10 +82,10 @@ const AppraseDetailView = (props) => {
                                     return (
                                         <div className="card w-100 p-3 border-0 mb-4">
                                             <div className="row w-100 mb-2">
-                                                <div className="col-10 apprais-header">{ad.name} </div>
+                                                <div className="col-10 apprais-header">{ad.name} {ad.status.isAccepted === true ? <span><img src={tick} alt="approved" className="ml-1" /></span> : <></>}</div>
                                                 <div className="col-2">
                                                     <CustomModal
-                                                        content={<div className=" edit-apprais">Edit</div>}
+                                                        content={<div className=" edit-apprais">{ad.status.isAccepted === true ? '' : "Edit"}</div>}
                                                         type={"upload-epa-form"}
                                                     />
                                                 </div>
@@ -84,8 +93,8 @@ const AppraseDetailView = (props) => {
                                             <div className="row mb-3">
                                                 <div className="col-12 d-flex" >
                                                     <span className="appraise-weights">Weight: <b>{ad.weight}%</b></span>
-                                                    <span className="ml-2 appraise-weights">Appraiser: <b>{ad.appraiser === undefined || ad.appraiser === null || ad.appraiser === '' ? "none" : ad.appraiser}</b></span>
-                                                    <span className="ml-2 appraise-weights">HOD: <b>{ad.headOfDepartment === undefined || ad.headOfDepartment === null || ad.headOfDepartment === '' ? 'none' : ad.headOfDepartment}</b></span>
+                                                    <span className="ml-3 appraise-weights">Appraiser: <b>{ad.appraiser === undefined || ad.appraiser === null || ad.appraiser === '' ? "none" : ad.appraiser}</b></span>
+                                                    <span className="ml-3 appraise-weights">HOD: <b>{ad.headOfDepartment === undefined || ad.headOfDepartment === null || ad.headOfDepartment === '' ? 'none' : ad.headOfDepartment}</b></span>
                                                 </div>
                                             </div>
                                             <div className="row mb-3">
@@ -108,13 +117,16 @@ const AppraseDetailView = (props) => {
                                             </div>
                                             <div className="row">
                                                 <div className="col-12 d-flex justify-content-end">
-                                                    <div className="d-flex">
-                                                        <CustomModal
-                                                            content={<button className="form-control reject-btn">Reject</button>}
-                                                            type={"reject-appraisal"}
-                                                        />
-                                                        <button className="form-control approve-btn ml-3">Approve</button>
-                                                    </div>
+                                                    {ad.status.isAccepted ? <></> :
+                                                        <div className="d-flex">
+                                                            <CustomModal
+                                                                content={<button className="form-control reject-btn" >Reject</button>}
+                                                                type={"reject-appraisal"}
+                                                                reject={() => { approveOrRejectEpa(ad.employeeId, ad.id, ad.whoami, { approve: false }) }} />
+                                                            <button className="form-control approve-btn ml-3" onClick={() => { approveOrRejectEpa(ad.employeeId, ad.id, ad.whoami, { approve: true }) }}>Approve</button>
+
+                                                        </div>
+                                                    }
                                                 </div>
                                             </div>
                                         </div>
@@ -130,4 +142,4 @@ const AppraseDetailView = (props) => {
     )
 }
 
-export default connect(null, { GetTeamMemberEPA })(withRouter(AppraseDetailView))
+export default connect(null, { GetTeamMemberEPA, ApproveOrRejectBySupervisor })(withRouter(AppraseDetailView))

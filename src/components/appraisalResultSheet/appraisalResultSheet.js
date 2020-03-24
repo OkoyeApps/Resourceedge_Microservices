@@ -8,10 +8,10 @@ function AppraisalResultSheet(props) {
         <div className="result-card my-3">
             <div className="row mx-0">
                 <div className="col-9 pl-0">
-                    <span className="category">Social Media</span>{props.location.pathname === "/employee_performance_agreement/view" ? <></> : <span><img src={tick} alt="verified" className="ml-1" /></span>}
+                    <span className="category">Social Media</span>{props.location.pathname === "/epa/view" ? <></> : <span><img src={tick} alt="verified" className="ml-1" /></span>}
                 </div>
                 <div className="col-3">
-                    {props.location.pathname === "/employee_performance_agreement/view" ? <div className="editable">Edit</div> : <></>}
+                    {props.location.pathname === "/epa/view" ? <div className="editable">Edit</div> : <></>}
                 </div>
             </div>
             <div className="mt-3">
