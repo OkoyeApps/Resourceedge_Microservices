@@ -23,21 +23,15 @@ const KeyOutcomeDetailParent = ({ActiveKraIndex, KRA}) => {
     }
 
     const renderEquivalentComponentForActiveKRA = () => {
-        // var aa =  (tempArray[ActiveKraIndex] == null && ActiveKraIndex == null)  ?<KeyResultDetails  next={true} currentActive={ActiveKraIndex} temp={false} /> 
-        // : (tempArray[ActiveKraIndex] != null && ActiveKraIndex  != null) 
         var aa = tempArray[ActiveKraIndex] == null ? <KeyResultDetails  next={true} currentActive={ActiveKraIndex} temp={false} />  : tempArray[ActiveKraIndex];
-        var bb = tempArray[ActiveKraIndex];
         if(ActiveKraIndex !== null){
             tempArray = [...tempArray,aa];
             setComponent(aa);
         }else{
             setComponent(aa);
         }
-        // return aa;
     }
 
-    console.log("calling memo render")
-    // renderEquivalentComponentForActiveKRA()
     return (
         activeComponent ? activeComponent : <></>
     )
