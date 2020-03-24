@@ -7,7 +7,7 @@ let selectedDays = date.getDate();
 let selectedMonth = date.getMonth() + 1;
 let selectedYear = date.getFullYear()
 
-function CustomCalenderPicker() {
+function CustomCalenderPicker(props) {
     const months = ['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     let formatMonth = date.getMonth() + 1
     console.log(formatMonth)
@@ -18,15 +18,14 @@ function CustomCalenderPicker() {
     const [selectedDay, setSelectedDay] = useState(false);
 
     const selectDateSetter = (d) => {
-        console.log("selectDateSetter was called", d)
         setDay(d);
         selectedDate = new Date(year + '-' + month + '-' + d);
         selectedDays = d;
         selectedMonth = month;
         selectedYear = year;
-        
+        props.handleDatePick(`${selectedDays < 10 ? `0${selectedDays}` : selectedDays}/${selectedMonth < 10 ? `0${selectedMonth}` : selectedMonth}/${selectedYear}`);
+        setShow(!show)
     }
-
     const moveToNextMonth = () => {
         setMonth(month + 1);
         if (month === 12) {
@@ -34,7 +33,6 @@ function CustomCalenderPicker() {
             setYear(year + 1);
         }
     }
-
     const moveToPrevMonth = () => {
         setMonth(month - 1);
         if (month === 1) {
@@ -42,11 +40,15 @@ function CustomCalenderPicker() {
             setYear(year - 1);
         }
     }
-
     // Format date for display
     const formatSelectedDate = () => {
         console.log('formatSelectedDate was called')
-        return `${selectedDays < 10 ? `0${selectedDays}` : selectedDays}/${selectedMonth < 10 ? `0${selectedMonth}` : selectedMonth}/${selectedYear}`
+        if (props.defaultValue) {
+            console.log(props.defaultValue, "love hahah")
+            return "20/05/20017"
+        } else {
+            return `${selectedDays < 10 ? `0${selectedDays}` : selectedDays}/${selectedMonth < 10 ? `0${selectedMonth}` : selectedMonth}/${selectedYear}`
+        }
     }
 
     const populateDates = () => {
@@ -68,12 +70,11 @@ function CustomCalenderPicker() {
         if (selectedDays === d && selectedMonth === month && selectedYear === year) {
             console.log("matched oooo")
             return true
-            // setSelectedDay(true)
         }
     }
 
     return (
-        <div className="w-100">
+        <div className="w-100" key={props.key}>
             <div className="date-picker form-control">
                 <div className="selected-date" onClick={() => { setShow(!show) }}>{formatSelectedDate()}</div>
                 {

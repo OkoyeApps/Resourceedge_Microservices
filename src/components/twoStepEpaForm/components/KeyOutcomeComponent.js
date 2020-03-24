@@ -12,23 +12,39 @@ function KeyOutcomeComponent(props) {
         setAllKeyOutcomes(Array.from(allKeyOutcomes));
     }
 
-    const handleChange = (e) => {
-        var currentData = { ...currentData, [e.target.name]: e.target.value }
-        props.updateKRA(props.currentActive, props.myIndex, currentData)
+    const handleChange = (e, value) => {
+        if(e === null){
+            console.log("correct value format",value)
+            props.updateKRA(props.currentActive, props.myIndex, {timeline : value});
+        }else{
+            var currentData = { ...currentData, [e.target.name]: e.target.value }
+            props.updateKRA(props.currentActive, props.myIndex, currentData);
+        }
     }
 
     console.log("rendering in key outcome")
     return (
         <div>
-            <article className="d-flex pt-3">
-                <div className="mr-4">
-                    <label className="form-label">Key Outcomes</label>
-                    <input type="text" className="form-control" disabled={temp ? false : true} name="question" onChange={handleChange} />
+            <article className="">
+                <div className="row">
+                    <div className="col-6">
+                        <div className="">
+                            <label className="form-label">Key Outcomes</label>
+                            <input Value={props.oldData ? props.oldData.question : ''} type="text" className="form-control" disabled={temp ? false : true} name="question" onChange={handleChange} />
+                        </div>
+                    </div>
+                    <div className="col-6">
+                        <div>
+                            <label className="form-label">Timeline</label>
+                            <div className="d-flex align-items-center">
+                                <CustomCalenderPicker key={Math.random()+1*Math.random()+0.2} defualtValue={props.oldData ? props.oldData.timeline : ''} handleDatePick={(dateValue)=>{handleChange(null,dateValue)}}/>
+                                <img src={remove} alt="remove" className="ml-2" onClick={removeInputComponent}/>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <label className="form-label">Timeline</label>
-                    <input type="date" className="form-control" disabled={temp ? false : true} name="timeLimit" onChange={handleChange} />
-                </div>
+
+
             </article>
         </div>
     )
