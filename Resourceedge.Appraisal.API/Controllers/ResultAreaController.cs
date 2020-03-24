@@ -37,12 +37,11 @@ namespace Resourceedge.Appraisal.API.Controllers
             return Ok(data);
         }
 
-
         [HttpGet(Name = "Mykpi")]
         public ActionResult<IEnumerable<KeyResultAreaDtoForCreation>> GetPersonalKpis(int empId)
         {
             var resultFromMap = resultArea.GetPersonalkpis(empId);
-            var mapInstance = mapper.Map<IEnumerable<KeyResultAreaDtoForCreation>>(resultFromMap);
+            var mapInstance = mapper.Map<IEnumerable<KeyResultAreaForViewDto>>(resultFromMap);
             return Ok(mapInstance);
         }
 

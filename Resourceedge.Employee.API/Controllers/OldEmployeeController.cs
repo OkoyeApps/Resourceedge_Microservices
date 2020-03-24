@@ -27,21 +27,6 @@ namespace Resourceedge.Employee.API.Controllers
             mapper = _mapper;
         }
 
-        [HttpGet(Name = "GetAllEmployees")]
-        public IActionResult GetEmployees([FromRoute] PaginationResourceParameter param)
-        {
-            var pagedEmployees = EmployeeRepo.GetEmployees(param);
-            var paginationMetadata = new
-            {
-                totalCount = pagedEmployees.TotalCount,
-                pageSize = pagedEmployees.PageSize,
-                currentPage = pagedEmployees.CurrentPage,
-                totalPages = pagedEmployees.TotalPages,
-            };
-
-            Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
-            return Ok(mapper.Map<IEnumerable<OldEmployeeDto>>(pagedEmployees));
-        }
 
         [HttpGet("{email}", Name = "GetEmployeeByEmail")]
         public IActionResult GetEmployeeByEmail(string email)
@@ -63,11 +48,7 @@ namespace Resourceedge.Employee.API.Controllers
             return Ok(mapper.Map<OldEmployeeDto>(EmployeeRepo.GetEmployeeByEmployeeId(Id)));
         }
 
-        [HttpGet("({Ids})")]
-        public IActionResult GetMultipleEmployees ([FromRoute][ModelBinder(BinderType = typeof(ArrayModelBinder))] string Ids)
-        {
-            return Ok();
-        }
+
 
 
         private IEnumerable<LinkDto> CreateLinksForEmployees(EmployeeResourceParameter employeeResourceParameters, bool hasNext, bool hasPrevious)
