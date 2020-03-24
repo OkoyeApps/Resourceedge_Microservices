@@ -3,6 +3,7 @@ using Resourceedge.Appraisal.Domain.Entities;
 using Resourceedge.Appraisal.Domain.Models;
 using Resourceedge.Common.Archive;
 using Resourceedge.Common.Util;
+using Resourceedge.Email.Api.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,10 @@ namespace Resourceedge.Appraisal.API.Interfaces
         public KeyResultArea Update(ObjectId Id, KeyResultAreaForUpdateMainDto entity);
         Task<long> UpdateKeyOutcome(ObjectId Id, ObjectId outcomeId, int empId, KeyOutcomeForUpdateDto entity);
         Task<KeyResultArea> HodApproval(int empId, ObjectId keyResultAreaId, string whoami, StatusForUpdateDto entity);
-        Task<KeyResultArea> EmpoyleeApproval(int empId, ObjectId keyResultAreaId, StatusForUpdateDto entity);
+        Task<KeyResultArea> EmployeeApproval(int empId, ObjectId keyResultAreaId, StatusForUpdateDto entity);
         IEnumerable<KeyResultArea> GetKeyResultAreasForAppraiser(int appraiserId, int employeeId);
+        void SendApprovalNotification(IEnumerable<KeyResultArea> keyAreas);
+        Task<OldEmployeeForViewDto> GetEmployee(int empId);
+
     }
 }

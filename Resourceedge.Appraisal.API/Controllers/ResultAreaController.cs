@@ -3,12 +3,15 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using Resourceedge.Appraisal.API.Helpers;
 using Resourceedge.Appraisal.API.Interfaces;
 using Resourceedge.Appraisal.API.Services;
 using Resourceedge.Appraisal.Domain.DBContexts;
 using Resourceedge.Appraisal.Domain.Entities;
 using Resourceedge.Appraisal.Domain.Models;
 using Resourceedge.Common.Util;
+using Resourceedge.Email.Api.Model;
+using Resourceedge.Email.Api.SGridClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,6 +60,8 @@ namespace Resourceedge.Appraisal.API.Controllers
             resultArea.AddKeyOutcomes(entityToAdd);
 
             var entityToReturn = mapper.Map<IEnumerable<KeyResultArea>>(entityToAdd);
+            resultArea.SendApprovalNotification(entityToReturn);
+
             return CreatedAtRoute("Mykpi", new { empId = empId }, entityToReturn);
         }
 
@@ -154,7 +159,7 @@ namespace Resourceedge.Appraisal.API.Controllers
                 return BadRequest();
             }
 
-            var result = resultArea.EmpoyleeApproval(empId, keyResultAreaId, entity);
+            var result = resultArea.EmployeeApproval(empId, keyResultAreaId, entity);
             
             if (result != null)
             {
@@ -180,6 +185,5 @@ namespace Resourceedge.Appraisal.API.Controllers
 
             return NotFound();
         }
-
     }
 }

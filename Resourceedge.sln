@@ -40,6 +40,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{457CFD8C-33B
 		Resourceedge.Employee.API\Dockerfile = Resourceedge.Employee.API\Dockerfile
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Resourceedge.Email.Api", "Resourceedge.Email.Api\Resourceedge.Email.Api.csproj", "{C80ECD07-84DB-429B-8823-43135A560F0E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Email", "Email", "{62BE3F31-BFFE-4F99-8B99-ADCF236D6164}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -82,6 +86,10 @@ Global
 		{BBC6C6A2-84B6-4545-9BEF-C6EA9F33722F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BBC6C6A2-84B6-4545-9BEF-C6EA9F33722F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BBC6C6A2-84B6-4545-9BEF-C6EA9F33722F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C80ECD07-84DB-429B-8823-43135A560F0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C80ECD07-84DB-429B-8823-43135A560F0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C80ECD07-84DB-429B-8823-43135A560F0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C80ECD07-84DB-429B-8823-43135A560F0E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -96,6 +104,7 @@ Global
 		{F57219B4-B65A-40FB-9A89-FC121AA04887} = {F1A0C0FE-25D3-4375-9A6D-09C116558785}
 		{F25B32EA-0EC6-4563-B67B-E413C72329DA} = {735A3EA3-1B0C-426F-9918-180BC9EAFE99}
 		{457CFD8C-33B6-429A-8916-16AE221FED8A} = {735A3EA3-1B0C-426F-9918-180BC9EAFE99}
+		{C80ECD07-84DB-429B-8823-43135A560F0E} = {62BE3F31-BFFE-4F99-8B99-ADCF236D6164}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8D69C74D-FE7D-4C07-AA58-6015158E57DE}

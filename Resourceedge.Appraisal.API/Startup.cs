@@ -18,6 +18,7 @@ using Resourceedge.Appraisal.API.Interfaces;
 using Resourceedge.Appraisal.API.Services;
 using Resourceedge.Appraisal.Domain.DBContexts;
 using Resourceedge.Appraisal.Domain.Entities;
+using Resourceedge.Email.Api.SGridClient;
 
 namespace Resourceedge.Appraisal.API
 {
@@ -55,6 +56,9 @@ namespace Resourceedge.Appraisal.API
             services.AddTransient<IDbContext, EdgeAppraisalContext>(ctx => EdgeAppraisalContext.Create(
                 Configuration.GetSection("DefaultConnection:ConnectionString").Value,
                 Configuration.GetSection("DefaultConnection:DataBaseName").Value));
+
+            services.AddTransient<ISGClient, SGClient>(ctx => SGClient.Create(
+                Configuration.GetSection("SendGrid:SENDGRID_API_KEY").Value));
 
             services.AddTransient<IKeyResultArea, KeyResultAreaService>();
             services.AddTransient<IAppraisalConfig, AppraisalConfigService>();

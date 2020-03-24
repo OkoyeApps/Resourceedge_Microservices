@@ -7,10 +7,14 @@ using Resourceedge.Appraisal.API.Interfaces;
 using Resourceedge.Appraisal.Domain.DBContexts;
 using Resourceedge.Appraisal.Domain.Entities;
 using Resourceedge.Appraisal.Domain.Models;
+using Resourceedge.Common.Archive;
+using Resourceedge.Email.Api.Model;
+using Resourceedge.Email.Api.SGridClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Resourceedge.Appraisal.API.Services
@@ -20,14 +24,19 @@ namespace Resourceedge.Appraisal.API.Services
         public readonly IMongoCollection<KeyResultArea> Collection;
         public readonly IQueryable<KeyResultArea> QueryableCollection;
         private readonly ILogger<KeyResultArea> logger;
-        private readonly HttpClient HttpClient;
+        private readonly ISGClient client;
+        private readonly HttpClient HttpClient; 
+        EmailSender sender;
 
-        public KeyResultAreaService(IDbContext context, ILogger<KeyResultArea> _logger, IHttpClientFactory _httpClientFactory)
+
+        public KeyResultAreaService(IDbContext context, ILogger<KeyResultArea> _logger, IHttpClientFactory _httpClientFactory, ISGClient _client)
         {
             Collection = context.Database.GetCollection<KeyResultArea>($"{nameof(KeyResultArea)}s");
             QueryableCollection = Collection.AsQueryable<KeyResultArea>();
             logger = _logger;
+            client = _client;
             HttpClient = _httpClientFactory.CreateClient("EmployeeService");
+            sender = new EmailSender(client);
         }
 
 
@@ -173,7 +182,7 @@ namespace Resourceedge.Appraisal.API.Services
             }
         }
 
-        public async Task<KeyResultArea> EmpoyleeApproval(int empId, ObjectId keyResultAreaId, StatusForUpdateDto entity)
+        public async Task<KeyResultArea> EmployeeApproval(int empId, ObjectId keyResultAreaId, StatusForUpdateDto entity)
         {
             try
             {
@@ -201,7 +210,41 @@ namespace Resourceedge.Appraisal.API.Services
             return result;
         }
 
+        public async void SendApprovalNotification(IEnumerable<KeyResultArea> keyAreas)
+        {
+            string subject = "Approve Key Result Area ";
 
+            List<EmailObject> emailObj = keyAreas.Select( x => new EmailObject() { ReceiverEmailAddress = x.HodDetails.Email, ReceiverFullName = x.HodDetails.Name}).ToList();
+            emailObj.AddRange(keyAreas.Select(x => new EmailObject() { ReceiverEmailAddress = x.AppraiserDetails.Email, ReceiverFullName = x.AppraiserDetails.Name }).ToList());
 
+            var employee = await GetEmployee(keyAreas.FirstOrDefault().EmployeeId);
+            string htmlContent = $"<strong>{employee.FullName}</strong>";
+             string textContent =  $" has Submitted his key result Area, Kindly Review and act on it";
+            EmailDtoForMultiple emailDtos = new EmailDtoForMultiple()
+            {
+                PlainTextContent = textContent,
+                HtmlContent = htmlContent,
+                EmailObjects = emailObj
+            };        
+            
+            var result = sender.SendToMultipleEmail(subject, emailDtos);
+           
+        }
+
+        public async Task<OldEmployeeForViewDto> GetEmployee(int empId)
+        {
+
+            var response = await HttpClient.GetAsync($"api/employee/employeeId/{empId}");
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsByteArrayAsync();
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                var result = JsonSerializer.Deserialize<OldEmployeeForViewDto>(content, options);
+
+                return result;
+            }
+
+            return null;
+        }
     }
 }
