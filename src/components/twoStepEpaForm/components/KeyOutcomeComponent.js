@@ -13,6 +13,7 @@ function KeyOutcomeComponent(props) {
     }
 
     const handleChange = (e, value) => {
+        
         if(e === null){
             console.log("correct value format",value)
             props.updateKRA(props.currentActive, props.myIndex, {timeline : value});

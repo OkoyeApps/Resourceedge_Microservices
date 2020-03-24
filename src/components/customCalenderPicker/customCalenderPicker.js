@@ -10,15 +10,11 @@ let selectedYear = date.getFullYear()
 function CustomCalenderPicker(props) {
     const months = ['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     let formatMonth = date.getMonth() + 1
-    console.log(formatMonth)
     const [show, setShow] = useState(false);
     const [month, setMonth] = useState(formatMonth);
     const [year, setYear] = useState(date.getFullYear());
-    const [day, setDay] = useState(date.getDate());
-    const [selectedDay, setSelectedDay] = useState(false);
 
     const selectDateSetter = (d) => {
-        setDay(d);
         selectedDate = new Date(year + '-' + month + '-' + d);
         selectedDays = d;
         selectedMonth = month;
