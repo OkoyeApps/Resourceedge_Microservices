@@ -15,6 +15,7 @@ const updateKRA = (kraindex, keyoutcomeIndex, data) => (dispatch, getState) => {
         currentKeyoutcome = { ...currentKeyoutcome, ...data };
         specificKeyResultArea.keyoutcomes[keyoutcomeIndex] = currentKeyoutcome;
         AllKRA[kraindex] = specificKeyResultArea;
+
     } else {
         var keyoutcomeObj = { keyoutcomes: [{ ...data }] }
         specificKeyResultArea = { ...specificKeyResultArea, ...keyoutcomeObj };
@@ -48,6 +49,12 @@ const UploadkeyResultAreas = (callback) => (dispatch, getState) => {
     var AllKRA = state.KRA;
     var authDetails = state.auth;
     AllKRA.map(x => x["myId"] = 1);
+    AllKRA.map(area => {
+        var nonNullKeyoutcomes = area.keyoutcomes.filter(x => x != null || x != undefined);
+        area.keyoutcomes = nonNullKeyoutcomes;
+    })
+
+    console.log('data to post', AllKRA);
     requestProcessor.Post("/resultarea/1", "", AllKRA, (success, header, status, data) => {
         if(success){
             callback(success, data);

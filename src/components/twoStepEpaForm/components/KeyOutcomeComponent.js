@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import remove from '../../../assets/images/remove.svg'
 import { connect } from 'react-redux'
 import { updateKRA } from '../../../reduxStore/actions/krAction'
+import CustomCalenderPicker from '../../customCalenderPicker/customCalenderPicker';
 
 function KeyOutcomeComponent(props) {
     var { allKeyOutcomes, setAllKeyOutcomes, myIndex, temp } = props
@@ -11,30 +12,42 @@ function KeyOutcomeComponent(props) {
         setAllKeyOutcomes(Array.from(allKeyOutcomes));
     }
 
-    const handleChange = (e) => {
-        var currentData = { ...currentData, [e.target.name]: e.target.value }
-        props.updateKRA(props.currentActive, props.myIndex, currentData)
-
+    const handleChange = (e, value) => {
+        
+        if(e === null){
+            console.log("correct value format",value)
+            props.updateKRA(props.currentActive, props.myIndex, {timelimit : value});
+        }else{
+            var currentData = { ...currentData, [e.target.name]: e.target.value }
+            props.updateKRA(props.currentActive, props.myIndex, currentData);
+        }
     }
 
     console.log("rendering in key outcome")
     return (
         <div>
-            <article className="d-flex pt-3">
-                <div className="mr-4">
-                    <label className="form-label">Key Outcomes</label>
-                    <input type="text" className="form-control" disabled={temp ? false : true} name="question" onChange={handleChange} />
-                </div>
-                <div>
-                    <label className="form-label">Timeline</label>
-                    <input type="date" className="form-control" disabled={temp ? false : true} name="timeLimit" onChange={handleChange} />
-                </div>
-                <div className="mt-2">
-                    <label className="form-label"></label>
-                    <div onClick={removeInputComponent}><img src={remove} alt="remove kra" className="remove-kra mt-2 ml-1" /></div>
+            <article className="">
+                <div className="row">
+                    <div className="col-6">
+                        <div className="">
+                            <label className="form-label">Key Outcomes</label>
+                            <input Value={props.oldData ? props.oldData.question : ''} type="text" className="form-control" disabled={temp ? false : true} name="question" onChange={handleChange} />
+                        </div>
+                    </div>
+                    <div className="col-6">
+                        <div>
+                            <label className="form-label">Timeline</label>
+                            <div className="d-flex align-items-center">
+                                <CustomCalenderPicker  defaultValue={props.oldData ? props.oldData.timelimit : undefined} handleDatePick={(dateValue)=>{handleChange(null,dateValue)}}/>
+                                <img src={remove} alt="remove" className="ml-2" onClick={removeInputComponent}/>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
+
             </article>
+            <br />
         </div>
     )
 }
@@ -42,4 +55,4 @@ const mapStateToProps = (state) => {
     console.log("ww", state)
 }
 
-export default connect(mapStateToProps, { updateKRA })(KeyOutcomeComponent)
+export default connect(null, { updateKRA })(KeyOutcomeComponent)

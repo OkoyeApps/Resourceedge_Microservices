@@ -3,7 +3,9 @@ import Selector from '../../selectiveSearch/selectiveSearch';
 import { connect } from 'react-redux'
 import { SearchForSupervisors } from '../../../reduxStore/actions/EpaActions';
 import { UpdateKRA_Supervisors } from '../../../reduxStore/actions/krAction'
-
+import 'selectize/dist/css/selectize.bootstrap2.css'
+import 'selectize/dist/css/selectize.bootstrap3.css'
+import 'selectize/dist/css/selectize.css'
 function KeyOutcomeSupervisorEntry(props) {
 
     var [searchResult, setSearchResult] = useState([])
@@ -14,12 +16,13 @@ function KeyOutcomeSupervisorEntry(props) {
         var select2 = window.select2;
         if($ && select2){
             console.log("dom fucntions",  $('#select1'))
+            $('#select1').selectize({options : [{data : ""}]})
         //    $('#select1').select2({})    
         //    console.log()
         }
     },[]);
-    var jQuery = window.$;
-var select2 = window.select2;
+//     var jQuery = window.$;
+// var select2 = window.select2;
 
 
     const searchSupervisor = async () => {
