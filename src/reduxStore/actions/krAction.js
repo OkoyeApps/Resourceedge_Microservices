@@ -1,4 +1,5 @@
 import Constants from '../constants'
+import requestProcessor from '../../api/requestProcessor';
 
 
 const SeedReducer = (data) => (dispatch, getState) => {
@@ -42,5 +43,19 @@ function performCheckAndUpdate(specificKeyResultArea, type, data) {
     return specificKeyResultArea;
 }
 
+const UploadkeyResultAreas = (callback) => (dispatch, getState) => {
+    var state = getState();
+    var AllKRA = state.KRA;
+    var authDetails = state.auth;
+    AllKRA.map(x => x["myId"] = 1);
+    requestProcessor.Post("/resultarea/1", "", AllKRA, (success, header, status, data) => {
+        if(success){
+            callback(success, data);
+        }else{
+            callback(false, data);
+        }
+    })
+}
 
-export { SeedReducer, updateKRA, UpdateKRA_Supervisors }  
+
+export { SeedReducer, updateKRA, UpdateKRA_Supervisors, UploadkeyResultAreas }  

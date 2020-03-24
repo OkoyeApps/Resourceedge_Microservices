@@ -5,7 +5,7 @@ import { updateKRA } from '../../../reduxStore/actions/krAction'
 import CustomCalenderPicker from '../../customCalenderPicker/customCalenderPicker';
 
 function KeyOutcomeComponent(props) {
-    var { next, setNext, allKeyOutcomes, setAllKeyOutcomes, myIndex } = props
+    var { allKeyOutcomes, setAllKeyOutcomes, myIndex, temp } = props
 
     const removeInputComponent = () => {
         allKeyOutcomes.splice(myIndex, 1)
@@ -20,23 +20,14 @@ function KeyOutcomeComponent(props) {
     console.log("rendering in key outcome")
     return (
         <div>
-            <article className="mt-3">
-                <div className="row">
-                    <div className="col-md-6">
-                        <div className="">
-                            <label className="form-label kra-sm-text">Key Outcomes</label>
-                            <input type="text" className="form-control" disabled={next ? false : true} name="question" onChange={handleChange} />
-                        </div>
-                    </div>
-                    <div className="col-md-6 d-flex align-item-center">
-                        <div className="w-100">
-                            <label className="form-label kra-sm-text">Timeline</label>
-                            <div className=" d-flex align-item-center">
-                                <CustomCalenderPicker />
-                                <div onClick={removeInputComponent} className=" d-flex align-item-center"><img src={remove} alt="remove kra" className="remove-kra ml-2" /></div>
-                            </div>
-                        </div>
-                    </div>
+            <article className="d-flex pt-3">
+                <div className="mr-4">
+                    <label className="form-label">Key Outcomes</label>
+                    <input type="text" className="form-control" disabled={temp ? false : true} name="question" onChange={handleChange} />
+                </div>
+                <div>
+                    <label className="form-label">Timeline</label>
+                    <input type="date" className="form-control" disabled={temp ? false : true} name="timeLimit" onChange={handleChange} />
                 </div>
             </article>
         </div>
