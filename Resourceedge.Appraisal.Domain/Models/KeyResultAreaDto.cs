@@ -16,13 +16,14 @@ namespace Resourceedge.Appraisal.Domain.Models
         public NameEmail Appraiser { get; set; }
         public bool? Approved { get; set; }
         public ICollection<KeyOutcome> keyOutcomes { get; set; } = new List<KeyOutcome>();
-        public ApprovalStatus Status { get; set; }
+        public ApprovalStatus Status { get; set; } = new ApprovalStatus();
 
     }
 
     public class KeyResultAreaForViewDto
     {
         private string currentPosition = "appraiser";
+        public ObjectId Id { get; set; }
         public string Name { get; set; }
         public int EmployeeId { get; set; }
         public decimal Weight { get; set; }
@@ -31,7 +32,7 @@ namespace Resourceedge.Appraisal.Domain.Models
         public bool? Approved { get; set; }
         public string whoami { get; set; }
         public ICollection<KeyOutcome> keyOutcomes { get; set; } = new List<KeyOutcome>();
-        public ApprovalStatus Status { get; set; }
+        public ApprovalStatus Status { get; set; } = new ApprovalStatus();
 
     }
 }
