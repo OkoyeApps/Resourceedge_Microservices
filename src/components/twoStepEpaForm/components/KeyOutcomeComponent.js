@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import remove from '../../../assets/images/remove.svg'
 import { connect } from 'react-redux'
 import { updateKRA } from '../../../reduxStore/actions/krAction'
+import CustomCalenderPicker from '../../customCalenderPicker/customCalenderPicker';
 
 function KeyOutcomeComponent(props) {
     var { next, setNext, allKeyOutcomes, setAllKeyOutcomes, myIndex } = props
@@ -14,26 +15,29 @@ function KeyOutcomeComponent(props) {
     const handleChange = (e) => {
         var currentData = { ...currentData, [e.target.name]: e.target.value }
         props.updateKRA(props.currentActive, props.myIndex, currentData)
-
     }
 
     console.log("rendering in key outcome")
     return (
         <div>
-            <article className="d-flex pt-3">
-                <div className="mr-4">
-                    <label className="form-label">Key Outcomes</label>
-                    <input type="text" className="form-control" disabled={next ? false : true} name="question" onChange={handleChange} />
+            <article className="mt-3">
+                <div className="row">
+                    <div className="col-md-6">
+                        <div className="">
+                            <label className="form-label kra-sm-text">Key Outcomes</label>
+                            <input type="text" className="form-control" disabled={next ? false : true} name="question" onChange={handleChange} />
+                        </div>
+                    </div>
+                    <div className="col-md-6 d-flex align-item-center">
+                        <div className="w-100">
+                            <label className="form-label kra-sm-text">Timeline</label>
+                            <div className=" d-flex align-item-center">
+                                <CustomCalenderPicker />
+                                <div onClick={removeInputComponent} className=" d-flex align-item-center"><img src={remove} alt="remove kra" className="remove-kra ml-2" /></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <label className="form-label">Timeline</label>
-                    <input type="date" className="form-control" disabled={next ? false : true} name="timeLimit" onChange={handleChange} />
-                </div>
-                <div className="mt-2">
-                    <label className="form-label"></label>
-                    <div onClick={removeInputComponent}><img src={remove} alt="remove kra" className="remove-kra mt-2 ml-1" /></div>
-                </div>
-
             </article>
         </div>
     )

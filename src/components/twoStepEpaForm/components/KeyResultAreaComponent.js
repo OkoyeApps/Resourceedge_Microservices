@@ -37,15 +37,12 @@ const KeyResultAreaComponent = (props) => {
         if (!isValid) {
             moveToNext();
             props.SeedReducer(AllKeyResultAreas)
+            props.setKeyResultArea(AllKeyResultAreas)
         } else {
             alert("one of your key result area field is empty")
         }
     }
 
-    useEffect(() => {
-        props.setEpaData(AllKeyResultAreas)
-
-    }, [AllKeyResultAreas])
 
     const RenderEpas = () => {
         return Array.from({ length: AllKeyResultAreas.length }).map((c, index) => {
@@ -67,7 +64,7 @@ const KeyResultAreaComponent = (props) => {
                 <p className="kra-sm-text">Weight</p>
             </article>
             <div id="input-space">
-                {next === false ? RenderEpas() : <KraDisplayComponent allKRA={AllKeyResultAreas} setCurrentIndex={props.setCurrentIndex} />}
+                {next === false ? RenderEpas() : <KraDisplayComponent allKRA={AllKeyResultAreas} setCurrentIndex={props.setCurrentIndex} pickKRA={props.pickKRA}/>}
                 <div className="kra-sm-txt-blue pt-1 px-3" onClick={AddKeyResultArea}>
                     {next === false ? <div> <span>+</span> <span>Add Key Result Area</span></div> : <></>}
                 </div>
