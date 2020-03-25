@@ -1,4 +1,5 @@
 import Constants from '../constants'
+import requestProcessor from '../../api/requestProcessor';
 
 
 const SeedReducer = (data) => (dispatch, getState) => {
@@ -14,6 +15,7 @@ const updateKRA = (kraindex, keyoutcomeIndex, data) => (dispatch, getState) => {
         currentKeyoutcome = { ...currentKeyoutcome, ...data };
         specificKeyResultArea.keyoutcomes[keyoutcomeIndex] = currentKeyoutcome;
         AllKRA[kraindex] = specificKeyResultArea;
+
     } else {
         var keyoutcomeObj = { keyoutcomes: [{ ...data }] }
         specificKeyResultArea = { ...specificKeyResultArea, ...keyoutcomeObj };
@@ -42,5 +44,25 @@ function performCheckAndUpdate(specificKeyResultArea, type, data) {
     return specificKeyResultArea;
 }
 
+const UploadkeyResultAreas = (callback) => (dispatch, getState) => {
+    var state = getState();
+    var AllKRA = state.KRA;
+    var authDetails = state.auth;
+    AllKRA.map(x => x["myId"] = 1);
+    AllKRA.map(area => {
+        var nonNullKeyoutcomes = area.keyoutcomes.filter(x => x != null || x != undefined);
+        area.keyoutcomes = nonNullKeyoutcomes;
+    })
 
-export { SeedReducer, updateKRA, UpdateKRA_Supervisors }  
+    console.log('data to post', AllKRA);
+    requestProcessor.Post("/resultarea/1", "", AllKRA, (success, header, status, data) => {
+        if(success){
+            callback(success, data);
+        }else{
+            callback(false, data);
+        }
+    })
+}
+
+
+export { SeedReducer, updateKRA, UpdateKRA_Supervisors, UploadkeyResultAreas }  

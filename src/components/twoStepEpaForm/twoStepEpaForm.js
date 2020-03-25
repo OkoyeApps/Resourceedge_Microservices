@@ -3,21 +3,21 @@ import './twoStepEpaForm.css'
 import CustomEpaField from '../customEpaFeild/customEpaFeild'
 import KeyResultAreaComponent from './components/KeyResultAreaComponent';
 import KeyResultDetails from './components/KeyResultDetails'
+import KeyOutcomeDetailParent from './components/keyOutcomeDetailParent';
+
 function TwoStepEpaForm(props) {
-    var [filled, setFilled] = useState(false)
     var [next, setNext] = useState(false)
-    var [epaData, setEpaData] = useState([]);
-    var [currentIndex, setCurrentIndex] = useState(0)
+    var [TotalKrasAdded, setTotalKrasAdded] = useState([]);
+    var [currentIndex, setCurrentIndex] = useState(null)
     const moveToNext = () => {
         setNext(true)
     }
-    console.log("what", epaData)
-    console.log("current index", currentIndex)
     return (
         <div className="row mx-0">
-            <KeyResultAreaComponent setNextView={setNext} setEpaData={setEpaData} setCurrentIndex={setCurrentIndex} />
+            <KeyResultAreaComponent setNextView={setNext} setTotalKrasAdded={setTotalKrasAdded} setCurrentIndex={setCurrentIndex} />
 
-            <KeyResultDetails setNext={setNext} next={next} currentActive={currentIndex} epaData={epaData} />
+            {/* <KeyResultDetails temp={next} currentActive={currentIndex} /> */}
+            <KeyOutcomeDetailParent  ActiveKraIndex={currentIndex} kraLength={TotalKrasAdded}/>
         </div>
     )
 }

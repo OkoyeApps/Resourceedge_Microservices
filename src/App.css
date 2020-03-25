@@ -25,3 +25,12 @@ body{
   font-family: AvenirUltraLight;
   src: url("./assets/fonts/AvenirNext-UltraLight.ttf");
 }
+
+@font-face {
+  font-family: Avenir;
+  src: url('./assets/fonts/AvenirNextLTPro-Regular.otf');
+}
+
+body{
+  font-family: Avenir !important;
+}
