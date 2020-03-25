@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './customCalenderPicker.css';
+import upArrow from '../../assets/images/directionArrow1.svg'
+import downArrow from '../../assets/images/directionArrow2.svg'
 
 const date = new Date();
 let selectedDate = new Date();
@@ -84,9 +86,11 @@ function CustomCalenderPicker(props) {
                     show ?
                         <div className="dates">
                             <div className="month">
-                                <div className="arrows prev-mth" onClick={moveToPrevMonth}>&lt;</div>
-                                <div className="mth">{`${months[month - 1]} ${year}`}</div>
-                                <div className="arrows next-mth" onClick={moveToNextMonth}>&gt;</div>
+                                <div className="mth"><b>{`${months[month - 1]} ${year}`}</b></div>
+                                <div className="d-flex">
+                                    <div className="arrows prev-mth" onClick={moveToPrevMonth}><img src={upArrow} alt="up"/></div>
+                                    <div className="arrows next-mth" onClick={moveToNextMonth}><img src={downArrow} alt="down"/></div>
+                                </div>
                             </div>
                             <div className="days">
                                 {populateDates()}

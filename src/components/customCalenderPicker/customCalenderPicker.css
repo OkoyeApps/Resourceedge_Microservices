@@ -23,13 +23,14 @@
     /* font-size: 28px; */
   }
   .date-picker .dates{
-    /* display: none; */
-    position: absolute;
-    top:100%;
-    left: 0;
-    right: 0;
+    position: relative;
+    top:30%;
     background-color: #fff;
     z-index: 2;
+    float: right;
+    width: 113%;
+    padding: 5px;
+    margin-right: -11px;
   }
   .date-picker .dates .month{
     display: flex;

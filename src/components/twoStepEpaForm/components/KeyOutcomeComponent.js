@@ -25,7 +25,7 @@ function KeyOutcomeComponent(props) {
 
     console.log("rendering in key outcome")
     return (
-        <div>
+        <div className="keyOutcomeComponet">
             <article className="">
                 <div className="row">
                     <div className="col-6">
@@ -37,7 +37,7 @@ function KeyOutcomeComponent(props) {
                     <div className="col-6">
                         <div>
                             <label className="form-label">Timeline</label>
-                            <div className="d-flex align-items-center">
+                            <div className="d-flex align-items-baseline">
                                 <CustomCalenderPicker  defaultValue={props.oldData ? props.oldData.timelimit : undefined} handleDatePick={(dateValue)=>{handleChange(null,dateValue)}}/>
                                 <img src={remove} alt="remove" className="ml-2" onClick={removeInputComponent}/>
                             </div>

@@ -6,10 +6,15 @@
     width: 100vw;
     background: rgba(72, 72, 72, 0.65);
     z-index: 3;
+    overflow-y: auto;
 }
 .modal__btn{
     width: 20vmin
 }
 .modal-arrow{
     cursor: pointer;
+}
+.spacing-modal-body{
+    max-height: 70vh;
+    overflow-y: auto;
 }
