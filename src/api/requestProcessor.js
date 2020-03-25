@@ -1,6 +1,6 @@
 import axios from 'axios';
-// var baseUrl = "https://resourceedgeappraisalapi.azurewebsites.net/api";
-var baseUrl = "http://localhost:5321/api"
+var baseUrl = "https://resourceedgeappraisalapi.azurewebsites.net/api";
+// var baseUrl = "http://localhost:5321/api"
 var axiosClient = axios.create({
     baseURL: baseUrl,
     headers: { "content-type": 'application/json', 'accept': 'application/json' }, timeout: 6000

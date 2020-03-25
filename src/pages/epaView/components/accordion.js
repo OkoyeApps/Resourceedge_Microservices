@@ -11,10 +11,10 @@ const CollapseView = ({ epaValue }) => {
         <div className="epa-card mt-2">
             <div className="row mx-0">
                 <div className="col-11 pl-0">
-                    <h4>{epaValue.name}</h4><span className="pl-2"><img src={tick} alt="reviewed" /></span>
+                    <h4>{epaValue.name}</h4><span className="pl-2">{epaValue.approved ? <img src={tick} alt="reviewed" /> : <></>}</span>
                 </div>
                 <div className="col-1">
-                    <div className="view-epa pointer-cursor" style={{cursor: "pointer"}} onClick={() => setToggle(!toggle)}>View</div>
+                    <div className="view-epa pointer-cursor" style={{ cursor: "pointer" }} onClick={() => setToggle(!toggle)}>{toggle ? "Collapse" : "View"}</div>
                 </div>
             </div>
             <article className="d-flex mt-2">
@@ -42,18 +42,16 @@ const CollapseView = ({ epaValue }) => {
                                     <th style={{ width: "60%" }}>Key Outcomes</th>
                                     <th className="pl-5">Deadline</th>
                                 </tr>
-                                <tr>
-                                    <td className="d-flex"><span className="mr-1">1.</span><span> Supervise and facilitate the preparation of Learnable 2020’s curriculum</span></td>
-                                    <td className="pl-5">15 November 2020</td>
-                                </tr>
-                                <tr>
-                                    <td className="d-flex"><span className="mr-1">2.</span><span> Supervise and facilitate the preparation of Learnable 2020’s curriculum</span></td>
-                                    <td className="pl-5">15 November 2020</td>
-                                </tr>
-                                <tr>
-                                    <td className="d-flex"><span className="mr-1">3.</span><span> Supervise and facilitate the preparation of Learnable 2020’s curriculum</span></td>
-                                    <td className="pl-5">15 November 2020</td>
-                                </tr>
+                                {
+                                    epaValue.keyOutcomes.map((ev, i) => {
+                                        return (
+                                            <tr>
+                                                <td className="d-flex"><span className="mr-1">{i + 1}</span><span>{ev.question}</span></td>
+                                                <td className="pl-5">{new Date(ev.timeLimit).toLocaleDateString()}</td>
+                                            </tr>
+                                        )
+                                    })
+                                }
                             </table>
                         </div>
                     </div>

@@ -74,7 +74,7 @@ function MainLayout(props) {
                         <div className="col-2  pl-0">
                             {renderInnerNav()}
                         </div>
-                        <div className="col-10">
+                        <div className="col-10 containerContent">
                             {props.children}
                         </div>
                     </div>

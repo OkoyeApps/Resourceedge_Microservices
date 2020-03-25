@@ -1,7 +1,7 @@
 import React from 'react';
 import './rejectAppraisal.css'
 
-const RejectAppraisal = () => {
+const RejectAppraisal = (props) => {
     return (
         <div className="reject-appraisal-wrapper p-2">
             <div className="row">
@@ -18,7 +18,7 @@ const RejectAppraisal = () => {
                 <div className="col-12 d-flex justify-content-center">
                     <div className="w-70 d-flex">
                         <button className="form-control mr-3 reject-btn">Cancel</button>
-                        <button className="form-control approve-btn">Reject</button>
+                        <button className="form-control approve-btn" onClick={props.reject}>Reject</button>
                     </div>
                 </div>
             </div>

@@ -25,3 +25,8 @@
   position: fixed;
   height: 100vh;
 }
+
+.containerContent {
+  height: 90vh;
+  overflow: auto;
+}
