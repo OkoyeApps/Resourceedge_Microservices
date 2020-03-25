@@ -17,7 +17,7 @@ const KeyOutcomeDetailParent = (props) => {
 
     const GenerateKeyOutcomeComponent = () => {
         var result = Array.from({ length: KRA.length }).map((x, index) => {
-            return <KeyResultDetails next={true} currentActive={index} key={index} temp={true} />
+            return <KeyResultDetails next={true} currentActive={index} key={index} temp={true} closeModal={props.closeModal} />
         })
         tempArray = result;
         setKeyoutcomeComponentArray(result);

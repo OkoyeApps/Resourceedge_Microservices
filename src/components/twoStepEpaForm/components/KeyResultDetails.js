@@ -28,7 +28,7 @@ function KeyResultDetails(props) {
             } else {
                 if (existingKeyArea[currentActive].keyoutcomes.length === 0 && existingKeyArea[currentActive].keyoutcomes[0].question
                     || existingKeyArea[currentActive].keyoutcomes[0].timelimit) {
-                   return <KeyOutcomeComponent key={(Math.random() + 2.1) * 5.2214} oldData={{
+                    return <KeyOutcomeComponent key={(Math.random() + 2.1) * 5.2214} oldData={{
                         question: existingKeyArea[currentActive].keyoutcomes[0].question,
                         timelimit: existingKeyArea[currentActive].keyoutcomes[0].timelimit
                     }}
@@ -50,7 +50,10 @@ function KeyResultDetails(props) {
     return (
         <>
             <section id="key-result-area-details" className={`col-7 py-3 ${temp ? "active-step" : "inactive-krad"}`}>
-                <p className="steps">Step 2<span className="small-half">/2</span></p>
+                <div className="d-flex">
+                    <p className="steps">Step 2<span className="small-half">/2</span></p>
+                    {props.next ? <div style={{ fontSize: 20 }} onClick={props.closeModal}><span className="fa fa-times"></span></div> : <></>}
+                </div>
                 <p className="kra-sm-text">Now enter the following details for each Key Results Area on the left respectively</p>
 
 

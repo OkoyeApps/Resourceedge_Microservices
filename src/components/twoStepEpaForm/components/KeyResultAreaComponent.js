@@ -69,7 +69,10 @@ const KeyResultAreaComponent = (props) => {
             <section id="key-result-area" className={`col-5 ${next ? '' : 'active-step'} py-3 px-0`}>
                 <article className="d-flex px-3">
                     <p className="steps">Step 1<span className="small-half">/2</span></p>
-                    {next ? <div className="edit-kra" style={{ cursor: "pointer" }} onClick={EditKra}>Edit</div> : <div onClick={props.closeModal} style={{ cursor: "pointer", fontSize: "20px" }}><i className="fa fa-times"></i></div>}
+                    {next ? <div className="edit-kra" style={{ cursor: "pointer" }} onClick={EditKra}>Edit</div> :
+                        // <div onClick={props.closeModal} style={{ cursor: "pointer", fontSize: "20px" }}><i className="fa fa-times"></i></div>
+                        <></>
+                    }
                 </article>
                 <p className="kra-sm-text pb-4 px-3">Please fill in all your Key Result Areas and their weights</p>
                 <article className="d-flex px-3">
