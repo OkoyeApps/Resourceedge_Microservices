@@ -5,15 +5,20 @@ import Activity from '../../components/activity/activity';
 import { GetPersonalEpas } from '../../reduxStore/actions/EpaActions'
 import { connect } from 'react-redux';
 import ResultAccordion from './components/accordion';
+import Skeleton from 'react-skeleton-loader'
 
 const EpaView = (props) => {
     // var { data } = props
     const [data, setData] = useState([]);
+    var [loading, setLoading] = useState(false)
     var [accept, setAccept] = useState(false)
     useEffect(() => {
+        setLoading(true)
         props.GetPersonalEpas(1, (success, data) => {
+            setLoading(true)
             if (success) {
                 setData(data);
+                setLoading(false)
                 getReadyToAccept(data)
             } else {
                 //show error message the right way
@@ -53,7 +58,7 @@ const EpaView = (props) => {
                 </section>
 
                 <section className="row mx-0 mt-2">
-                    <div className="col-8">
+                    <div className="col-12">
                         {
                             data.map((x, i) => {
                                 return (
@@ -67,7 +72,7 @@ const EpaView = (props) => {
                         }
 
                     </div>
-                    <Activity />
+                    {/* <Activity /> */}
                 </section>
             </div>
         )
@@ -75,14 +80,27 @@ const EpaView = (props) => {
 
     return (
         <div>
-            {data.length > 0 ? viewWithData() : <div className="d-flex align-items-center justify-content-center" style={{ marginTop: "40vh" }}><section className="text-center">
-                <div className="notice-text">
-                    Nothing to see here
+            {loading ?
+                <div className="row mt-5 pt-5">
+                    <div className="col-md-12">
+                        <Skeleton height="15vh" width="100%" color="#e6e6e6" borderRadius="0" />
+                        <Skeleton height="15vh" width="100%" color="#e6e6e6" borderRadius="0" />
+                        <Skeleton height="15vh" width="100%" color="#e6e6e6" borderRadius="0" />
+                        <Skeleton height="15vh" width="100%" color="#e6e6e6" borderRadius="0" />
                     </div>
-                <div className="little-gray-text pt-4">
-                    When you upload your Employee Performance Agreement, you’ll see it here
+                    {/* <div className="col-md-4">
+                        <Skeleton height="70vh" width="100%" color="#e6e6e6" />
+                    </div> */}
+
+                </div> :
+                data.length > 0 ? viewWithData() : <div className="d-flex align-items-center justify-content-center" style={{ marginTop: "40vh" }}><section className="text-center">
+                    <div className="notice-text">
+                        Nothing to see here
                     </div>
-            </section></div>}
+                    <div className="little-gray-text pt-4">
+                        When you upload your Employee Performance Agreement, you’ll see it here
+                    </div>
+                </section></div>}
         </div>
     )
 }
