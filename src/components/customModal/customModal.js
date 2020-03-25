@@ -32,7 +32,7 @@ const CustomModal = (props) => {
                                     :
                                     ""
                 }
-                closeModal={() => setOpenModal(false)}
+                // closeModal={() => setOpenModal(false)}
                 keepOpen={() => setOpenModal(true)}
                 showArrow={props.showArrow}
             />

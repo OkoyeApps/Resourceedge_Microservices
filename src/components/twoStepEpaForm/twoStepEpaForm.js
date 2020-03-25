@@ -12,8 +12,8 @@ function TwoStepEpaForm(props) {
 
     return (
         <div className="row mx-0">
-            <KeyResultAreaComponent setNextView={setNext} setTotalKrasAdded={setTotalKrasAdded} setCurrentIndex={setCurrentIndex} setShow={props.setShow} />
-            <KeyOutcomeDetailParent ActiveKraIndex={currentIndex} kraLength={TotalKrasAdded} />
+            <KeyResultAreaComponent setNextView={setNext} setTotalKrasAdded={setTotalKrasAdded} setCurrentIndex={setCurrentIndex} setShow={props.setShow} closeModal={props.closeModal} />
+            <KeyOutcomeDetailParent ActiveKraIndex={currentIndex} kraLength={TotalKrasAdded} closeModal={props.closeModal} />
         </div>
     )
 }
