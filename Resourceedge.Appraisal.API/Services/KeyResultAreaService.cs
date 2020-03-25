@@ -218,8 +218,8 @@ namespace Resourceedge.Appraisal.API.Services
             emailObj.AddRange(keyAreas.Select(x => new EmailObject() { ReceiverEmailAddress = x.AppraiserDetails.Email, ReceiverFullName = x.AppraiserDetails.Name }).ToList());
 
             var employee = await GetEmployee(keyAreas.FirstOrDefault().EmployeeId);
-            string htmlContent = $"<strong>{employee.FullName}</strong>";
-             string textContent =  $" has Submitted his key result Area, Kindly Review and act on it";
+            string htmlContent = "";
+             string textContent = "";
             EmailDtoForMultiple emailDtos = new EmailDtoForMultiple()
             {
                 PlainTextContent = textContent,
@@ -227,7 +227,7 @@ namespace Resourceedge.Appraisal.API.Services
                 EmailObjects = emailObj
             };        
             
-            var result = sender.SendToMultipleEmail(subject, emailDtos);
+            var result = sender.SendMultipleEmail(subject, employee.FullName, emailDtos);
            
         }
 

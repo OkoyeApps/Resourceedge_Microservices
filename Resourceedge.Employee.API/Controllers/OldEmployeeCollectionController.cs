@@ -27,7 +27,7 @@ namespace Resourceedge.Employee.API.Controllers
         }
 
         [HttpGet(Name = "GetAllEmployees")]
-        public IActionResult GetEmployees([FromRoute] PaginationResourceParameter param)
+        public IActionResult GetEmployees([FromQuery] PaginationResourceParameter param)
         {
             var pagedEmployees = EmployeeRepo.GetEmployees(param);
             var paginationMetadata = new

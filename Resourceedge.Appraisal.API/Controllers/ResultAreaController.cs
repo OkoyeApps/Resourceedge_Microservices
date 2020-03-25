@@ -55,6 +55,7 @@ namespace Resourceedge.Appraisal.API.Controllers
         [HttpPost(Name = "CreateKeyOutcomes")]
         public IActionResult CreateKeyResultArea(string empId, IEnumerable<KeyResultAreaDtoForCreation> model)
         {
+            
             var entityToAdd = mapper.Map<IEnumerable<KeyResultAreaDtoForCreation>, IEnumerable<KeyResultArea>>(model);            
             resultArea.AddKeyOutcomes(entityToAdd);
 

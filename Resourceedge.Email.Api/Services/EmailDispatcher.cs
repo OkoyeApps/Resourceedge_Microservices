@@ -26,26 +26,28 @@ namespace Resourceedge.Email.Api.Services
             msg.PlainTextContent = emailDto.PlainTextContent;
             msg.HtmlContent = emailDto.HtmlContent;
             msg.AddTo(emailDto.ReceiverEmailAddress, emailDto.ReceiverFullName);
-            msg.AddCc("nwabugwu.akomas@tenece.com", "Nwabugwu Akomas");
 
             var res = await client.GridClient.SendEmailAsync(msg);
 
             return res.StatusCode;
         }
 
-        public async Task<HttpStatusCode> SendMultipleEmail(string subject, string plaintextContent, string htmlContent, List<EmailAddress> emails)
+        public async Task<HttpStatusCode> SendSingleMailToMultipleEmail(string subject, string plaintextContent, string htmlContent, List<EmailAddress> emails)
         {
-            var msg = client.message;
-            msg.SetFrom(client.From);
-            msg.From = client.From;
 
-            msg.AddTos(emails);
-            msg.PlainTextContent = plaintextContent;
-            msg.HtmlContent = htmlContent;
-            msg.AddCc("nwabugwu.akomas@tenece.com", "Nwabugwu Akomas");
-
+            emails.Add(new EmailAddress("kingdav.ndcdavison@gamil.com", "Nwabugwu Akomas"));
+            var msg = MailHelper.CreateSingleEmailToMultipleRecipients(client.From, emails, subject, plaintextContent, htmlContent);
             var res = await client.GridClient.SendEmailAsync(msg);
-            return HttpStatusCode.OK;
+
+            return res.StatusCode;
+        }
+
+        public async Task<HttpStatusCode> SendMultipleMailToMultipleEmail(List<string> subject, string plaintextContent, string htmlContent, List<EmailAddress> emails, List<Dictionary<string,string>> substitute )
+        {
+            var msg = MailHelper.CreateMultipleEmailsToMultipleRecipients(client.From, emails, subject, plaintextContent, htmlContent, substitute);
+            var res = await client.GridClient.SendEmailAsync(msg);
+
+            return res.StatusCode;
         }
     }
 }
