@@ -76,11 +76,17 @@ export default function Selector(props) {
             </div>
             {
                 searchable ?
-                    show ? <div className={dropClass ? dropClass : "dropDown w-100"} style={{ ...dropStyle }}>
-                        <ul className="w-100">
-                            {result && result.slice(0, 10).map((item, index) => (<li onClick={(e) => handleSelect({ email: item.email, EmployeeId: item.employeeId, name: item.fullName }, e)} key={index} className="w-100">{item.fullName}</li>))}
-                        </ul>
-                    </div> : <></>
+                    show ?
+                        <div className={dropClass ? dropClass : "dropDown w-100"} style={{ ...dropStyle }}>
+                            <ul className="w-100">
+                                {
+                                    result ?
+                                        result.slice(0, 10).map((item, index) => (<li onClick={(e) => handleSelect({ email: item.email, EmployeeId: item.employeeId, name: item.fullName }, e)} key={index} className="w-100">{item.fullName}</li>))
+                                        :
+                                        <p> </p>
+                                }
+                            </ul>
+                        </div> : <></>
                     : <></>
             }
 

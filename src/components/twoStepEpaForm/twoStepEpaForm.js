@@ -14,10 +14,10 @@ function TwoStepEpaForm(props) {
     }
     return (
         <div className="row mx-0">
-            <KeyResultAreaComponent setNextView={setNext} setTotalKrasAdded={setTotalKrasAdded} setCurrentIndex={setCurrentIndex} />
+            <KeyResultAreaComponent setNextView={setNext} setTotalKrasAdded={setTotalKrasAdded} setCurrentIndex={setCurrentIndex} closeModal={props.closeModal} setShow={props.setShow} />
 
             {/* <KeyResultDetails temp={next} currentActive={currentIndex} /> */}
-            <KeyOutcomeDetailParent  ActiveKraIndex={currentIndex} kraLength={TotalKrasAdded}/>
+            <KeyOutcomeDetailParent ActiveKraIndex={currentIndex} kraLength={TotalKrasAdded} />
         </div>
     )
 }

@@ -13,6 +13,7 @@
 .slide {
   display: unset;
   position: fixed;
+  z-index: 1;
   top: 9%;
   animation: slideIn 0.5s linear;
   right: 1%;

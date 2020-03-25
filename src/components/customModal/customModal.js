@@ -8,6 +8,10 @@ import TwoStepEpaForm from '../twoStepEpaForm/twoStepEpaForm'
 const CustomModal = (props) => {
     var [openModal, setOpenModal] = useState(false);
 
+    var CloseModal = () => {
+        setOpenModal(false)
+    }
+
     if (openModal === true) {
         return (
             <ModalBody
@@ -15,7 +19,7 @@ const CustomModal = (props) => {
                 content={
                     props.type === "upload-epa-form" ?
                         // <EpaForm/>
-                        <TwoStepEpaForm />
+                        <TwoStepEpaForm closeModal={CloseModal} setShow={props.setShow} />
                         :
                         props.type === "reject-appraisal" ?
                             <RejectAppraisal reject={props.reject} />
