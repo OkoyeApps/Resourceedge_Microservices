@@ -9,14 +9,10 @@ function TwoStepEpaForm(props) {
     var [next, setNext] = useState(false)
     var [TotalKrasAdded, setTotalKrasAdded] = useState([]);
     var [currentIndex, setCurrentIndex] = useState(null)
-    const moveToNext = () => {
-        setNext(true)
-    }
+
     return (
         <div className="row mx-0">
             <KeyResultAreaComponent setNextView={setNext} setTotalKrasAdded={setTotalKrasAdded} setCurrentIndex={setCurrentIndex} />
-
-            {/* <KeyResultDetails temp={next} currentActive={currentIndex} /> */}
             <KeyOutcomeDetailParent  ActiveKraIndex={currentIndex} kraLength={TotalKrasAdded}/>
         </div>
     )

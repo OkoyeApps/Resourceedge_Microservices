@@ -44,16 +44,14 @@
 }
 
 .dropDown {
-  /* margin-left: 6px; */
-  /* padding: 1rem 0.3rem; */
-  /* box-shadow: 1px 1px 2px 2px lightgray; */
   border: 1px solid lightgray;
-  /* border-radius: 8px; */
-  /* margin: 0 2rem 2px 2rem; */
   animation: popIn 0.3s linear;
   background: #fff;
   position: absolute;
   overflow: auto;
+  z-index: 2;
+  width: 88%;
+  font-size: 14px;
 }
 
 .dropDown ul {
