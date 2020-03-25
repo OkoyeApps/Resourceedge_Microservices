@@ -13,15 +13,12 @@ namespace Resourceedge.Appraisal.API.Helpers
 {
     public class EmailSender
     {
-        EmailSender sender;
-
         private readonly ISGClient client;
         EmailDispatcher dispatcher;
         public EmailSender(ISGClient _client)
         {
             client = _client;
             dispatcher = new EmailDispatcher(client);
-            sender = new EmailSender(client);
         }
 
         public async Task<HttpStatusCode> SendToSingleEmployee(string Subject, SingleEmailDto singleEmail)
@@ -52,13 +49,12 @@ namespace Resourceedge.Appraisal.API.Helpers
                     SingleEmailDto singleEmail = new SingleEmailDto()
                     {
                         PlainTextContent = emailDtos.PlainTextContent,
-                        HtmlContent = await sender.FormatEmail(employeeName, item.Name),
+                        HtmlContent = await FormatEmail(employeeName, item.Name),
                         ReceiverEmailAddress = item.Email,
                         ReceiverFullName = item.Name
                     };
 
                      await dispatcher.SendSingleEmail(subject, singleEmail);
-
                 }
                 return HttpStatusCode.OK;        
             }
@@ -66,8 +62,7 @@ namespace Resourceedge.Appraisal.API.Helpers
             {
 
                 throw ex;
-            }
-        
+            }        
         }
 
         public async Task<string> FormatEmail(string Name, string supervisor)

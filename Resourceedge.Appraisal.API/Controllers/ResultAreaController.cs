@@ -60,7 +60,7 @@ namespace Resourceedge.Appraisal.API.Controllers
             resultArea.AddKeyOutcomes(entityToAdd);
 
             var entityToReturn = mapper.Map<IEnumerable<KeyResultArea>>(entityToAdd);
-            resultArea.SendApprovalNotification(entityToReturn);
+           // resultArea.SendApprovalNotification(entityToReturn);
 
             return CreatedAtRoute("Mykpi", new { empId = empId }, entityToReturn);
         }
