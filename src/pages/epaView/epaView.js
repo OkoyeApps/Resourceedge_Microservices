@@ -43,7 +43,7 @@ const EpaView = (props) => {
         return (
             <div>
                 <section className="row mx-0 pt-5">
-                    <div className="col-8">
+                    <div className="col-12">
                         <div className="row mx-0 py-2">
                             <div className="col-11 d-flex align-items-center">
                                 <div className="view-intro-txt">

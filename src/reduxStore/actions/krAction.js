@@ -50,15 +50,17 @@ const UploadkeyResultAreas = (callback) => (dispatch, getState) => {
     var authDetails = state.auth;
     AllKRA.map(x => x["myId"] = 1);
     AllKRA.map(area => {
-        var nonNullKeyoutcomes = area.keyoutcomes.filter(x => x != null || x != undefined);
-        area.keyoutcomes = nonNullKeyoutcomes;
+        if (area.keyoutcomes) {
+            var nonNullKeyoutcomes = area.keyoutcomes.filter(x => x != null || x != undefined);
+            area.keyoutcomes = nonNullKeyoutcomes;
+        }
     })
 
     console.log('data to post', AllKRA);
     requestProcessor.Post("/resultarea/1", "", AllKRA, (success, header, status, data) => {
-        if(success){
+        if (success) {
             callback(success, data);
-        }else{
+        } else {
             callback(false, data);
         }
     })
