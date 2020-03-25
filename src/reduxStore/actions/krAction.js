@@ -27,6 +27,20 @@ const updateKRA = (kraindex, keyoutcomeIndex, data) => (dispatch, getState) => {
     })
 }
 
+const RemoveKRA_From_list = (kraindex, keyoutcomeIndex) => (dispatch, getState) => {
+    var state = getState();
+    var AllKRA = state.KRA;
+    var specificKeyResultArea = AllKRA[kraindex];
+    if (specificKeyResultArea.hasOwnProperty("keyoutcomes")) {
+        specificKeyResultArea.keyoutcomes.splice(keyoutcomeIndex, 1);
+        dispatch({
+            type: Constants.UPDATE_KRA,
+            payload: AllKRA
+        })
+    }
+}
+
+
 const UpdateKRA_Supervisors = (kraindex, type = "", data) => (dispatch, getState) => {
     var state = getState();
     var AllKRA = state.KRA;
@@ -67,4 +81,4 @@ const UploadkeyResultAreas = (callback) => (dispatch, getState) => {
 }
 
 
-export { SeedReducer, updateKRA, UpdateKRA_Supervisors, UploadkeyResultAreas }  
+export { SeedReducer, updateKRA, UpdateKRA_Supervisors, UploadkeyResultAreas, RemoveKRA_From_list }  

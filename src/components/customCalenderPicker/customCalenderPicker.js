@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './customCalenderPicker.css';
+import upArrow from '../../assets/images/directionArrow1.svg'
+import downArrow from '../../assets/images/directionArrow2.svg'
+import radioIcon from '../../assets/images/radioIcon.svg'
 
 const date = new Date();
 let selectedDate = new Date();
@@ -45,9 +48,7 @@ function CustomCalenderPicker(props) {
     }
     // Format date for display
     const formatSelectedDate = () => {
-        console.log('formatSelectedDate was called')
         if (props.defaultValue) {
-            console.log(props.defaultValue, "love hahah")
             return props.defaultValue
         } else {
             return `${selectedDays < 10 ? `0${selectedDays}` : selectedDays}/${selectedMonth < 10 ? `0${selectedMonth}` : selectedMonth}/${selectedYear}`
@@ -55,7 +56,6 @@ function CustomCalenderPicker(props) {
     }
 
     const populateDates = () => {
-        console.log("populateDates was called")
         var dayCount = []
         let amount_days = 31;
         if (month === 2) {
@@ -65,13 +65,12 @@ function CustomCalenderPicker(props) {
             dayCount = [...dayCount, i + 1]
         }
         return dayCount.map((d, i) => (
-            <div key={i} className={checkForSelectedDay(d) ? "day selected" : "day"} onClick={() => { selectDateSetter(d) }}>{d}</div>
+            <div key={i} className={checkForSelectedDay(d) ? "day selected custom-day" : "day custom-day"} onClick={() => { selectDateSetter(d) }}>{d}</div>
         ));
     }
 
     const checkForSelectedDay = d => {
         if (selectedDays === d && selectedMonth === month && selectedYear === year) {
-            console.log("matched oooo")
             return true
         }
     }
@@ -84,12 +83,18 @@ function CustomCalenderPicker(props) {
                     show ?
                         <div className="dates">
                             <div className="month">
-                                <div className="arrows prev-mth" onClick={moveToPrevMonth}>&lt;</div>
                                 <div className="mth">{`${months[month - 1]} ${year}`}</div>
-                                <div className="arrows next-mth" onClick={moveToNextMonth}>&gt;</div>
+                                <div className="d-flex">
+                                    <div className="arrows prev-mth" onClick={moveToPrevMonth}><img src={upArrow} alt="up"/></div>
+                                    <div className="arrows next-mth" onClick={moveToNextMonth}><img src={downArrow} alt="down"/></div>
+                                </div>
                             </div>
                             <div className="days">
                                 {populateDates()}
+                            </div>
+                            <div className="d-flex align-items-center justify-content-center">
+                                <img src={radioIcon} alt='radio'/>
+                                <span className="ml-2 ongoing-calender">Continuous/Ongoing</span>
                             </div>
                         </div>
                         :

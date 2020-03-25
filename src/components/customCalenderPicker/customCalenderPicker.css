@@ -19,17 +19,16 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    /* color: #000; */
-    /* font-size: 28px; */
   }
   .date-picker .dates{
-    /* display: none; */
-    position: absolute;
-    top:100%;
-    left: 0;
-    right: 0;
+    position: relative;
+    top:30%;
     background-color: #fff;
     z-index: 2;
+    float: right;
+    width: 113%;
+    padding: 5px;
+    margin-right: -11px;
   }
   .date-picker .dates .month{
     display: flex;
@@ -64,6 +63,36 @@
     color: #000;
   }
   .selected{
-    background-color: #00CA85;
-    color: #000;
+    background-color: #1A73E8;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 16px;
+    text-align: center;
+    color: #FFFFFF !important;
+  }
+  .mth{
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 19px;
+    color: #323130;
+  }
+  .custom-day{
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 16px;
+    text-align: center;
+    color: #323130;
+  }
+  .ongoing-calender{
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 13px;
+    display: flex;
+    align-items: flex-end;
+    text-align: center;
+    color: #1A73E8;
   }

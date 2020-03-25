@@ -15,7 +15,7 @@ const ModalBody = (props) => {
             <div className={"__modal__body__ d-flex justify-content-center align-items-center"} onClick={toCloseModal ? props.closeModal : ""}>
                 <div className={"px-3 d-flex"} onMouseOver={() => { setToCloseModal(false) }} onMouseLeave={() => { setToCloseModal(true) }}>
                     <img src={leftArrow} alt="arrow" className="modal-arrow" />
-                    <div className="card px-3 mx-5">
+                    <div className="card spacing-modal-body px-3 mx-5">
                         {props.content}
                     </div>
                     <img src={rightArrow} alt="arrow" className="modal-arrow" />
@@ -26,12 +26,14 @@ const ModalBody = (props) => {
         return (
             <div className={"__modal__body__ d-flex justify-content-center align-items-center"} onClick={toCloseModal ? props.closeModal : ""}>
                 <div className={"card"} onMouseOver={() => { setToCloseModal(false) }} onMouseLeave={() => { setToCloseModal(true) }}>
-                    <div className={"position-absolute justify-content-between"} style={{ width: "95%", textAlign: "right", zIndex: "3" }}>
-                        <div></div>
-                        <div onClick={props.closeModal} >
+                    <div className="spacing-modal-body">
+                        <div className={"position-absolute justify-content-between"} style={{ width: "95%", textAlign: "right", zIndex: "3" }}>
+                            <div></div>
+                            <div onClick={props.closeModal} >
+                            </div>
                         </div>
+                        {props.content}
                     </div>
-                    {props.content}
                 </div>
             </div>
         )
