@@ -77,12 +77,14 @@ namespace Resourceedge.Appraisal.API.Services
             var result = resultArea.Select(x =>
                 new KeyResultAreaForViewDto
                 {
-                    whoami = x.AppraiserDetails.EmployeeId == employeeId ? "APPRAISAL" : "HOD",
+                    whoami = x.AppraiserDetails.EmployeeId == employeeId ? "APPRAISER" : "HOD",
                     Approved = x.Approved,
                     EmployeeId = x.EmployeeId,
                     Name = x.Name,
                     Weight = x.Weight,
                     keyOutcomes = x.keyOutcomes,
+                    Id = x.Id,
+                    Status = x.Status
                 }
             );
             return result;

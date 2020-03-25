@@ -20,7 +20,7 @@ namespace Resourceedge.Employee.API
     public class Startup
     {
         private readonly IConfiguration Configuration;
-        private static readonly string[] Headers = new[] { "X-Operation", "X-Resource", "X-Total-Count" };
+        private static readonly string[] Headers = new[] { "X-Operation", "X-Resource", "X-Total-Count", "X-Pagination" };
 
         public Startup(IConfiguration configuration)
         {
