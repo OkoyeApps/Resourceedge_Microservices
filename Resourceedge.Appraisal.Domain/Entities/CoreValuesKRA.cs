@@ -11,6 +11,7 @@ namespace Resourceedge.Appraisal.Domain.Entities
         [BsonElement]
         public ObjectId Id { get; set; }
         public string Name { get; set; }
+        public string Description { get; set; }
         public decimal Weight { get; set; }
         public bool? Approved { get; set; }
         public int Year { get; set; } = DateTime.Now.Year;

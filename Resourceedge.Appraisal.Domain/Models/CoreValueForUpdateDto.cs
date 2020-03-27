@@ -9,6 +9,7 @@ namespace Resourceedge.Appraisal.Domain.Models
     public class CoreValueForUpdateDto 
     {
         public string Name { get; set; }
+        public string Description { get; set; }
         public bool? Approved { get; set; }
         public bool IsActive { get; set; }
     }

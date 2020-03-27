@@ -68,7 +68,7 @@ namespace Resourceedge.Appraisal.API.Controllers
             {
                 var entityReturn = mapper.Map<CoreValueKRAForViewDto>(res);
 
-                return CreatedAtRoute("CoreValue", new { Id = Id, entityReturn });
+                return CreatedAtRoute("CoreValue", new { Id = Id}, entityReturn);
 
             }
 
