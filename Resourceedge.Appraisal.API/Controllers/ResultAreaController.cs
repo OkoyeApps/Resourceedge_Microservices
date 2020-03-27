@@ -3,16 +3,9 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using Resourceedge.Appraisal.API.Helpers;
 using Resourceedge.Appraisal.API.Interfaces;
-using Resourceedge.Appraisal.API.Services;
-using Resourceedge.Appraisal.Domain.DBContexts;
 using Resourceedge.Appraisal.Domain.Entities;
 using Resourceedge.Appraisal.Domain.Models;
-using Resourceedge.Common.Util;
-using Resourceedge.Email.Api.Model;
-using Resourceedge.Email.Api.SGridClient;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,7 +18,7 @@ namespace Resourceedge.Appraisal.API.Controllers
     {
         private readonly IMapper mapper;
         private readonly IKeyResultArea resultArea;
-        
+
         public ResultAreaController(IKeyResultArea _resultArea, IMapper _mapper)
         {
             this.resultArea = _resultArea;
@@ -55,12 +48,12 @@ namespace Resourceedge.Appraisal.API.Controllers
         [HttpPost(Name = "CreateKeyOutcomes")]
         public IActionResult CreateKeyResultArea(string empId, IEnumerable<KeyResultAreaDtoForCreation> model)
         {
-            
-            var entityToAdd = mapper.Map<IEnumerable<KeyResultAreaDtoForCreation>, IEnumerable<KeyResultArea>>(model);            
+
+            var entityToAdd = mapper.Map<IEnumerable<KeyResultAreaDtoForCreation>, IEnumerable<KeyResultArea>>(model);
             resultArea.AddKeyOutcomes(entityToAdd);
 
             var entityToReturn = mapper.Map<IEnumerable<KeyResultArea>>(entityToAdd);
-           // resultArea.SendApprovalNotification(entityToReturn);
+            resultArea.SendApprovalNotification(entityToReturn);
 
             return CreatedAtRoute("Mykpi", new { empId = empId }, entityToReturn);
         }
@@ -90,9 +83,6 @@ namespace Resourceedge.Appraisal.API.Controllers
         [HttpPost("Update/{KeyResultAreaId}")]
         public async Task<IActionResult> UpdateKPIs(int empId, string KeyResultAreaId, KeyResultAreaForUpdateDto entityForUpdate)
         {
-            //var Kpi = new KeyResultAreaForUpdateDto();
-            //entityForUpdate.ApplyTo(Kpi);
-
             ObjectId Id = new ObjectId(KeyResultAreaId);
             var keyResult = await resultArea.QuerySingleByUserId(Id, empId);
 
@@ -117,12 +107,12 @@ namespace Resourceedge.Appraisal.API.Controllers
 
             ObjectId Id = new ObjectId(KeyResultAreaId);
             ObjectId keyOutcomeId = new ObjectId(KeyOutcomeId);
-         
+
             var result = await resultArea.UpdateKeyOutcome(Id, keyOutcomeId, empId, keyOutcomeForUpdate);
-            if(result > 0)
+            if (result > 0)
             {
                 return Ok(result);
-            }            
+            }
 
             return NotFound();
         }
@@ -138,15 +128,12 @@ namespace Resourceedge.Appraisal.API.Controllers
             }
 
             var result = await resultArea.HodApproval(empId, keyResultAreaId, whoami, entity);
-
             if (result != null)
             {
                 return CreatedAtRoute("GetEmployeeKpiById", new { empId = empId, KeyResultAreaId = result.Id.ToString() }, result);
             }
 
             return NotFound();
-
-
         }
 
         [HttpPost("{KeyResultAreaId}/Approval")]
@@ -154,31 +141,29 @@ namespace Resourceedge.Appraisal.API.Controllers
         {
             var keyResultAreaId = new ObjectId(KeyResultAreaId);
 
-            if(entity == null)
+            if (entity == null)
             {
                 return BadRequest();
             }
 
             var result = resultArea.EmployeeApproval(empId, keyResultAreaId, entity);
-            
             if (result != null)
             {
                 return CreatedAtRoute("GetEmployeeKpiById", new { empId = empId, KeyResultAreaId = result.Id.ToString() }, result);
             }
 
             return NotFound();
-
         }
- 
-
+        
         [HttpDelete("Id")]
-        public async Task<IActionResult> DeleteKeyResultArea (ObjectId Id)
+        public async Task<IActionResult> DeleteKeyResultArea(string Id)
         {
-            var keyResult = await resultArea.QuerySingle(Id);
+            ObjectId objId = new ObjectId(Id);
+            var keyResult = await resultArea.QuerySingle(objId);
 
             if (keyResult != null)
             {
-                resultArea.Delete(Id);
+                resultArea.Delete(objId);
 
                 return NoContent();
             }

@@ -16,7 +16,7 @@ namespace Resourceedge.Employee.Domain.Interfaces
         OldEmployee GetEmployeeByEmployeeId(int employeeId);
         OldEmployee GetEmployeeByObjectId(ObjectId Id);
         OldEmployee GetEmployeeByEmail(string email);
-        PagedList<OldEmployeeForViewDto> GetEmployeesWithSeachQuery(PaginationResourceParameter resourceParam);
+        PagedList<OldEmployeeForViewDto> GetEmployeesWithSeachQuery(int empId, PaginationResourceParameter resourceParam);
         Task<IEnumerable<OldEmployee>> GetMultipleEmployeesById(IEnumerable<int> Ids);
     }
 }

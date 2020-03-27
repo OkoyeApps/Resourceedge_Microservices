@@ -37,12 +37,12 @@ namespace Resourceedge.Appraisal.API.Controllers
 
         }
 
-        [Route("~/api/Supervisors")]
+        [Route("~/api/Supervisors/{empId:Int}")]
         [HttpGet]
-        public async Task<IActionResult> GetAppraisee(string SearchQuery, string  OrderBy )
+        public async Task<IActionResult> GetAppraisee(int empId, string SearchQuery, string  OrderBy )
         {
             var aa = Request.Query;
-            var result = await teamRepo.GetSupervisors(SearchQuery, OrderBy);
+            var result = await teamRepo.GetSupervisors(empId, SearchQuery, OrderBy);
             if (result == null)
             {
                 return BadRequest();

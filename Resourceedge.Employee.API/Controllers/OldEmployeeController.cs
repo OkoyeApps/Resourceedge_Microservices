@@ -70,10 +70,10 @@ namespace Resourceedge.Employee.API.Controllers
             return links;
         }
 
-        [HttpGet("SearchEmployee")]
-        public IActionResult GetEmployeeBySearch([FromQuery]PaginationResourceParameter resourceParameters)
+        [HttpGet("SearchEmployee/{empId:int}")]
+        public IActionResult GetEmployeeBySearch(int empId, [FromQuery]PaginationResourceParameter resourceParameters)
         {
-           var result = EmployeeRepo.GetEmployeesWithSeachQuery(resourceParameters);
+           var result = EmployeeRepo.GetEmployeesWithSeachQuery(empId, resourceParameters);
             return Ok(result);
         }
         

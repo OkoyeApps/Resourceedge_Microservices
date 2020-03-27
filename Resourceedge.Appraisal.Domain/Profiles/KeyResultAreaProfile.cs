@@ -26,8 +26,6 @@ namespace Resourceedge.Appraisal.Domain.Profiles
             CreateMap<KeyResultAreaForUpdateDto, KeyResultAreaForUpdateMainDto>()
              .ForMember(dest => dest.HodDetails, to => to.MapFrom(src => src.HeadOfDepartment))
              .ForMember(dest => dest.AppraiserDetails, to => to.MapFrom(src => src.Appraiser));
-
-            //KeyOutcome
         }
     }
 }

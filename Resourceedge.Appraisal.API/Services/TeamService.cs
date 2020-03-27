@@ -90,10 +90,10 @@ namespace Resourceedge.Appraisal.API.Services
             return result;
         }
 
-        public async Task<IEnumerable<OldEmployeeForViewDto>> GetSupervisors(string searchParam, string orderParam)
+        public async Task<IEnumerable<OldEmployeeForViewDto>> GetSupervisors(int empId, string searchParam, string orderParam)
         {
 
-            var response = await HttpClient.GetAsync($"api/employee/SearchEmployee?SearchQuery={searchParam}&OrderBy={orderParam}");
+            var response = await HttpClient.GetAsync($"api/employee/SearchEmployee/{empId}?SearchQuery={searchParam}&OrderBy={orderParam}");
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsByteArrayAsync();

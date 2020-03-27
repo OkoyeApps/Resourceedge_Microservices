@@ -14,7 +14,7 @@ namespace Resourceedge.Appraisal.API.Interfaces
         Task<IEnumerable<OldEmployeeDto>> GetEmployeesToAppraise(int employeeId);
         Task<IEnumerable<KeyResultAreaForViewDto>> GetTeamMemberKpi(int MyId, int TeammeberId);
         IEnumerable<KeyResultAreaForViewDto> UpdateWhoAmIForList(IEnumerable<KeyResultArea> resultArea, int employeeId);
-        Task<IEnumerable<OldEmployeeForViewDto>> GetSupervisors(string searchPAram, string orderParam);
+        Task<IEnumerable<OldEmployeeForViewDto>> GetSupervisors(int empId, string searchPAram, string orderParam);
 
     }
 }
