@@ -7,7 +7,6 @@ using Resourceedge.Appraisal.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Resourceedge.Appraisal.API.Services
 {
@@ -23,7 +22,7 @@ namespace Resourceedge.Appraisal.API.Services
                 {
 
                     var dataToAdd = new List<KeyResultArea>()
-                {
+                    {
                         new KeyResultArea
                         {
                             UserId = Guid.NewGuid().ToString(),
@@ -55,13 +54,49 @@ namespace Resourceedge.Appraisal.API.Services
                             },
                             Weight = 50,
                             Approved = true,
-                            Name = "School Manager", 
+                            Name = "School Manager",
                             Status = new ApprovalStatus { Employee =true, Hod = false, IsAccepted = true }
                         }
                     };
 
                     collection.InsertMany(dataToAdd);
 
+                }
+
+                var coreValueCollection = dbContext.Database.GetCollection<CoreValuesKRA>($"{nameof(CoreValuesKRA)}s");
+                if (!coreValueCollection.AsQueryable().Any())
+                {
+                    var data = new List<CoreValuesKRA>()
+                    {   
+                        new CoreValuesKRA()
+                        {
+                            Name = "Tenece Core Value",
+                            Description = "Kindly select this if you are in tenece",
+                            keyOutcomes =
+                            {
+                                new KeyOutcome(){Question = "Candour", TimeLimit = "Annual"},
+                                new KeyOutcome(){Question = "Tenecity", TimeLimit = "Annual"},
+                            },
+                            Approved = true,
+                            IsActive = true
+                        },
+                        new CoreValuesKRA()
+                        {
+                                 Name = "Genesys Core Value",
+                            Description = "Kindly select this if you are in genesys",
+                            keyOutcomes =
+                            {
+                                new KeyOutcome(){Question = "Candour", TimeLimit = "Annual"},
+                                new KeyOutcome(){Question = "Tenecity", TimeLimit = "Annual"},
+                            },
+                            Approved = true,
+                            IsActive = true
+
+                        }
+
+                    };
+
+                    coreValueCollection.InsertMany(data);
                 }
             }
         }

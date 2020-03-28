@@ -23,18 +23,22 @@ namespace Resourceedge.Appraisal.Domain.Models
         public string AppraisalCycleId { get; set; }
         public string KeyResultAreaId { get; set; }
         public ICollection<AppraisalKeyOutcomeDtoString> KeyOutcomeScore { get; set; }
+
     }
 
     public class AppraisalKeyOutcomeDtoString
     {
         public string KeyOutcomeId { get; set; }
         public int EmployeeScore { get; set; }
+        public FeedBack AppraiseeFeedBack { get; set; }
     }
 
     public class AppraisalKeyOutcomeDto
     {
         public ObjectId KeyOutcomeId { get; set; }
         public int EmployeeScore { get; set; }
+        public FeedBack AppraiseeFeedBack { get; set; }
+
     }
 
 }
