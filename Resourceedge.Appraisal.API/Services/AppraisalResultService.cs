@@ -6,7 +6,6 @@ using Resourceedge.Appraisal.API.Interfaces;
 using Resourceedge.Appraisal.Domain.DBContexts;
 using Resourceedge.Appraisal.Domain.Entities;
 using Resourceedge.Appraisal.Domain.Models;
-using Resourceedge.Common.Archive;
 using Resourceedge.Email.Api.Model;
 using Resourceedge.Email.Api.SGridClient;
 using System.Collections.Generic;
@@ -23,7 +22,7 @@ namespace Resourceedge.Appraisal.API.Services
         private readonly IMapper mapper;
         private readonly IKeyResultArea resultAreaRepo;
         private EmailSender sender;
-        
+
 
         public AppraisalResultService(IDbContext _context, IMapper _mapper, ISGClient _client, IKeyResultArea _resultAreaRepo)
         {
@@ -54,7 +53,7 @@ namespace Resourceedge.Appraisal.API.Services
             var result = Collection.Find(a => a.myId == entity.myId && a.AppraisalConfigId == entity.AppraisalConfigId && a.AppraisalCycleId == entity.AppraisalCycleId && a.KeyResultArea.Id == entity.KeyResultAreaId).FirstOrDefault();
             var keyResultArea = await resultAreaRepo.QuerySingle(entity.KeyResultAreaId);
             var employee = await resultAreaRepo.GetEmployee(entity.myId);
-            
+
             string subject = $"Pending Appraisal for {employee.FullName}";
             string msg = $"has submitted his/her appraisal for the key result area {keyResultArea.Name}, Kindly attend to it as soon as possible.";
             string title = "Approval For Approval";
@@ -68,7 +67,7 @@ namespace Resourceedge.Appraisal.API.Services
 
                 emailDto = new SingleEmailDto()
                 {
-                    ReceiverFullName = keyResultArea.AppraiserDetails.Name, 
+                    ReceiverFullName = keyResultArea.AppraiserDetails.Name,
                     ReceiverEmailAddress = keyResultArea.AppraiserDetails.Email,
                     HtmlContent = await sender.FormatEmail(employee.FullName, keyResultArea.AppraiserDetails.Name, msg, title),
                 };
@@ -87,7 +86,7 @@ namespace Resourceedge.Appraisal.API.Services
                             {
                                 result.KeyOutcomeScore.FirstOrDefault(x => x.KeyOutcomeId == item1.KeyOutcomeId).AppraisalScore = item.EmployeeScore;
                             }
-                        }                     
+                        }
                     }
                 }
                 var entityToUpdate = result.ToBsonDocument();
@@ -116,7 +115,9 @@ namespace Resourceedge.Appraisal.API.Services
                         }
                     }
                 }
-                var entityToUpdate = result.ToBsonDocument();
+                result.HodAccept.IsAccepted = true;
+                var newAppraisalResult = result.HodApproval("");
+                var entityToUpdate = newAppraisalResult.ToBsonDocument();
                 var update = new BsonDocument("$set", entityToUpdate);
                 Collection.FindOneAndUpdate(filter, update, options: new FindOneAndUpdateOptions<AppraisalResult> { ReturnDocument = ReturnDocument.After });
                 msg = $"who is your HOD has completed your appraisal for the key result area {keyResultArea.Name}, You are to accept or reject it";
@@ -124,11 +125,11 @@ namespace Resourceedge.Appraisal.API.Services
                 {
                     ReceiverFullName = employee.FullName,
                     ReceiverEmailAddress = employee.Email,
-                    HtmlContent = await sender.FormatEmail(keyResultArea.HodDetails.Name, employee.FullName,  msg, title),
+                    HtmlContent = await sender.FormatEmail(keyResultArea.HodDetails.Name, employee.FullName, msg, title),
                 };
 
             }
-           await sender.SendToSingleEmployee(subject, emailDto);
+            await sender.SendToSingleEmployee(subject, emailDto);
         }
 
         public async Task<UpdateResult> EmployeeAcceptOrReject(ObjectId appraisalResultId, AcceptanceStatus status)
@@ -138,7 +139,10 @@ namespace Resourceedge.Appraisal.API.Services
 
             if (appraisalResult != null)
             {
-                appraisalResult.EmployeeAccept.IsAccepted = status.IsAccepted.Value;
+                appraisalResult.EmployeeAccept = new AcceptanceStatus() 
+                { 
+                    IsAccepted = status.IsAccepted.Value
+                };
 
                 var newAppraisalResult = appraisalResult.CompleteAppraisal(status.Reason);
                 var entityToUpdate = newAppraisalResult.ToBsonDocument();
@@ -161,7 +165,10 @@ namespace Resourceedge.Appraisal.API.Services
 
             if (appraisalResult != null)
             {
-                appraisalResult.HodAccept.IsAccepted = status.IsAccepted.Value;
+                appraisalResult.HodAccept = new AcceptanceStatus()
+                {
+                    IsAccepted = status.IsAccepted.Value
+                };
 
                 var newAppraisalResult = appraisalResult.HodApproval(status.Reason);
                 var entityToUpdate = newAppraisalResult.ToBsonDocument();
@@ -176,9 +183,9 @@ namespace Resourceedge.Appraisal.API.Services
                 };
 
                 var res = await Collection.UpdateOneAsync(filter, update);
-                if(res.MatchedCount > 0)
+                if (res.MatchedCount > 0)
                 {
-                    await sender.SendToSingleEmployee(subject, emailDto); 
+                    await sender.SendToSingleEmployee(subject, emailDto);
                 }
 
                 return res;

@@ -113,7 +113,7 @@ namespace Resourceedge.Appraisal.API.Controllers
             return CreatedAtRoute("MyAppraisal", new { employee = appraisalResultToSubmit.myId, appraisalConfig = appraisalResultToSubmit.AppraisalConfigId, appraisalCycle = appraisalResultToSubmit.AppraisalCycleId }, appraisalResultToSubmit);
         }
 
-        [HttpPatch("{Id}/EmployeeAccept")]
+        [HttpPatch("{Id}/AcceptAppraisal")]
         public async Task<IActionResult> AcceptAppraisal(string Id, JsonPatchDocument<AcceptanceStatus> entity)
         {
             ObjectId kra = new ObjectId(Id);
@@ -129,7 +129,7 @@ namespace Resourceedge.Appraisal.API.Controllers
 
             return NotFound();
         }
-
+        [HttpPatch("{Id}/HodApproval")]
         public async Task<IActionResult> ApproveAppraisalHOD(string Id, JsonPatchDocument<AcceptanceStatus> entity)
         {
             ObjectId kra = new ObjectId(Id);
