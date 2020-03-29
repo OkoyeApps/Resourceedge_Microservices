@@ -1,4 +1,5 @@
 ﻿using MongoDB.Bson;
+using MongoDB.Driver;
 using Resourceedge.Appraisal.Domain.Entities;
 using Resourceedge.Appraisal.Domain.Models;
 using System;
@@ -16,6 +17,8 @@ namespace Resourceedge.Appraisal.API.Interfaces
 
         void SubmitAppraisal(AppraisalResultForCreationDto entity);
 
+        Task<UpdateResult> EmployeeAcceptOrReject(ObjectId appraisalResultId, AcceptanceStatus status);
 
+        Task<UpdateResult> HodApprovalOrReject(ObjectId appraisalResultId, AcceptanceStatus status);
     }
 }

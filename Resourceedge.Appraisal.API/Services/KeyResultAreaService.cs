@@ -24,7 +24,6 @@ namespace Resourceedge.Appraisal.API.Services
         public readonly IMongoCollection<KeyResultArea> Collection;
         public readonly IQueryable<KeyResultArea> QueryableCollection;
         private readonly ILogger<KeyResultArea> logger;
-        private readonly ISGClient client;
         private readonly HttpClient HttpClient; 
         EmailSender sender;
 
@@ -34,9 +33,8 @@ namespace Resourceedge.Appraisal.API.Services
             Collection = context.Database.GetCollection<KeyResultArea>($"{nameof(KeyResultArea)}s");
             QueryableCollection = Collection.AsQueryable<KeyResultArea>();
             logger = _logger;
-            client = _client;
             HttpClient = _httpClientFactory.CreateClient("EmployeeService");
-            sender = new EmailSender(client);
+            sender = new EmailSender(_client);
         }
 
 
@@ -213,13 +211,15 @@ namespace Resourceedge.Appraisal.API.Services
         public async void SendApprovalNotification(IEnumerable<KeyResultArea> keyAreas)
         {
             string subject = "Approve Key Result Area ";
+            string message = "has sumbitted one or more key result area, kindly review and act on it";
+            string title = "Key Result Area(KRA) For Approval";
+            string htmlContent = "";
+             string textContent = "";
 
             List<EmailObject> emailObj = keyAreas.Select( x => new EmailObject() { ReceiverEmailAddress = x.HodDetails.Email, ReceiverFullName = x.HodDetails.Name}).ToList();
             emailObj.AddRange(keyAreas.Select(x => new EmailObject() { ReceiverEmailAddress = x.AppraiserDetails.Email, ReceiverFullName = x.AppraiserDetails.Name }).ToList());
 
             var employee = await GetEmployee(keyAreas.FirstOrDefault().EmployeeId);
-            string htmlContent = "";
-             string textContent = "";
             EmailDtoForMultiple emailDtos = new EmailDtoForMultiple()
             {
                 PlainTextContent = textContent,
@@ -227,7 +227,7 @@ namespace Resourceedge.Appraisal.API.Services
                 EmailObjects = emailObj
             };        
             
-            var result = sender.SendMultipleEmail(subject, employee.FullName, emailDtos);
+            var result = sender.SendMultipleEmail(subject, employee.FullName, emailDtos,message, title);
            
         }
 

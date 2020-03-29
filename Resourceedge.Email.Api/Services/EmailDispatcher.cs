@@ -19,13 +19,9 @@ namespace Resourceedge.Email.Api.Services
 
         public async Task<HttpStatusCode> SendSingleEmail(string subject, SingleEmailDto emailDto)
         {
-            var msg = client.message;
-            msg.SetGlobalSubject(subject);
-            msg.SetFrom(client.From);
-
-            msg.PlainTextContent = emailDto.PlainTextContent;
-            msg.HtmlContent = emailDto.HtmlContent;
-            msg.AddTo(emailDto.ReceiverEmailAddress, emailDto.ReceiverFullName);
+            EmailAddress email = new EmailAddress(emailDto.ReceiverEmailAddress, emailDto.ReceiverFullName);
+            var msg = MailHelper.CreateSingleEmail(client.From, email, subject, emailDto.PlainTextContent, emailDto.HtmlContent);
+            var ser = msg.Serialize();
 
             var res = await client.GridClient.SendEmailAsync(msg);
 
@@ -35,7 +31,7 @@ namespace Resourceedge.Email.Api.Services
         public async Task<HttpStatusCode> SendSingleMailToMultipleEmail(string subject, string plaintextContent, string htmlContent, List<EmailAddress> emails)
         {
 
-            emails.Add(new EmailAddress("kingdav.ndcdavison@gamil.com", "Nwabugwu Akomas"));
+            emails.Add(new EmailAddress("", "Nwabugwu Akomas"));
             var msg = MailHelper.CreateSingleEmailToMultipleRecipients(client.From, emails, subject, plaintextContent, htmlContent);
             var res = await client.GridClient.SendEmailAsync(msg);
 

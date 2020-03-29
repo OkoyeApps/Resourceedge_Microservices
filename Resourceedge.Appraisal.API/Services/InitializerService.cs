@@ -67,7 +67,7 @@ namespace Resourceedge.Appraisal.API.Services
                 if (!coreValueCollection.AsQueryable().Any())
                 {
                     var data = new List<CoreValuesKRA>()
-                    {   
+                    {
                         new CoreValuesKRA()
                         {
                             Name = "Tenece Core Value",
@@ -91,13 +91,102 @@ namespace Resourceedge.Appraisal.API.Services
                             },
                             Approved = true,
                             IsActive = true
-
                         }
 
                     };
 
                     coreValueCollection.InsertMany(data);
                 }
+
+                //var AppraisalCollection = dbContext.Database.GetCollection<AppraisalResult>($"{nameof(AppraisalResult)}s");
+                //if (!AppraisalCollection.AsQueryable().Any())
+                //{
+                //    ObjectId objId = new ObjectId("5e78a4474c0bf888746215e8");
+                //    var result = new List<AppraisalResult>()
+                //    {
+                //        new AppraisalResult()
+                //        {
+                //            Id = ObjectId.GenerateNewId(),
+                //             myId = 1,
+                //            AppraisalConfigId = ObjectId.GenerateNewId(),
+                //            AppraisalCycleId = ObjectId.GenerateNewId(),
+                //            KeyResultArea = collection.Find(a => a.Id == objId).FirstOrDefault(),
+                //            KeyOutcomeScore =
+                //            {
+                //                new AppraisalKeyOutcome()
+                //                {
+                //                    KeyOutcomeId = ObjectId.GenerateNewId(),
+                //                    EmployeeScore = 4,
+                //                    AppraisalScore = 3,
+                //                    HodScore = 3
+                //                },
+                //                new AppraisalKeyOutcome(){ KeyOutcomeId = ObjectId.GenerateNewId(),
+                //                EmployeeScore = 4,
+                //                AppraisalScore = 3,
+                //                HodScore = 3
+                //                }
+                //            },
+                //            AppraiseeFeedBack = new FeedBack()
+                //            {
+                //                Comment = "Need to pay attention to details", Recommendation = "Training on personal development"
+                //            },
+                //            EmployeeAccept = new AcceptanceStatus()
+                //            {
+                //                IsAccepted = true,
+                //                Reason = ""
+                //            },
+                //            HodAccept = new AcceptanceStatus()
+                //            {
+                //                IsAccepted = true,
+                //                Reason = ""
+                //            },
+                //            IsAccepted = true,
+                //            IsCompleted = true,
+                //            CurrentSupervisor = "HOD"
+                //        },
+                //        new AppraisalResult()
+                //        {
+                //            Id = ObjectId.GenerateNewId(),
+                //             myId = 1,
+                //            AppraisalConfigId= ObjectId.GenerateNewId(),
+                //            AppraisalCycleId=ObjectId.GenerateNewId(),
+                //            KeyResultArea = collection.Find(a => a.Id == objId).FirstOrDefault(),
+                //            KeyOutcomeScore =
+                //            {
+                //                new AppraisalKeyOutcome()
+                //                { KeyOutcomeId = ObjectId.GenerateNewId(),
+                //                    EmployeeScore = 4,
+                //                    AppraisalScore = 3,
+                //                    HodScore = 3
+                //                },
+                //                new AppraisalKeyOutcome(){ KeyOutcomeId = ObjectId.GenerateNewId(),
+                //                EmployeeScore = 4,
+                //                AppraisalScore = 3,
+                //                HodScore = 3
+                //                }
+                //            },
+                //            AppraiseeFeedBack = new FeedBack()
+                //            {
+                //                Comment = "Impressive Growth", Recommendation = "Training on Agile Software Development"
+                //            },
+                //            EmployeeAccept = new AcceptanceStatus()
+                //            {
+                //                IsAccepted = true,
+                //                Reason = ""
+                //            },
+                //            HodAccept = new AcceptanceStatus()
+                //            {
+                //                IsAccepted = true,
+                //                Reason = ""
+                //            },
+                //            IsAccepted = true,
+                //            IsCompleted = true,
+                //            CurrentSupervisor = "HOD"
+                //        }
+                //    };
+
+                //    AppraisalCollection.InsertMany(result);
+                //}
             }
         }
     }

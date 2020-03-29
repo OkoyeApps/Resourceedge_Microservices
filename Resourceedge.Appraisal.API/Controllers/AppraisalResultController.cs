@@ -1,12 +1,11 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using Resourceedge.Appraisal.API.Interfaces;
 using Resourceedge.Appraisal.Domain.Entities;
 using Resourceedge.Appraisal.Domain.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Resourceedge.Appraisal.API.Controllers
@@ -23,20 +22,21 @@ namespace Resourceedge.Appraisal.API.Controllers
             appraisalResult = _appraisalResult;
             mapper = _mapper;
         }
-        
+
         [HttpGet(Name = "MyAppraisal")]
         public IActionResult EmployeeAppraisal(int? employee, string appraisalConfig, string appraisalCycle)
         {
 
-            if (employee == null || appraisalConfig == null || appraisalCycle == null){
+            if (employee == null || appraisalConfig == null || appraisalCycle == null)
+            {
 
                 return BadRequest();
             }
-                    
+
             ObjectId configId = new ObjectId(appraisalConfig);
             ObjectId cycleId = new ObjectId(appraisalCycle);
 
-           var result = appraisalResult.Get(configId, cycleId, employee);
+            var result = appraisalResult.Get(configId, cycleId, employee);
 
             return Ok(result);
         }
@@ -55,7 +55,7 @@ namespace Resourceedge.Appraisal.API.Controllers
             {
                 var outcome = new AppraisalKeyOutcomeDto()
                 {
-                    EmployeeScore = item.EmployeeScore,                  
+                    EmployeeScore = item.EmployeeScore,
                     KeyOutcomeId = new ObjectId(item.KeyOutcomeId)
                 };
                 Outcomes.Add(outcome);
@@ -68,7 +68,8 @@ namespace Resourceedge.Appraisal.API.Controllers
                 AppraisalConfigId = new ObjectId(appraisalResultForCreation.AppraisalConfigId),
                 AppraisalCycleId = new ObjectId(appraisalResultForCreation.AppraisalCycleId),
                 KeyResultAreaId = new ObjectId(appraisalResultForCreation.KeyResultAreaId),
-                KeyOutcomeScore = Outcomes
+                KeyOutcomeScore = Outcomes,
+                AppraiseeFeedBack = appraisalResultForCreation.AppraiseeFeedBack
             };
 
             appraisalResult.SubmitAppraisal(appraisalResultToSubmit);
@@ -110,6 +111,39 @@ namespace Resourceedge.Appraisal.API.Controllers
             //var appraisalResultToReturn = mapper.Map<AppraisalResult>(appraisalResultForCreation);
 
             return CreatedAtRoute("MyAppraisal", new { employee = appraisalResultToSubmit.myId, appraisalConfig = appraisalResultToSubmit.AppraisalConfigId, appraisalCycle = appraisalResultToSubmit.AppraisalCycleId }, appraisalResultToSubmit);
+        }
+
+        [HttpPatch("{Id}/EmployeeAccept")]
+        public async Task<IActionResult> AcceptAppraisal(string Id, JsonPatchDocument<AcceptanceStatus> entity)
+        {
+            ObjectId kra = new ObjectId(Id);
+
+            AcceptanceStatus entityToUpdate = new AcceptanceStatus();
+            entity.ApplyTo(entityToUpdate);
+
+            var res = await appraisalResult.EmployeeAcceptOrReject(kra, entityToUpdate);
+            if (res != null)
+            {
+                return Ok();
+            }
+
+            return NotFound();
+        }
+
+        public async Task<IActionResult> ApproveAppraisalHOD(string Id, JsonPatchDocument<AcceptanceStatus> entity)
+        {
+            ObjectId kra = new ObjectId(Id);
+
+            AcceptanceStatus entityToUpdate = new AcceptanceStatus();
+            entity.ApplyTo(entityToUpdate);
+
+            var res = await appraisalResult.HodApprovalOrReject(kra, entityToUpdate);
+            if (res.MatchedCount > 0)
+                return Ok();
+
+            return NotFound();
+
+
         }
     }
 }
