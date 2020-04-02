@@ -40,7 +40,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Resourceedge.Authentication
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workers", "Workers", "{34633821-0A5F-44F8-A155-AE80A1749466}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBIntializers", "..\DBIntializers\DBIntializers.csproj", "{8717801A-2979-4C4D-ACE3-03B7D289CD95}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBIntializers", "DBIntializers\DBIntializers.csproj", "{8717801A-2979-4C4D-ACE3-03B7D289CD95}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
