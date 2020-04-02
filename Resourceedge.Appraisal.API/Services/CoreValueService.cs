@@ -33,7 +33,7 @@ namespace Resourceedge.Appraisal.API.Services
 
         public PagedList<CoreValuesKRA> GetCoreValuesSearch(PaginationResourceParameter resourceParam)
         {
-            var collection = QueryableCollection.Where(c => c.Name.Contains(resourceParam.SearchQuery) || c.keyOutcomes.Any(x => x.Question == resourceParam.SearchQuery));
+            var collection = QueryableCollection.Where(c => c.Name.Contains(resourceParam.SearchQuery, StringComparison.OrdinalIgnoreCase) || c.keyOutcomes.Any(x => x.Question == resourceParam.SearchQuery));
 
             return PagedList<CoreValuesKRA>.Create(collection, resourceParam.PageNumber, resourceParam.PageSize);
         }

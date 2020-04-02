@@ -16,6 +16,6 @@ namespace Resourceedge.Appraisal.Domain.Models
         public decimal Weight { get; set; }
         public bool? Approved { get; set; }
         public string whoami { get; set; }
-        public ICollection<KeyOutcome> keyOutcomes { get; set; } = new List<KeyOutcome>();
+        public ICollection<KeyOutcome> keyoutcomes { get; set; } = new List<KeyOutcome>();
     }
 }
