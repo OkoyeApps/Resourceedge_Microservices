@@ -1,0 +1,87 @@
+﻿@model LoginViewModel
+
+@{
+    var modelGet = (LoginGetViewModel)ViewData["modelDetails"];
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js">
+    <link href="~/css/style.css" rel="stylesheet" />
+    <title>Authenticate</title>
+</head>
+
+<body>
+
+    <main class="wrap-login">
+        <div class="row mx-0">
+            <div class="col-4 px-0">
+                <div>
+                    <img src="~/images/authImg.png" alt="auth" class="authImg" />
+                </div>
+            </div>
+            <section class="col-8 d-flex justify-content-center align-items-center">
+                <div class="login-box">
+                    <div class="name-box">
+                        <span class="welcome-text">Hello @Model.Name</span>
+                    </div>
+                    <p class="text">Please enter your password</p>
+                    <form asp-controller="Auth" asp-action="Authenticate" method="post">
+                        <input type="hidden" name="Username" value="@Model.UserName" />
+                        <input type="hidden" name="Name" value="@Model.Name" />
+                        <input type="hidden" name="ReturnUrl" value="@Model.ReturnUrl" />
+                        <div class="form-control enter-mail">
+                            <div class="row h-100">
+                                <div class="col-2"></div>
+                                <div class="col-8 h-100">
+                                    <input class="w-100 h-100 text-center" name="password" placeholder="Password" type="password" id="password" />
+                                </div>
+                                <div class="col-2 d-flex align-items-center justify-content-center">
+
+                                    <img src='~/images/closedEye.svg' alt="good icon" onMouseDown={showPassword}
+                                         class="password-icon" style="display: none;" id="password-hider"
+                                         onclick="showPassword(false)" />
+
+                                    <img src="~/images/openEye.svg" alt="good icon" class="password-icon"
+                                         onclick="showPassword(true)" id='password-shower' />
+
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn proceed" type="submit">Proceed</button>
+
+                    </form>
+
+
+                </div>
+            </section>
+        </div>
+    </main>
+
+
+    <script>
+        let password = document.getElementById('password');
+        let passwordShower = document.getElementById('password-shower')
+        let passwordHider = document.getElementById('password-hider')
+
+        const showPassword = (decision) => {
+            if (decision === true) {
+                password.type = "text"
+                passwordShower.style = 'display: none;'
+                passwordHider.style = 'display: unset'
+            }
+            else {
+                password.type = "password"
+                passwordShower.style = 'display: unset'
+                passwordHider.style = 'display: none'
+            }
+        }
+    </script>
+</body>
+
+</html>

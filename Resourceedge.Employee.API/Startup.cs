@@ -26,18 +26,23 @@ namespace Resourceedge.Employee.API
         {
             Configuration = configuration;
         }
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors(options =>
             {
-                options.AddPolicy("CorsPolicy", cors =>
-                        cors.AllowAnyOrigin()
-                            .AllowAnyMethod()
-                            .AllowAnyHeader()
-                            .WithExposedHeaders(Headers));
+                options.AddDefaultPolicy(config =>
+                {
+                    config.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().WithExposedHeaders(Headers);
+                });
             });
+
+            services.AddAuthentication("Bearer").AddJwtBearer("Bearer", config =>
+            {
+                config.Authority = Configuration["Services:Authority"];
+                config.Audience = "Employee";
+                config.RequireHttpsMetadata = false;
+            });
+
             services.AddHttpClient("OldEdge", config =>
             {
                 config.BaseAddress = new Uri(Configuration["Services:oldResourceedge"]);
@@ -73,9 +78,15 @@ namespace Resourceedge.Employee.API
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseCors("CorsPolicy");
+            app.UseCors();
+            app.UseCookiePolicy(new CookiePolicyOptions { MinimumSameSitePolicy = SameSiteMode.Lax });
 
             app.UseRouting();
+
+            app.UseAuthentication();
+
+            app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

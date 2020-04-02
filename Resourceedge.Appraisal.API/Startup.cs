@@ -27,9 +27,6 @@ namespace Resourceedge.Appraisal.API
         public IConfiguration Configuration { get; set; }
         private static readonly string[] Headers = new[] { "X-Operation", "X-Resource", "X-Total-Count", "X-Pagination" };
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
-
         public Startup(IConfiguration _config)
         {
             Configuration = _config;
@@ -39,11 +36,17 @@ namespace Resourceedge.Appraisal.API
 
             services.AddCors(options =>
             {
-                options.AddPolicy("CorsPolicy", cors =>
-                        cors.AllowAnyOrigin()
-                            .AllowAnyMethod()
-                            .AllowAnyHeader()
-                            .WithExposedHeaders(Headers));
+                options.AddDefaultPolicy(config =>
+                {
+                    config.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().WithExposedHeaders(Headers);
+                });
+            });
+
+            services.AddAuthentication("Bearer").AddJwtBearer("Bearer", config =>
+            {
+                config.Authority = Configuration["Services:Authority"];
+                config.Audience = "Appraisal";
+                config.RequireHttpsMetadata = false;
             });
             services.AddHttpClient("EmployeeService", config =>
             {
@@ -85,7 +88,6 @@ namespace Resourceedge.Appraisal.API
             });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -93,17 +95,21 @@ namespace Resourceedge.Appraisal.API
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseCors("CorsPolicy");
+            app.UseCors();
+            app.UseCookiePolicy(new CookiePolicyOptions { MinimumSameSitePolicy = SameSiteMode.Lax });
+
             app.UseRouting();
+
+            app.UseAuthentication();
+
+            app.UseAuthorization();
+
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
-
-
-
-            InitializerService.Seed(app);
+           InitializerService.Seed(app);
         }
     }
 }
