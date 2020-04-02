@@ -5,20 +5,89 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Resourceedge.Authentication.API.IdentiyServer4;
+using Resourceedge.Authentication.API.Services;
+using Resourceedge.Authentication.Domain.Entities;
+using Resourceedge.Authentication.Domain.Interfaces;
 
 namespace Resourceedge.Authentication.API
 {
     public class Startup
     {
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+        private readonly IConfiguration configuration;
+
+        public Startup(IConfiguration _configuration)
+        {
+            configuration = _configuration;
+        }
         public void ConfigureServices(IServiceCollection services)
         {
+            var AuthConnectionString = configuration.GetConnectionString("Auth");
+            var Identity4ConnectionString = configuration.GetConnectionString("Identity4");
+
+            //services.AddCors(options =>
+            //{
+            //    options.AddPolicy("CorsPolicy", cors =>
+            //            cors.AllowAnyOrigin()
+            //                .AllowAnyMethod()
+            //                .AllowAnyHeader()
+            //                );
+            //});
+
+            services.AddDbContext<EdgeDbContext>(config =>
+            {
+                config.UseSqlServer(AuthConnectionString
+                //    options =>
+                //{
+                //    options.EnableRetryOnFailure()
+                //    .MigrationsAssembly("Resourceedge.Authentication.API");
+                //}
+                );
+            })
+            .AddIdentity<ApplicationUser, ApplicationRole>(config =>
+            {
+                config.Password.RequiredLength = 4;
+                config.Password.RequireDigit = false;
+                config.Password.RequiredUniqueChars = 0;
+                config.Password.RequireNonAlphanumeric = false;
+                config.Password.RequireUppercase = false;
+                config.Password.RequireLowercase = false;
+            })
+            .AddEntityFrameworkStores<EdgeDbContext>()
+            .AddDefaultTokenProviders();
+
+            services.ConfigureApplicationCookie(config =>
+            {
+                config.LoginPath = "/Auth/Authenticate";
+                config.Cookie.Name = "IdentityServer.Cookie";
+            });
+            var assembly = typeof(Startup).Assembly.GetName().Name;
+            services.AddIdentityServer()
+                .AddCorsPolicyService<CorsPolicyImplementation>()
+                .AddAspNetIdentity<ApplicationUser>()
+                .AddConfigurationStore(options =>
+                {
+                    options.ConfigureDbContext = b => b.UseSqlServer(Identity4ConnectionString,
+                        sql => sql.MigrationsAssembly(assembly));
+                })
+                .AddOperationalStore(options =>
+                {
+                    options.ConfigureDbContext = b => b.UseSqlServer(Identity4ConnectionString,
+                        sql => sql.MigrationsAssembly(assembly));
+                })
+                .AddDeveloperSigningCredential();
+
+            services.AddTransient<IAuthInterface, AuthServices>();
+
+            services.AddControllersWithViews();
+            //.AddRazorRuntimeCompilation();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -26,14 +95,19 @@ namespace Resourceedge.Authentication.API
                 app.UseDeveloperExceptionPage();
             }
 
+            //app.UseCors("CorsPolicy");
+            app.UseCookiePolicy(new CookiePolicyOptions { MinimumSameSitePolicy = SameSiteMode.Lax });
+
+            app.UseStaticFiles();
+
             app.UseRouting();
+
+            app.UseIdentityServer();
+
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Hello World!");
-                });
+                endpoints.MapDefaultControllerRoute();
             });
         }
     }

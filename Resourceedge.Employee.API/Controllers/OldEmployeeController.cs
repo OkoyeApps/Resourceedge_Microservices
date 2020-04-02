@@ -48,6 +48,12 @@ namespace Resourceedge.Employee.API.Controllers
             return Ok(mapper.Map<OldEmployeeDto>(EmployeeRepo.GetEmployeeByEmployeeId(Id)));
         }
 
+        [HttpGet("userid/{Id}", Name ="GetEmployeeByUserId")]
+        public IActionResult GetEmployeeByUserId(string Id)
+        {
+            return Ok(mapper.Map<OldEmployeeDto>(EmployeeRepo.GetEmployeeByUserId(Id)));
+        }
+
 
 
 

@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Resourceedge.Appraisal.API.Interfaces;
@@ -12,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace Resourceedge.Appraisal.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/resultarea/{empId:int}")]
     public class ResultAreaController : ControllerBase
@@ -31,6 +34,7 @@ namespace Resourceedge.Appraisal.API.Controllers
         }
 
         [HttpGet(Name = "Mykpi")]
+
         public ActionResult<IEnumerable<KeyResultAreaDtoForCreation>> GetPersonalKpis(int empId)
         {
             var resultFromMap = resultArea.GetPersonalkpis(empId);

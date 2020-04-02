@@ -1,0 +1,55 @@
+﻿@model  VerifyEmail
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js">
+    <link href="~/css/style.css" rel="stylesheet" />
+    <title>Enter Email</title>
+</head>
+
+<body>
+
+    <main class="wrap-login">
+        <div class="row mx-0">
+            <div class="col-4 px-0">
+                <div>
+                    <img src="~/images/authImg.png" alt="auth" class="authImg" />
+                </div>
+            </div>
+
+            <section class="col-8 d-flex justify-content-center align-items-center">
+                <div class="login-box">
+                    <div class="name-box">
+                        <span class="welcome-text">Welcome Back!</span>
+                    </div>
+                    <p class="text">We know you’ve been working hard, let’s measure your progress</p>
+                    <form asp-controller="Auth" asp-action="VerifyEmail" method="post">
+                        <input type="hidden" name="ReturnUrl" value="@Model.ReturnUrl" />
+                        <div class="form-control enter-mail">
+                            <div class="row h-100">
+                                <div class="col-2"></div>
+                                <div class="col-8 h-100">
+                                    <input class="w-100 h-100 text-center" type="email" id="email" name="email"
+                                           placeholder="Please enter your company email address" />
+                                </div>
+                                <div class="col-2 d-flex align-items-center justify-content-center">
+                                    <img src="~/images/goodIcon.svg" alt="good" />
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn proceed">Proceed</button>
+                    </form>
+
+
+                </div>
+            </section>
+        </div>
+    </main>
+</body>
+
+</html>
