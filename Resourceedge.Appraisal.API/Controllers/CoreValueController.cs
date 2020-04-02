@@ -92,7 +92,6 @@ namespace Resourceedge.Appraisal.API.Controllers
 
             return NotFound();
         }
-
         public IActionResult SearchForCoreValue(PaginationResourceParameter resourceParam)
         {
             var res = coreValueRepo.GetCoreValuesSearch(resourceParam);

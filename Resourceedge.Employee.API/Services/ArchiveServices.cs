@@ -76,7 +76,7 @@ namespace Resourceedge.Employee.API.Services
         public PagedList<OldEmployeeForViewDto> GetEmployeesWithSeachQuery(int empId, PaginationResourceParameter resourceParam)
         {
 
-            var list = QueryableCollection.Where(e => e.FullName.Contains(resourceParam.SearchQuery) || e.EmpEmail.Contains(resourceParam.SearchQuery) && e.EmployeeId != empId)
+            var list = QueryableCollection.Where(e => e.FullName.Contains(resourceParam.SearchQuery) || e.EmpEmail.Contains(resourceParam.SearchQuery) && e.EmployeeId != empId && e.Isactive == true)
                                           .Select(a => new OldEmployeeForViewDto() { Email = a.EmpEmail, FullName = a.FullName, EmployeeId = a.EmployeeId });
             var pagedList = PagedList<OldEmployeeForViewDto>.Create(list, resourceParam.PageNumber, resourceParam.PageSize);
 

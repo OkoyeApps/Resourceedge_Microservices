@@ -4,6 +4,7 @@ using Resourceedge.Appraisal.API.Interfaces;
 using Resourceedge.Common.Archive;
 using Resourceedge.Common.Util;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Resourceedge.Appraisal.API.Controllers
@@ -49,6 +50,14 @@ namespace Resourceedge.Appraisal.API.Controllers
             }
 
             return Ok(result);
+        }
+        [HttpGet("teamMemberCount")]
+        public async Task<IActionResult> GetEmployeesToAppraiseCount(int Id)
+        {
+            var resultFromRepo = await teamRepo.GetEmployeesToAppraise(Id);
+            var empCount = resultFromRepo.Count();
+
+            return Ok(empCount);
         }
 
 
