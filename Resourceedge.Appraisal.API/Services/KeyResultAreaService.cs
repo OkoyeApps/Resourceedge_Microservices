@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using IdentityModel.Client;
+using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -10,10 +11,14 @@ using Resourceedge.Appraisal.Domain.Models;
 using Resourceedge.Common.Archive;
 using Resourceedge.Email.Api.Model;
 using Resourceedge.Email.Api.SGridClient;
+using Resourceedge.Worker.Auth.Services;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Claims;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -24,16 +29,24 @@ namespace Resourceedge.Appraisal.API.Services
         public readonly IMongoCollection<KeyResultArea> Collection;
         public readonly IQueryable<KeyResultArea> QueryableCollection;
         private readonly ILogger<KeyResultArea> logger;
-        private readonly HttpClient HttpClient; 
+        private readonly ITokenAccesor tokenAccesor;
+        private readonly AuthService authService;
+        private readonly HttpClient HttpClient;
+        private readonly HttpClient AuthHttpClient;
         EmailSender sender;
 
 
-        public KeyResultAreaService(IDbContext context, ILogger<KeyResultArea> _logger, IHttpClientFactory _httpClientFactory, ISGClient _client)
+        public KeyResultAreaService(IDbContext context, ILogger<KeyResultArea> _logger, IHttpClientFactory _httpClientFactory, ISGClient _client, ITokenAccesor _tokenAccesor, AuthService _authService)
         {
             Collection = context.Database.GetCollection<KeyResultArea>($"{nameof(KeyResultArea)}s");
             QueryableCollection = Collection.AsQueryable<KeyResultArea>();
             logger = _logger;
+            tokenAccesor = _tokenAccesor;
+            authService = _authService;
             HttpClient = _httpClientFactory.CreateClient("EmployeeService");
+            AuthHttpClient = _httpClientFactory.CreateClient("Auth");
+            HttpClient.SetBearerToken(tokenAccesor.TokenResponse.AccessToken);
+            //AuthHttpClient.SetBearerToken(tokenAccesor.TokenResponse.AccessToken);
             sender = new EmailSender(_client);
         }
 
@@ -97,11 +110,66 @@ namespace Resourceedge.Appraisal.API.Services
             return null;
         }
 
-        public void AddKeyOutcomes(IEnumerable<KeyResultArea> entity)
+        public async Task<bool> AddKeyOutcomes(IEnumerable<KeyResultArea> entity)
         {
             Collection.InsertMany(entity);
-            return;
+
+            var superviorsAndClaims = new Dictionary<string, List<Claim>>();
+
+            superviorsAndClaims = FormatHodDetailsForClaims(entity, superviorsAndClaims);
+            superviorsAndClaims = FormatAppraiserForClaims(entity, superviorsAndClaims);
+
+            var result = await authService.AddUserClaimsByEmail(superviorsAndClaims);
+            //var result2 = await SendCliamsToEmployeeSystemForSupervisors(superviorsAndClaims);
+            return true;
         }
+
+        public Dictionary<string, List<Claim>> FormatHodDetailsForClaims(IEnumerable<KeyResultArea> entity, Dictionary<string, List<Claim>> superviorsAndClaims)
+        {
+            foreach (var resultArea in entity)
+            {
+                if (superviorsAndClaims.ContainsKey(resultArea.HodDetails.Email))
+                {
+                    //Add claims for Supervisor
+                    var currentClaims = superviorsAndClaims[resultArea.HodDetails.Email];
+                    var exisitingClam = currentClaims.FirstOrDefault(X => X.Value == "hod");
+                    if (exisitingClam == null)
+                    {
+                        superviorsAndClaims[resultArea.HodDetails.Email].Add(new Claim("privilege_appraisal", "hod"));
+                    }
+                }
+                else
+                {
+                    superviorsAndClaims[resultArea.HodDetails.Email] = new List<Claim> { new Claim("privilege_appraisal", "hod") };
+                }
+            }
+            return superviorsAndClaims;
+        }
+
+
+
+        public Dictionary<string, List<Claim>> FormatAppraiserForClaims(IEnumerable<KeyResultArea> entity, Dictionary<string, List<Claim>> superviorsAndClaims)
+        {
+            foreach (var resultArea in entity)
+            {
+                if (superviorsAndClaims.ContainsKey(resultArea.AppraiserDetails.Email))
+                {
+                    //Add claims for Supervisor
+                    var currentClaims = superviorsAndClaims[resultArea.AppraiserDetails.Email];
+                    var exisitingClam = currentClaims.FirstOrDefault(X => X.Value == "appraiser");
+                    if (exisitingClam == null)
+                    {
+                        superviorsAndClaims[resultArea.AppraiserDetails.Email].Add(new Claim("privilege_appraisal", "appraiser"));
+                    }
+                }
+                else
+                {
+                    superviorsAndClaims[resultArea.AppraiserDetails.Email] = new List<Claim> { new Claim("privilege_appraisal", "appraiser") };
+                }
+            }
+            return superviorsAndClaims;
+        }
+
 
         public void AddKeyOutcomes(KeyResultArea entity)
         {
@@ -214,9 +282,9 @@ namespace Resourceedge.Appraisal.API.Services
             string message = "has sumbitted one or more key result area, kindly review and act on it";
             string title = "Key Result Area(KRA) For Approval";
             string htmlContent = "";
-             string textContent = "";
+            string textContent = "";
 
-            List<EmailObject> emailObj = keyAreas.Select( x => new EmailObject() { ReceiverEmailAddress = x.HodDetails.Email, ReceiverFullName = x.HodDetails.Name}).ToList();
+            List<EmailObject> emailObj = keyAreas.Select(x => new EmailObject() { ReceiverEmailAddress = x.HodDetails.Email, ReceiverFullName = x.HodDetails.Name }).ToList();
             emailObj.AddRange(keyAreas.Select(x => new EmailObject() { ReceiverEmailAddress = x.AppraiserDetails.Email, ReceiverFullName = x.AppraiserDetails.Name }).ToList());
 
             var employee = await GetEmployee(keyAreas.FirstOrDefault().EmployeeId);
@@ -225,15 +293,15 @@ namespace Resourceedge.Appraisal.API.Services
                 PlainTextContent = textContent,
                 HtmlContent = htmlContent,
                 EmailObjects = emailObj
-            };        
-            
-            var result = sender.SendMultipleEmail(subject, employee.FullName, emailDtos,message, title);
-           
+            };
+
+            var result = sender.SendMultipleEmail(subject, employee.FullName, emailDtos, message, title);
+
         }
 
         public async Task<OldEmployeeForViewDto> GetEmployee(int empId)
         {
-
+            HttpClient.SetBearerToken(tokenAccesor.TokenResponse.AccessToken);
             var response = await HttpClient.GetAsync($"api/employee/employeeId/{empId}");
             if (response.IsSuccessStatusCode)
             {
@@ -243,8 +311,30 @@ namespace Resourceedge.Appraisal.API.Services
 
                 return result;
             }
-
             return null;
+        }
+
+        public async Task<bool> SendCliamsToEmployeeSystemForSupervisors(Dictionary<string, List<Claim>> supervisorsAndClaims)
+        {
+            try
+            {
+
+                var jsonString = JsonSerializer.Serialize(supervisorsAndClaims);
+                var result = await AuthHttpClient.PostAsync("api/auth/external", new StringContent(jsonString, Encoding.UTF8, "application/json"));
+                if (result.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+           
+
+
         }
     }
 }

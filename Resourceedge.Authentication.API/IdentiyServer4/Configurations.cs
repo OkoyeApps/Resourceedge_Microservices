@@ -39,19 +39,19 @@ namespace Resourceedge.Authentication.API.IdentiyServer4
         {
             return new List<Client>
             {
-                //new Client
-                //{
-                //    AllowedGrantTypes = GrantTypes.ClientCredentials,
-                //    ClientSecrets = { new Secret("edge_employee_subsystem_secret".Sha256()) },
-                //    ClientId = "edge_employee_subsystem",
-                //},
-                //new Client
-                //{
-                //    AllowedGrantTypes = GrantTypes.ClientCredentials,
-                //    ClientSecrets = { new Secret("edge_appraisal_subsystem_secret".Sha256()) },
-                //    ClientId = "edge_appraisal_subsystem",
-                //    AllowedScopes = { "Employee" }
-                //},
+                new Client
+                {
+                    AllowedGrantTypes = GrantTypes.ClientCredentials,
+                    ClientSecrets = { new Secret("edge_employee_subsystem_secret".Sha256()) },
+                    ClientId = "edge_employee_subsystem",
+                },
+                new Client
+                {
+                    AllowedGrantTypes = GrantTypes.ClientCredentials,
+                    ClientSecrets = { new Secret("edge_appraisal_subsystem_secret".Sha256()) },
+                    ClientId = "edge_appraisal_subsystem",
+                    AllowedScopes = { "Employee" }
+                },
 
                  new Client
                  {

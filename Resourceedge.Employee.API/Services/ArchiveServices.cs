@@ -69,18 +69,26 @@ namespace Resourceedge.Employee.API.Services
         public async Task<IEnumerable<OldEmployee>> GetMultipleEmployeesById(IEnumerable<int> Ids)
         {
             var filter = Builders<OldEmployee>.Filter.In("EmployeeId", Ids);
-            var result = await Collection.Find(filter).ToListAsync() ;
+            var result = await Collection.Find(filter).ToListAsync();
             return result;
         }
 
         public PagedList<OldEmployeeForViewDto> GetEmployeesWithSeachQuery(int empId, PaginationResourceParameter resourceParam)
         {
 
-            var list = QueryableCollection.Where(e => e.FullName.Contains(resourceParam.SearchQuery, StringComparison.OrdinalIgnoreCase) || e.EmpEmail.Contains(resourceParam.SearchQuery, StringComparison.OrdinalIgnoreCase) && e.EmployeeId != empId && e.Isactive == true)
-                                          .Select(a => new OldEmployeeForViewDto() { Email = a.EmpEmail, FullName = a.FullName, EmployeeId = a.EmployeeId });
+            var list = QueryableCollection.Where(SearchPredicate(empId, resourceParam.SearchQuery))
+                                          .Select(a => new OldEmployeeForViewDto() { Email = a.EmpEmail, FullName = a.FullName, EmployeeId = a.EmployeeId }).AsQueryable();
             var pagedList = PagedList<OldEmployeeForViewDto>.Create(list, resourceParam.PageNumber, resourceParam.PageSize);
 
             return pagedList;
+        }
+
+
+        private Func<OldEmployee, bool> SearchPredicate(int empId, string SearchQuery)
+        {
+            return e => e.FullName.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase) || e.EmpEmail.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase)
+            && e.EmployeeId != empId && e.Isactive == true;
+            
         }
     }
 }

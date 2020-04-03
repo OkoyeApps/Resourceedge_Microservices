@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using IdentityModel.Client;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using Resourceedge.Appraisal.API.Interfaces;
 using Resourceedge.Appraisal.Domain.DBContexts;
@@ -6,6 +9,7 @@ using Resourceedge.Appraisal.Domain.Entities;
 using Resourceedge.Appraisal.Domain.Models;
 using Resourceedge.Common.Archive;
 using Resourceedge.Common.Util;
+using Resourceedge.Worker.Auth.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,9 +25,10 @@ namespace Resourceedge.Appraisal.API.Services
         private readonly HttpClient HttpClient;
         private readonly IQueryable<KeyResultArea> QueryableCollection;
         private readonly IKeyResultArea resultArea;
+        private readonly ITokenAccesor tokenAccessor;
         private IMongoCollection<KeyResultArea> Collection;
 
-        public TeamService(IHttpClientFactory _httpClientFactory, ILogger<TeamService> _logger, IDbContext _dbContext, IKeyResultArea _resultArea)
+        public TeamService(IHttpClientFactory _httpClientFactory, ILogger<TeamService> _logger, IDbContext _dbContext, IKeyResultArea _resultArea, ITokenAccesor _tokenAccessor)
         {
             if (_httpClientFactory != null && _logger != null && _dbContext != null)
             {
@@ -31,6 +36,9 @@ namespace Resourceedge.Appraisal.API.Services
                 this.logger = _logger;
                 resultArea = _resultArea;
                 Collection = _dbContext.Database.GetCollection<KeyResultArea>($"{nameof(KeyResultArea)}s");
+
+                resultArea = _resultArea;
+                tokenAccessor = _tokenAccessor;
                 QueryableCollection = Collection.AsQueryable();
             }
             else
@@ -41,8 +49,6 @@ namespace Resourceedge.Appraisal.API.Services
                 }
                 throw new ArgumentNullException(nameof(logger));
             }
-
-            resultArea = _resultArea;
         }
         public async Task<IEnumerable<OldEmployeeDto>> GetEmployeesToAppraise(int employeeId)
         {
@@ -65,10 +71,10 @@ namespace Resourceedge.Appraisal.API.Services
             return new List<OldEmployeeDto>();
         }
 
-        public async  Task<IEnumerable<KeyResultAreaForViewDto>> GetTeamMemberKpi(int MyId, int TeammeberId)
+        public async Task<IEnumerable<KeyResultAreaForViewDto>> GetTeamMemberKpi(int MyId, int TeammeberId)
         {
             var result = resultArea.GetKeyResultAreasForAppraiser(MyId, TeammeberId);
-            return UpdateWhoAmIForList(result, MyId); 
+            return UpdateWhoAmIForList(result, MyId);
         }
 
 
@@ -92,6 +98,7 @@ namespace Resourceedge.Appraisal.API.Services
 
         public async Task<IEnumerable<OldEmployeeForViewDto>> GetSupervisors(int empId, string searchParam, string orderParam)
         {
+            HttpClient.SetBearerToken(tokenAccessor.TokenResponse.AccessToken);
 
             var response = await HttpClient.GetAsync($"api/employee/SearchEmployee/{empId}?SearchQuery={searchParam}&OrderBy={orderParam}");
             if (response.IsSuccessStatusCode)
@@ -104,6 +111,8 @@ namespace Resourceedge.Appraisal.API.Services
             }
 
             return null;
+
+
         }
     }
 }

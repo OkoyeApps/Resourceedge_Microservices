@@ -29,7 +29,7 @@ namespace Resourceedge.Authentication.API.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewData["error"] = "Email is required";
+                ViewBag.Error = "Email is required";
                 return View(model);
             }
             var result = await AuthRepo.GetUserbyEmail(model.Email);
@@ -61,6 +61,7 @@ namespace Resourceedge.Authentication.API.Controllers
             var result = await AuthRepo.Login(model);
             if (!result.Item1)
             {
+                ViewBag.Error = "Username or password incorrect";
                 return View(model);
             }
 

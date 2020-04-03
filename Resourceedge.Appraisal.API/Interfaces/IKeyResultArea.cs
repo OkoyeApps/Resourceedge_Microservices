@@ -16,7 +16,7 @@ namespace Resourceedge.Appraisal.API.Interfaces
         Task<KeyResultArea> QuerySingleByUserId(ObjectId id, int UserId);
         Task<KeyResultArea> QuerySingleUserKeyOutcome(ObjectId id, ObjectId outcomeId, int empId);
         void AddKeyOutcomes(KeyResultArea entity);
-        public void AddKeyOutcomes(IEnumerable<KeyResultArea> entity);
+         Task<bool> AddKeyOutcomes(IEnumerable<KeyResultArea> entity);
         public IEnumerable<KeyResultArea> GetPersonalkpis(int empId, string resultArea = null);
         public KeyResultArea Update(ObjectId Id, KeyResultAreaForUpdateMainDto entity);
         Task<long> UpdateKeyOutcome(ObjectId Id, ObjectId outcomeId, int empId, KeyOutcomeForUpdateDto entity);

@@ -19,6 +19,7 @@ using Resourceedge.Appraisal.API.Services;
 using Resourceedge.Appraisal.Domain.DBContexts;
 using Resourceedge.Appraisal.Domain.Entities;
 using Resourceedge.Email.Api.SGridClient;
+using Resourceedge.Worker.Auth.Services;
 
 namespace Resourceedge.Appraisal.API
 {
@@ -53,8 +54,21 @@ namespace Resourceedge.Appraisal.API
                 config.BaseAddress = new Uri(Configuration["Services:employee"]);
                 config.DefaultRequestHeaders.Clear();
                 config.DefaultRequestHeaders.Add("Accept", "application/json");
-            }).AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(5, _ => TimeSpan.FromMilliseconds(500))); ;
+            }).AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(5, _ => TimeSpan.FromMilliseconds(500))); 
+            services.AddHttpClient("discoveryEndpoint", config =>
+            {
+                config.BaseAddress = new Uri(Configuration["Services:Authority"]);
+                config.DefaultRequestHeaders.Clear();
+                config.DefaultRequestHeaders.Add("Accept", "application/json");
+            });
+            services.AddHttpClient("Auth", config =>
+            {
+                config.BaseAddress = new Uri(Configuration["Services:Auth"]);
+                config.DefaultRequestHeaders.Clear();
+                config.DefaultRequestHeaders.Add("Accept", "application/json");
+            });
 
+            //services.AddHttpContextAccessor();
 
             services.AddTransient<IDbContext, EdgeAppraisalContext>(ctx => EdgeAppraisalContext.Create(
                 Configuration.GetSection("DefaultConnection:ConnectionString").Value,
@@ -68,15 +82,10 @@ namespace Resourceedge.Appraisal.API
             services.AddTransient<IAppraisalResult, AppraisalResultService>();
             services.AddTransient<ITeamRepository, TeamService>();
             services.AddTransient<ICoreValue, CoreValueService>();
+            services.AddTransient<ITokenAccesor, TokenAccessorService>();
+            services.AddTransient(typeof(AuthService));
+
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
-            services.AddControllers(setupAction =>
-            {
-                setupAction.ReturnHttpNotAcceptable = true;
-            }).AddXmlDataContractSerializerFormatters()
-            .AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
-
-      
 
             services.Configure<MvcOptions>(config =>
             {
@@ -86,12 +95,33 @@ namespace Resourceedge.Appraisal.API
                     newtonsoftJsonOutputFormatter.SupportedMediaTypes.Add("application/vnd.marvin.hateoas+json");
                 }
             });
+            services.AddControllers(setupAction =>
+            {
+                setupAction.ReturnHttpNotAcceptable = true;
+            }).AddXmlDataContractSerializerFormatters()
+            .AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
+
+      
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                //app.UseExceptionHandler(appBuilder =>
+                //{
+                //    appBuilder.Run(async context =>
+                //    {
+                //        context.Response.StatusCode = 500;
+                //        await context.Response.WriteAsync("An unexpected fault happened. Try again later");
+                //    });
+                //});
+
                 app.UseDeveloperExceptionPage();
             }
 

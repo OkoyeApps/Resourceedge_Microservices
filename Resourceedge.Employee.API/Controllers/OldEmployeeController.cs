@@ -11,9 +11,11 @@ using Resourceedge.Employee.API.Helpers;
 using Resourceedge.Employee.Domain.Dtos;
 using Resourceedge.Employee.Domain.Interfaces;
 using Resourceedge.Common.Archive;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Resourceedge.Employee.API.Controllers
 {
+    //[Authorize]
     [ApiController]
     [Route("api/employee")]
     public class OldEmployeeController : ControllerBase

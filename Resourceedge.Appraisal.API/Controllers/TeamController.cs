@@ -42,7 +42,6 @@ namespace Resourceedge.Appraisal.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAppraisee(int empId, string SearchQuery, string  OrderBy )
         {
-            var aa = Request.Query;
             var result = await teamRepo.GetSupervisors(empId, SearchQuery, OrderBy);
             if (result == null)
             {

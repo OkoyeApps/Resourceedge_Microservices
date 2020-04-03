@@ -33,6 +33,11 @@ namespace Resourceedge.Appraisal.Domain.Models
         public string whoami { get; set; }
         public ICollection<KeyOutcome> keyOutcomes { get; set; } = new List<KeyOutcome>();
         public ApprovalStatus Status { get; set; } = new ApprovalStatus();
+    }
 
+    public  class  KeyResultAreaSuperviorCliams
+    {
+        public NameEmail Appraiser { get; set; }
+        public NameEmail Hod { get; set; }
     }
 }

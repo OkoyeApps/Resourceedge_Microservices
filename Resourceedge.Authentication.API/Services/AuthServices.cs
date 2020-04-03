@@ -45,7 +45,7 @@ namespace Resourceedge.Authentication.API.Services
                 var currentUser = await UserManager.FindByEmailAsync(email);
                 if (currentUser == null)
                 {
-                    return (true, "Email does not exist, kindly register");
+                    return (false, "Email does not exist, kindly see your HR for registration");
                 }
                 return (true, currentUser.FirstName);
             }

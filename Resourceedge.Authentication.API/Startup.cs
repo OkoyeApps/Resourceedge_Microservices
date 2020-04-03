@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Resourceedge.Authentication.API.ExternalServices;
 using Resourceedge.Authentication.API.IdentiyServer4;
 using Resourceedge.Authentication.API.Services;
 using Resourceedge.Authentication.Domain.Entities;
@@ -30,25 +31,16 @@ namespace Resourceedge.Authentication.API
             var AuthConnectionString = configuration.GetConnectionString("Auth");
             var Identity4ConnectionString = configuration.GetConnectionString("Identity4");
 
-            //services.AddCors(options =>
-            //{
-            //    options.AddPolicy("CorsPolicy", cors =>
-            //            cors.AllowAnyOrigin()
-            //                .AllowAnyMethod()
-            //                .AllowAnyHeader()
-            //                );
-            //});
-
-            services.AddDbContext<EdgeDbContext>(config =>
+            services.AddCors(options =>
             {
-                config.UseSqlServer(AuthConnectionString
-                //    options =>
-                //{
-                //    options.EnableRetryOnFailure()
-                //    .MigrationsAssembly("Resourceedge.Authentication.API");
-                //}
-                );
-            })
+                options.AddDefaultPolicy(cors =>
+                        cors.AllowAnyOrigin()
+                            .AllowAnyMethod()
+                            .AllowAnyHeader()
+                            );
+            });
+
+            services.AddDbContext<EdgeDbContext>(config => {config.UseSqlServer(AuthConnectionString, options => { options.EnableRetryOnFailure(); });})
             .AddIdentity<ApplicationUser, ApplicationRole>(config =>
             {
                 config.Password.RequiredLength = 4;
@@ -83,6 +75,7 @@ namespace Resourceedge.Authentication.API
                 .AddDeveloperSigningCredential();
 
             services.AddTransient<IAuthInterface, AuthServices>();
+            services.AddTransient<IExternalServiceInterface, ExternalApprisalService>();
 
             services.AddControllersWithViews();
             //.AddRazorRuntimeCompilation();
@@ -95,7 +88,7 @@ namespace Resourceedge.Authentication.API
                 app.UseDeveloperExceptionPage();
             }
 
-            //app.UseCors("CorsPolicy");
+            app.UseCors();
             app.UseCookiePolicy(new CookiePolicyOptions { MinimumSameSitePolicy = SameSiteMode.Lax });
 
             app.UseStaticFiles();

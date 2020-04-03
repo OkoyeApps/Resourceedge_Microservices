@@ -26,8 +26,8 @@ namespace Resourceedge.Authentication.API
                 var EdgeDbContext = scope.ServiceProvider.GetRequiredService<EdgeDbContext>();
                 var PersistedDbContext =  scope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>();
                 var ConfigurationdDbContext =  scope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
-                await EdgeUserInitializer.EnsureSeed(UserManager, EdgeDbContext);
-                IdentityInitializer.EnsureSeed(ConfigurationdDbContext, PersistedDbContext);
+                //await EdgeUserInitializer.EnsureSeed(UserManager, EdgeDbContext);
+                //IdentityInitializer.EnsureSeed(ConfigurationdDbContext, PersistedDbContext);
             }
 
                 host.Run();

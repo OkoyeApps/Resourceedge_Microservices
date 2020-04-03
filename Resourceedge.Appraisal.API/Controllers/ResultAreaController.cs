@@ -11,6 +11,7 @@ using Resourceedge.Appraisal.Domain.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System;
 
 namespace Resourceedge.Appraisal.API.Controllers
 {
@@ -50,16 +51,26 @@ namespace Resourceedge.Appraisal.API.Controllers
         }
 
         [HttpPost(Name = "CreateKeyOutcomes")]
-        public IActionResult CreateKeyResultArea(string empId, IEnumerable<KeyResultAreaDtoForCreation> model)
+        public async Task<IActionResult> CreateKeyResultArea(string empId, IEnumerable<KeyResultAreaDtoForCreation> model)
         {
+            try
+            {
+                foreach (var item in model)
+                {
+                    item.myId = empId;
+                }
 
-            var entityToAdd = mapper.Map<IEnumerable<KeyResultAreaDtoForCreation>, IEnumerable<KeyResultArea>>(model);
-            resultArea.AddKeyOutcomes(entityToAdd);
+                var entityToAdd = mapper.Map<IEnumerable<KeyResultAreaDtoForCreation>, IEnumerable<KeyResultArea>>(model);
+                var result = await resultArea.AddKeyOutcomes(entityToAdd);
 
-            var entityToReturn = mapper.Map<IEnumerable<KeyResultArea>>(entityToAdd);
-            resultArea.SendApprovalNotification(entityToReturn);
-
-            return CreatedAtRoute("Mykpi", new { empId = empId }, entityToReturn);
+                var entityToReturn = mapper.Map<IEnumerable<KeyResultArea>>(entityToAdd);
+                resultArea.SendApprovalNotification(entityToReturn);
+                return CreatedAtRoute("Mykpi", new { empId = empId }, entityToReturn);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         [HttpPatch("Update/{KeyResultAreaId}")]
@@ -158,7 +169,7 @@ namespace Resourceedge.Appraisal.API.Controllers
 
             return NotFound();
         }
-        
+
         [HttpDelete("Id")]
         public async Task<IActionResult> DeleteKeyResultArea(string Id)
         {
