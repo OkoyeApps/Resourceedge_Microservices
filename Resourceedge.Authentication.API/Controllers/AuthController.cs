@@ -65,6 +65,11 @@ namespace Resourceedge.Authentication.API.Controllers
         {
             ViewBag.Title = "Authenticate";
 
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Error = "password is required";
+                return View(model);
+            }
             var result = await AuthRepo.Login(model);
             if (!result.Item1)
             {

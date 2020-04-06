@@ -62,14 +62,18 @@ namespace Resourceedge.Authentication.API.IdentiyServer4
                          IdentityServerConstants.StandardScopes.Profile,
                          "Employee", "Appraisal", "edge_priviledge_appraisal"
                      },
-                     RedirectUris = {"http://localhost:3000/auth/redirect", "https://staging-resourceedge.herokuapp.com/auth/redirect" },
+                     RedirectUris = {"http://localhost:3000/auth/redirect", "https://staging-resourceedge.herokuapp.com/auth/redirect", "https://resourceedge.herokuapp.com/auth/redirect" },
                      AllowAccessTokensViaBrowser = true,
                      RequireConsent = false,
                      //AccessTokenLifetime = 1,
                      //Allow CORS
-                     AllowedCorsOrigins = { "http://localhost:3000", "https://staging-resourceedge.herokuapp.com" },
-                    
+                     AllowedCorsOrigins = { "http://localhost:3000", "https://staging-resourceedge.herokuapp.com", "https://resourceedge.herokuapp.com" },
+
                  }
+
+
+
+                 
             };
         }
 

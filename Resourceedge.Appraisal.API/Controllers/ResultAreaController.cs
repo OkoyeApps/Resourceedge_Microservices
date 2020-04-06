@@ -185,5 +185,12 @@ namespace Resourceedge.Appraisal.API.Controllers
 
             return NotFound();
         }
+
+        [HttpGet("checkuploaded")]
+        public IActionResult CheckUserUploadedEpaForYear(int empId)
+        {
+            var result = resultArea.HasUploadedEpa(empId);
+            return Ok(result);
+        } 
     }
 }

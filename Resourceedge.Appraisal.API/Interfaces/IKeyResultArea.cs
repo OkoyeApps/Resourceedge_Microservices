@@ -25,6 +25,7 @@ namespace Resourceedge.Appraisal.API.Interfaces
         IEnumerable<KeyResultArea> GetKeyResultAreasForAppraiser(int appraiserId, int employeeId);
         void SendApprovalNotification(IEnumerable<KeyResultArea> keyAreas);
         Task<OldEmployeeForViewDto> GetEmployee(int empId);
+        bool HasUploadedEpa(int employeeId);
 
     }
 }

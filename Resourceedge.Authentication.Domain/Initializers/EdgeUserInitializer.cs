@@ -22,7 +22,7 @@ namespace Resourceedge.Authentication.Domain.Initializers
             {
                 await context.Database.EnsureDeletedAsync();
                 await context.Database.MigrateAsync();
-                await Initialize(UserManager, context);
+                //await Initialize(UserManager, context);
             }
             else
             {

@@ -6,7 +6,8 @@ services:
       - ASPNETCORE_ENVIRONMENT=Production
       - DefaultConnection__ConnectionString=mongodb+srv://chocksy:ewZg5URqMNyal7Xs@lawyerpp-cluster-5faak.mongodb.net/EdgeAppraisal?retryWrites=true
       - DefaultConnection__DataBaseName=EdgeAppraisal
-      - Services__employee=http://resourceedgeemployee.centralus.azurecontainer.io/api
+      - Services__employee=https://resourceedgeemployee.azurewebsites.net/api
+      - SendGrid__SENDGRID_API_KEY=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
     ports:
       - "6001:80"
       
