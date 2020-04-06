@@ -21,12 +21,15 @@ namespace Resourceedge.Authentication.API.Controllers
 
         public IActionResult VerifyEmail(string ReturnUrl)
         {
+            ViewBag.Title = "Verify Email";
             return View(new VerifyEmail { ReturnUrl = ReturnUrl });
         }
 
         [HttpPost]
         public async Task<IActionResult> VerifyEmail(VerifyEmail model)
         {
+            ViewBag.Title = "Verify Email";
+
             if (!ModelState.IsValid)
             {
                 ViewBag.Error = "Email is required";
@@ -45,6 +48,8 @@ namespace Resourceedge.Authentication.API.Controllers
 
         public IActionResult Authenticate(string ReturnUrl)
         {
+            ViewBag.Title = "Authenticate";
+
             TempData.TryGetValue("LoginModel", out object savedTempObject);
             if (savedTempObject == null)
             {
@@ -58,6 +63,8 @@ namespace Resourceedge.Authentication.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Authenticate(LoginViewModel model)
         {
+            ViewBag.Title = "Authenticate";
+
             var result = await AuthRepo.Login(model);
             if (!result.Item1)
             {
@@ -67,6 +74,29 @@ namespace Resourceedge.Authentication.API.Controllers
 
             var claims = User.Claims.ToList();
                 return Redirect(model.ReturnUrl);
+        }
+
+        public IActionResult ResetPassword(string ReturnUrl)
+        {
+            ViewBag.Title = "Reset Password";
+
+            TempData.TryGetValue("LoginModel", out object savedTempObject);
+            if (savedTempObject == null)
+            {
+                return RedirectToAction("VerifyEmail", new { ReturnUrl });
+            }
+
+            var loginModel = JsonConvert.DeserializeObject<LoginGetViewModel>((string)savedTempObject);
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult ResetPassword()
+        {
+            ViewBag.Title = "Reset Password";
+
+            return View();            
+
         }
     }
 }

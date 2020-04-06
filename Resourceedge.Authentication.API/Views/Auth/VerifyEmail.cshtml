@@ -1,63 +1,49 @@
 ﻿@model VerifyEmail
 
-<!DOCTYPE html>
-<html lang="en">
+@{
+    Layout = "Shared/_AuthLayout.cshtml";
+}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="~/css/style.css" rel="stylesheet" />
-    <title>Verify Email</title>
-</head>
 
-<body>
-    <main class="wrap-login">
-        <div class="row mx-0">
-            <div class="col-4 px-0">
-                <div>
-                    <img src="~/images/authImg.png" alt="auth" class="authImg" />
+
+<div class="login-box">
+   
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert">&times; </button>
+            <span>@ViewBag.Error.ToString()</span>
+        </div>
+
+    }
+    <div class="name-box">
+        <span class="welcome-text">Welcome Back!</span>
+    </div>
+    <p class="text">We know you’ve been working hard, let’s measure your progress</p>
+    <form asp-controller="Auth" asp-action="VerifyEmail" method="post">
+        <input type="hidden" name="ReturnUrl" value="@Model.ReturnUrl" />
+        <div class="form-control enter-mail">
+            <div class="row h-100">
+                <div class="col-2"></div>
+                <div class="col-8 h-100">
+                    <input class="w-100 h-100 text-center" type="email" id="email" name="email"
+                           placeholder="Please enter your company email address" />
+                </div>
+                <div class="col-2 d-flex align-items-center justify-content-center">
+                    <img src="~/images/goodIcon.svg" alt="good" />
                 </div>
             </div>
-
-            <section class="col-8 d-flex justify-content-center align-items-center">
-                <div class="login-box">
-                    @if (ViewBag.Error != null)
-                    {
-                        <div class="alert alert-danger alert-dismissable">
-                            <button type="button" class="close" data-dismiss="alert">&times; </button>
-                            <span>@ViewBag.Error.ToString()</span>
-                        </div>
-
-                    }
-                    <div class="name-box">
-                        <span class="welcome-text">Welcome Back!</span>
-                    </div>
-                    <p class="text">We know you’ve been working hard, let’s measure your progress</p>
-                    <form asp-controller="Auth" asp-action="VerifyEmail" method="post">
-                        <input type="hidden" name="ReturnUrl" value="@Model.ReturnUrl" />
-                        <div class="form-control enter-mail">
-                            <div class="row h-100">
-                                <div class="col-2"></div>
-                                <div class="col-8 h-100">
-                                    <input class="w-100 h-100 text-center" type="email" id="email" name="email"
-                                           placeholder="Please enter your company email address" />
-                                </div>
-                                <div class="col-2 d-flex align-items-center justify-content-center">
-                                    <img src="~/images/goodIcon.svg" alt="good" />
-                                </div>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn proceed">Proceed</button>
-                    </form>
-
-
-                </div>
-            </section>
         </div>
-    </main>
-    <script src="~/js/Jquery3.1.js"></script>
-    <script src="~/js/popper.js"></script>
-    <script src="~/js/bootsrapp.min.js"></script>
-</body>
-</html>
+        <button type="submit" class="btn proceed">Proceed</button>
+    </form>
+
+
+</div>
+@*</section>
+            </div>
+        </main>
+        <script src="~/js/Jquery3.1.js"></script>
+        <script src="~/js/popper.js"></script>
+        <script src="~/js/bootsrapp.min.js"></script>
+    </body>
+    </html>*@

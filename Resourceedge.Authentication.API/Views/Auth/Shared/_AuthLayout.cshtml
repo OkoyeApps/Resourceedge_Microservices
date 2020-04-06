@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/style.css" rel="stylesheet" />
+    <link href="~/css/style.css" rel="stylesheet" />
+    <title>@ViewBag.Title</title>
+</head>
+
+<body>
+
+    <main class="wrap-login">
+        <div class="row mx-0">
+            <div class="col-4 px-0">
+                <div>
+                    <img src="~/images/authImg.png" alt="auth" class="authImg" />
+                </div>
+            </div>
+            <section class="col-8 d-flex justify-content-center align-items-center">
+                @RenderBody()
+            </section>
+        </div>
+    </main>
+    <script src="~/js/Jquery3.1.js"></script>
+    <script src="~/js/popper.js"></script>
+    <script src="~/js/bootsrapp.min.js"></script>
+</body>
+
+</html>
