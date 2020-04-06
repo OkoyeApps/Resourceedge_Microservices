@@ -58,6 +58,11 @@ namespace Resourceedge.Authentication.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Authenticate(LoginViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Error = "password is required";
+                return View(model);
+            }
             var result = await AuthRepo.Login(model);
             if (!result.Item1)
             {

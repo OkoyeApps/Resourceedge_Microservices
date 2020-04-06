@@ -318,7 +318,6 @@ namespace Resourceedge.Appraisal.API.Services
         {
             try
             {
-
                 var jsonString = JsonSerializer.Serialize(supervisorsAndClaims);
                 var result = await AuthHttpClient.PostAsync("api/auth/external", new StringContent(jsonString, Encoding.UTF8, "application/json"));
                 if (result.IsSuccessStatusCode)
@@ -331,10 +330,12 @@ namespace Resourceedge.Appraisal.API.Services
             {
                 throw ex;
             }
+        }
 
-           
-
-
+        public bool HasUploadedEpa(int employeeId)
+        {
+            var year = DateTime.Now.Year;
+            return QueryableCollection.Any(x => x.EmployeeId == employeeId && x.Year == year);
         }
     }
 }
