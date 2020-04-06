@@ -78,32 +78,49 @@ namespace Resourceedge.Authentication.API.Controllers
             return Redirect(model.ReturnUrl);
         }
 
-        public IActionResult ResetPassword(string ReturnUrl)
+        public IActionResult ResetPassword(string Username, string Token, string ReturnUrl)
         {
             ViewBag.Title = "Reset Password";
 
-            TempData.TryGetValue("LoginModel", out object savedTempObject);
-            if (savedTempObject == null)
+            if(string.IsNullOrEmpty(Username) && string.IsNullOrEmpty(Token))
             {
-                return RedirectToAction("VerifyEmail", new { ReturnUrl = "ResetPassword" });
+                return RedirectToAction("PasswordReset", new { ReturnUrl });
             }
 
-            var loginModel = JsonConvert.DeserializeObject<LoginGetViewModel>((string)savedTempObject);
-            return View(new LoginViewModel { ReturnUrl = ReturnUrl, UserName = loginModel.UserName, Name = loginModel.Name });
+            return View(new ResetPasswordViewModel {Email = Username, Token = Token});
         }
 
         [HttpPost]
-        public IActionResult ResetPassword()
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
             ViewBag.Title = "Reset Password";
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Error = "password is required";
+                return View(model);
+            }
 
-            return View();
+            if(model.Password != model.ConfirmPassword)
+            {
+                ViewBag.Error = "Password and Confirm Password must match";
+                return View(model);
+            }
+
+            var result = await AuthRepo.ResetUserPassword(model);
+            if (!result)
+            {
+                ViewBag.Error = "Password Failed to reset, Try Again";
+            }
+
+
+            return RedirectToAction("VerifyEmail", new {ReturnUrl = ""});
 
         }
 
         public IActionResult PasswordReset(string ReturnUrl)
         {
             ViewBag.Title = "Password Reset";
+           
             return View(new VerifyEmail { ReturnUrl = ReturnUrl });
         }
 
@@ -123,7 +140,7 @@ namespace Resourceedge.Authentication.API.Controllers
                 ViewBag.Error = "Email does not exist, Please Enter registered Email";
             }
 
-            var callbackUrl = Url.Action("ResetPassword", "Account", new { User = result.Item2.Email, code = result.Item3 });
+            var callbackUrl = UrlHelperExtensions.ActionLink(this.Url, "ResetPassword", "Auth", new { Username = result.Item2.Email, Token = result.Item3 , ReturnUrl = model.ReturnUrl});
             var res = await AuthRepo.SendResetPasswordEmail(result.Item2, callbackUrl);
 
             if (!res.Item1)
@@ -132,7 +149,7 @@ namespace Resourceedge.Authentication.API.Controllers
             }
 
             ViewBag.Success = "Email Sent Successfully";
-            return View();
+            return View(new VerifyEmail { ReturnUrl = model.ReturnUrl });
         }
     }
 }

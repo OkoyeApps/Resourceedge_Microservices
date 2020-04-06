@@ -107,7 +107,7 @@ namespace Resourceedge.Authentication.API.Services
                 {
                     ReceiverEmailAddress = currentUser.Email,
                     ReceiverFullName = currentUser.FullName,
-                    HtmlContent = await emailService.FormatEmail(currentUser.FirstName, "")
+                    HtmlContent = await emailService.FormatEmail(currentUser.FirstName, url)
                 };
 
                 var res = await emailService.SendToSingleEmployee(subject, emailDto);
@@ -115,6 +115,31 @@ namespace Resourceedge.Authentication.API.Services
                     return (true, res.ToString());
                 else
                     return (false, res.ToString());
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public async Task<bool> ResetUserPassword(ResetPasswordViewModel model)
+        {
+            try
+            {
+                var currentUser = await UserManager.FindByEmailAsync(model.Email);
+                if (currentUser == null)
+                {
+                    return (false);
+                }
+
+                var res = await UserManager.ResetPasswordAsync(currentUser, model.Token, model.Password);
+                if (res.Succeeded)
+                {
+                    return true;
+                }
+
+                return false;
             }
             catch (Exception ex)
             {

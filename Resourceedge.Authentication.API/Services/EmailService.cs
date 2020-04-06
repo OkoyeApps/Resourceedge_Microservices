@@ -38,7 +38,7 @@ namespace Resourceedge.Authentication.API.Services
             body = body.Replace("{FullName}", Name);
             body = body.Replace("{GroupName}", "RESOURCE EDGE");
             body = body.Replace("{Link}", Url);
-            body = body.Replace("{URL}", Url);
+            body = body.Replace("{Url}", Url);
 
             return body;
         }
