@@ -2,10 +2,7 @@
 using Newtonsoft.Json;
 using Resourceedge.Authentication.Domain.Interfaces;
 using Resourceedge.Authentication.Domain.Model;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Resourceedge.Authentication.API.Controllers
@@ -21,12 +18,15 @@ namespace Resourceedge.Authentication.API.Controllers
 
         public IActionResult VerifyEmail(string ReturnUrl)
         {
+            ViewBag.Title = "Verify Email";
             return View(new VerifyEmail { ReturnUrl = ReturnUrl });
         }
 
         [HttpPost]
         public async Task<IActionResult> VerifyEmail(VerifyEmail model)
         {
+            ViewBag.Title = "Verify Email";
+
             if (!ModelState.IsValid)
             {
                 ViewBag.Error = "Email is required";
@@ -45,6 +45,8 @@ namespace Resourceedge.Authentication.API.Controllers
 
         public IActionResult Authenticate(string ReturnUrl)
         {
+            ViewBag.Title = "Authenticate";
+
             TempData.TryGetValue("LoginModel", out object savedTempObject);
             if (savedTempObject == null)
             {
@@ -52,12 +54,14 @@ namespace Resourceedge.Authentication.API.Controllers
             }
 
             var loginModel = JsonConvert.DeserializeObject<LoginGetViewModel>((string)savedTempObject);
-            return View(new LoginViewModel { ReturnUrl = ReturnUrl, UserName = loginModel .UserName, Name = loginModel.Name});
+            return View(new LoginViewModel { ReturnUrl = ReturnUrl, UserName = loginModel.UserName, Name = loginModel.Name });
         }
 
         [HttpPost]
         public async Task<IActionResult> Authenticate(LoginViewModel model)
         {
+            ViewBag.Title = "Authenticate";
+
             if (!ModelState.IsValid)
             {
                 ViewBag.Error = "password is required";
@@ -71,7 +75,81 @@ namespace Resourceedge.Authentication.API.Controllers
             }
 
             var claims = User.Claims.ToList();
-                return Redirect(model.ReturnUrl);
+            return Redirect(model.ReturnUrl);
+        }
+
+        public IActionResult ResetPassword(string Username, string Token, string ReturnUrl)
+        {
+            ViewBag.Title = "Reset Password";
+
+            if(string.IsNullOrEmpty(Username) && string.IsNullOrEmpty(Token))
+            {
+                return RedirectToAction("PasswordReset", new { ReturnUrl });
+            }
+
+            return View(new ResetPasswordViewModel {Email = Username, Token = Token});
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            ViewBag.Title = "Reset Password";
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Error = "password is required";
+                return View(model);
+            }
+
+            if(model.Password != model.ConfirmPassword)
+            {
+                ViewBag.Error = "Password and Confirm Password must match";
+                return View(model);
+            }
+
+            var result = await AuthRepo.ResetUserPassword(model);
+            if (!result)
+            {
+                ViewBag.Error = "Password Failed to reset, Try Again";
+            }
+
+
+            return RedirectToAction("VerifyEmail", new {ReturnUrl = ""});
+
+        }
+
+        public IActionResult PasswordReset(string ReturnUrl)
+        {
+            ViewBag.Title = "Password Reset";
+           
+            return View(new VerifyEmail { ReturnUrl = ReturnUrl });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PasswordReset(VerifyEmail model)
+        {
+            ViewBag.Title = "Password Reset";
+
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("PassordReset", new { ReturnUrl = "" });
+            }
+
+            var result = await AuthRepo.GetResetPasswordToken(model.Email);
+            if (!result.Item1)
+            {
+                ViewBag.Error = "Email does not exist, Please Enter registered Email";
+            }
+
+            var callbackUrl = UrlHelperExtensions.ActionLink(this.Url, "ResetPassword", "Auth", new { Username = result.Item2.Email, Token = result.Item3 , ReturnUrl = model.ReturnUrl});
+            var res = await AuthRepo.SendResetPasswordEmail(result.Item2, callbackUrl);
+
+            if (!res.Item1)
+            {
+                ViewBag.Error = "Email Failed to send";
+            }
+
+            ViewBag.Success = "Email Sent Successfully";
+            return View(new VerifyEmail { ReturnUrl = model.ReturnUrl });
         }
     }
 }

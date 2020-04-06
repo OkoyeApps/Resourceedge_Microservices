@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Resourceedge.Authentication.Domain\Resourceedge.Authentication.Domain.csproj" />
+    <ProjectReference Include="..\Resourceedge.Email.Api\Resourceedge.Email.Api.csproj" />
   </ItemGroup>
 
   <ItemGroup>

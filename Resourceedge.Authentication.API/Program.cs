@@ -21,7 +21,7 @@ namespace Resourceedge.Authentication.API
         {
             var host = CreateHostBuilder(args).Build();
             using (var scope = host.Services.CreateScope())
-            {
+            {   
                 var UserManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
                 var EdgeDbContext = scope.ServiceProvider.GetRequiredService<EdgeDbContext>();
                 var PersistedDbContext =  scope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>();

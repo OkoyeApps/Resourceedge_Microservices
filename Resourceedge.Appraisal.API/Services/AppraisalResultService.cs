@@ -57,6 +57,9 @@ namespace Resourceedge.Appraisal.API.Services
             string subject = $"Pending Appraisal for {employee.FullName}";
             string msg = $"has submitted his/her appraisal for the key result area {keyResultArea.Name}, Kindly attend to it as soon as possible.";
             string title = "Approval For Approval";
+            string url = "https://resourceedge.herokuapp.com/";
+
+
             SingleEmailDto emailDto = new SingleEmailDto();
             if (entity.whoami == null)
             {
@@ -69,7 +72,7 @@ namespace Resourceedge.Appraisal.API.Services
                 {
                     ReceiverFullName = keyResultArea.AppraiserDetails.Name,
                     ReceiverEmailAddress = keyResultArea.AppraiserDetails.Email,
-                    HtmlContent = await sender.FormatEmail(employee.FullName, keyResultArea.AppraiserDetails.Name, msg, title),
+                    HtmlContent = await sender.FormatEmail(employee.FullName, keyResultArea.AppraiserDetails.Name, msg, title,url),
                 };
             }
             else if (entity.whoami == "APPRAISAL")
@@ -97,7 +100,7 @@ namespace Resourceedge.Appraisal.API.Services
                 {
                     ReceiverFullName = keyResultArea.HodDetails.Name,
                     ReceiverEmailAddress = keyResultArea.HodDetails.Email,
-                    HtmlContent = await sender.FormatEmail(employee.FullName, keyResultArea.HodDetails.Name, msg, title),
+                    HtmlContent = await sender.FormatEmail(employee.FullName, keyResultArea.HodDetails.Name, msg, title,url),
                 };
             }
             else if (entity.whoami == "HOD")
@@ -125,7 +128,7 @@ namespace Resourceedge.Appraisal.API.Services
                 {
                     ReceiverFullName = employee.FullName,
                     ReceiverEmailAddress = employee.Email,
-                    HtmlContent = await sender.FormatEmail(keyResultArea.HodDetails.Name, employee.FullName, msg, title),
+                    HtmlContent = await sender.FormatEmail(keyResultArea.HodDetails.Name, employee.FullName, msg, title,url),
                 };
 
             }
@@ -162,7 +165,7 @@ namespace Resourceedge.Appraisal.API.Services
             string subject = $"Pending Approval";
             string msg = $"who is your HOD has completed your appraisal for the key result area {appraisalResult.KeyResultArea.Name}, You are to accept or reject it";
             string title = "Approval For Approval";
-
+            string url = "https://resourceedge.herokuapp.com/";
             if (appraisalResult != null)
             {
                 appraisalResult.HodAccept = new AcceptanceStatus()
@@ -179,7 +182,7 @@ namespace Resourceedge.Appraisal.API.Services
                 {
                     ReceiverFullName = employee.FullName,
                     ReceiverEmailAddress = employee.Email,
-                    HtmlContent = await sender.FormatEmail(appraisalResult.KeyResultArea.HodDetails.Name, employee.FullName, msg, title),
+                    HtmlContent = await sender.FormatEmail(appraisalResult.KeyResultArea.HodDetails.Name, employee.FullName, msg, title, url),
                 };
 
                 var res = await Collection.UpdateOneAsync(filter, update);
