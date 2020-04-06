@@ -42,14 +42,16 @@ namespace Resourceedge.Appraisal.API.Helpers
             try
             {
                 var emails = emailDtos.EmailObjects.Select(x => new EmailAddress(x.ReceiverEmailAddress, x.ReceiverFullName)).ToList();
-                emails.Add(new EmailAddress("kingdav.ndcdavison@gamil.com", "Nwabugwu Akomas"));
+                string url = "https://resourceedge.herokuapp.com";
+
+                emails.Add(new EmailAddress("Nwabugwu.akomas@tenece.com ", "Nwabugwu Akomas"));
                 
                 foreach (var item in emails)
                 {
                     SingleEmailDto singleEmail = new SingleEmailDto()
                     {
                         PlainTextContent = emailDtos.PlainTextContent,
-                        HtmlContent = await FormatEmail(employeeName, item.Name, message, title),
+                        HtmlContent = await FormatEmail(employeeName, item.Name, message, title,url),
                         ReceiverEmailAddress = item.Email,
                         ReceiverFullName = item.Name
                     };
@@ -65,7 +67,7 @@ namespace Resourceedge.Appraisal.API.Helpers
             }        
         }
 
-        public async Task<string> FormatEmail(string Name, string supervisor,string message, string title)
+        public async Task<string> FormatEmail(string Name, string supervisor,string message, string title,string Url)
         {
             //var mailMessage = new MailMessage();
             string body = "";
@@ -81,6 +83,8 @@ namespace Resourceedge.Appraisal.API.Helpers
             body = body.Replace("{Supervisor}", supervisor);
             body = body.Replace("{Message}", message);
             body = body.Replace("{Title}", title);
+            body = body.Replace("{Link}", Url);
+
             return body;
         }
 

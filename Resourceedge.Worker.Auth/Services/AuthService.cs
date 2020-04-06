@@ -23,9 +23,9 @@ namespace Resourceedge.Worker.Auth.Services
                 foreach (var item in UserAndClaims)
                 {
                     var currentUser = dbContext.AspNetUsers.Include("AspNetUserClaims").FirstOrDefault(x => x.Email == item.Key);
-                    dbContext.Update(currentUser);
                     if (currentUser != null)
                     {
+                        dbContext.Update(currentUser);
                         foreach (var claim in item.Value)
                         {
                             var exisitingClaim = currentUser.AspNetUserClaims.FirstOrDefault(x => x.ClaimValue == claim.Value && x.ClaimType == claim.Type);
