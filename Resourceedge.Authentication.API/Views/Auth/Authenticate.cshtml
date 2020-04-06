@@ -41,16 +41,10 @@
                             <div class="row h-100">
                                 <div class="col-2"></div>
                                 <div class="col-8 h-100">
-                                    <div>
-                                        <input class="w-100 h-100 text-center" name="password" placeholder="Password" type="password" id="password" required />
-                                    </div>
-                                    @if (ViewBag.Error != null)
-                                    {
-                                        <div class="text-danger">
-                                            <span>@ViewBag.Error.ToString()</span>
-                                        </div>
 
-                                    }
+                                    <input class="w-100 h-100 text-center" name="password" placeholder="Password" type="password" id="password" required />
+
+
                                 </div>
                                 <div class="col-2 d-flex align-items-center justify-content-center">
 
@@ -63,7 +57,15 @@
 
                                 </div>
                             </div>
+                            @if (ViewBag.Error != null)
+                            {
+                                <div class="col-12 mt-4">
+                                    <span class="text-danger" id="errorShow">@ViewBag.Error.ToString()</span>
+                                </div>
+
+                            }
                         </div>
+                       
                         <button class="btn proceed" type="submit">Proceed</button>
 
                     </form>
@@ -94,6 +96,10 @@
                 passwordHider.style = 'display: none'
             }
         }
+
+        let errorText = document.getElementById('errorShow');
+        setTimeout(function () { errorText.style = 'display: none;'}, 10000)
+   
     </script>
 </body>
 

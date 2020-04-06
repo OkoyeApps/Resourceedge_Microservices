@@ -13,7 +13,6 @@ namespace Resourceedge.Worker.Auth.Services
 {
     public class AuthService
     {
-        //var userManager = new UserManager<AspNetUsers>(new UserStore(new EdgeUserDBContext()), new PasswordHasher<AspNetUsers>(), new UserValidator<AspNetUsers>(), new List<PasswordHasher<AspNetUsers>>() { }, new UpperInvariantLookupNormalizer(), new IdentityErrorDescriber(), );
 
         public async Task<bool> AddUserClaimsByEmail(Dictionary<string, List<Claim>> UserAndClaims)
         {

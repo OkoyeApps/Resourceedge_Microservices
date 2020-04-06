@@ -37,19 +37,22 @@
                                         <input class="w-100 h-100 text-center" type="email" id="email" name="email"
                                                placeholder="Please enter your company email address" required />
                                     </div>
-                                    @if (ViewBag.Error != null)
-                                    {
-                                        <div class="text-danger">
-                                            <span>@ViewBag.Error.ToString()</span>
-                                        </div>
 
-                                    }
                                 </div>
+
                                 <div class="col-2 d-flex align-items-center justify-content-center">
                                     <img src="~/images/goodIcon.svg" alt="good" />
                                 </div>
                             </div>
+                            @if (ViewBag.Error != null)
+                            {
+                                <div class="col-12 mt-4">
+                                    <span class="text-danger" id="errorShow">@ViewBag.Error.ToString() ererere</span>
+                                </div>
+
+                            }
                         </div>
+                        
                         <button type="submit" class="btn proceed">Proceed</button>
                     </form>
 
@@ -61,5 +64,9 @@
     <script src="~/js/Jquery3.1.js"></script>
     <script src="~/js/popper.js"></script>
     <script src="~/js/bootsrapp.min.js"></script>
+    <script>
+        let errorText = document.getElementById('errorShow');
+        setTimeout(function () { errorText.style = 'display: none;'; }, 10000)
+    </script>
 </body>
 </html>

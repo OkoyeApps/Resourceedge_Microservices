@@ -45,7 +45,7 @@ namespace Resourceedge.Appraisal.API.Services
             authService = _authService;
             HttpClient = _httpClientFactory.CreateClient("EmployeeService");
             AuthHttpClient = _httpClientFactory.CreateClient("Auth");
-            HttpClient.SetBearerToken(tokenAccesor.TokenResponse.AccessToken);
+            //HttpClient.SetBearerToken(tokenAccesor.TokenResponse.AccessToken);
             //AuthHttpClient.SetBearerToken(tokenAccesor.TokenResponse.AccessToken);
             sender = new EmailSender(_client);
         }
