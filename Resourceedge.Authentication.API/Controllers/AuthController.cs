@@ -83,11 +83,11 @@ namespace Resourceedge.Authentication.API.Controllers
             TempData.TryGetValue("LoginModel", out object savedTempObject);
             if (savedTempObject == null)
             {
-                return RedirectToAction("VerifyEmail", new { ReturnUrl });
+                return RedirectToAction("VerifyEmail", new { ReturnUrl = "ResetPassword" });
             }
 
             var loginModel = JsonConvert.DeserializeObject<LoginGetViewModel>((string)savedTempObject);
-            return View();
+            return View(new LoginViewModel { ReturnUrl = ReturnUrl, UserName = loginModel.UserName, Name = loginModel.Name });
         }
 
         [HttpPost]
@@ -97,6 +97,12 @@ namespace Resourceedge.Authentication.API.Controllers
 
             return View();            
 
+        }
+
+        public IActionResult PasswordReset()
+        {
+
+            return View();
         }
     }
 }
