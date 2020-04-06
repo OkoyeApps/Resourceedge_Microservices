@@ -104,8 +104,16 @@ namespace Resourceedge.Authentication.API.Controllers
 
         }
 
-        public IActionResult PasswordReset()
+        public IActionResult PasswordReset(string ReturnUrl)
         {
+            ViewBag.Title = "Password Reset";
+            return View(new VerifyEmail { ReturnUrl = ReturnUrl });
+        }
+        
+        [HttpPost]
+        public IActionResult PasswordReset(VerifyEmail model)
+        {
+            ViewBag.Title = "Password Reset";
 
             return View();
         }

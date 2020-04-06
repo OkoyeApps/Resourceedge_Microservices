@@ -70,5 +70,25 @@ namespace Resourceedge.Authentication.API.Services
             }
             return (false, "Email or password incorrect");
         }
+
+        public async Task<(bool,string)> SendResetPasswordEmail(string email)
+        {
+            try
+            {
+                var currentUser = await UserManager.FindByEmailAsync(email);
+                if (currentUser == null)
+                {
+                    return (false, "Email does not exist, kindly see your HR for registration");
+                }
+
+                var token = await UserManager.GeneratePasswordResetTokenAsync(currentUser);
+                return (true, token);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
     }
 }

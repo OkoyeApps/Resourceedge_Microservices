@@ -21,45 +21,45 @@ namespace Resourceedge.Appraisal.API.Services
                 if (!collection.AsQueryable().Any())
                 {
 
-                    var dataToAdd = new List<KeyResultArea>()
-                    {
-                        new KeyResultArea
-                        {
-                            UserId = Guid.NewGuid().ToString(),
-                             EmployeeId = 1,
-                            AppraiserDetails = new NameEmail { Name = "Emmanuel", EmployeeId = 1, Email = "appraisal@test.com" },
-                            HodDetails = new NameEmail { Name = "EmmanuelHod", EmployeeId = 4, Email = "Hod@test.com" },
-                            keyOutcomes =
-                            {
-                                new KeyOutcome{ Question = "Test question 1", TimeLimit = BsonDateTime.Create(DateTime.Now).ToString() },
-                                new KeyOutcome{ Question = "Test question 2", TimeLimit = BsonDateTime.Create(DateTime.Now).ToString()},
-                                new KeyOutcome{ Question = "Test question 3", TimeLimit = BsonDateTime.Create(DateTime.Now).ToString()},
-                            },
-                            Weight = 50,
-                            Approved = true,
-                            Name = "School Manager",
-                            Status = new ApprovalStatus  { Employee =true, Hod = true, IsAccepted = true }
-                        },
-                        new KeyResultArea
-                        {
-                            UserId = Guid.NewGuid().ToString(),
-                            EmployeeId = 1,
-                            AppraiserDetails = new NameEmail { Name = "Test", EmployeeId = 1, Email = "test@test.com" },
-                            HodDetails = new NameEmail { Name = "TestlHod", EmployeeId = 1, Email = "test@test.com" },
-                            keyOutcomes =
-                            {
-                                new KeyOutcome{ Question = "Test question 4", TimeLimit = BsonDateTime.Create(DateTime.Now).ToString()},
-                                new KeyOutcome{ Question = "Test question 5", TimeLimit = BsonDateTime.Create(DateTime.Now).ToString()},
-                                new KeyOutcome{ Question = "Test question 6", TimeLimit = BsonDateTime.Create(DateTime.Now).ToString()},
-                            },
-                            Weight = 50,
-                            Approved = true,
-                            Name = "School Manager",
-                            Status = new ApprovalStatus { Employee =true, Hod = false, IsAccepted = true }
-                        }
-                    };
+                    //var dataToAdd = new List<KeyResultArea>()
+                    //{
+                    //    new KeyResultArea
+                    //    {
+                    //        UserId = Guid.NewGuid().ToString(),
+                    //         EmployeeId = 1,
+                    //        AppraiserDetails = new NameEmail { Name = "Emmanuel", EmployeeId = 1, Email = "appraisal@test.com" },
+                    //        HodDetails = new NameEmail { Name = "EmmanuelHod", EmployeeId = 4, Email = "Hod@test.com" },
+                    //        keyOutcomes =
+                    //        {
+                    //            new KeyOutcome{ Question = "Test question 1", TimeLimit = BsonDateTime.Create(DateTime.Now).ToString() },
+                    //            new KeyOutcome{ Question = "Test question 2", TimeLimit = BsonDateTime.Create(DateTime.Now).ToString()},
+                    //            new KeyOutcome{ Question = "Test question 3", TimeLimit = BsonDateTime.Create(DateTime.Now).ToString()},
+                    //        },
+                    //        Weight = 50,
+                    //        Approved = true,
+                    //        Name = "School Manager",
+                    //        Status = new ApprovalStatus  { Employee =true, Hod = true, IsAccepted = true }
+                    //    },
+                    //    new KeyResultArea
+                    //    {
+                    //        UserId = Guid.NewGuid().ToString(),
+                    //        EmployeeId = 1,
+                    //        AppraiserDetails = new NameEmail { Name = "Test", EmployeeId = 1, Email = "test@test.com" },
+                    //        HodDetails = new NameEmail { Name = "TestlHod", EmployeeId = 1, Email = "test@test.com" },
+                    //        keyOutcomes =
+                    //        {
+                    //            new KeyOutcome{ Question = "Test question 4", TimeLimit = BsonDateTime.Create(DateTime.Now).ToString()},
+                    //            new KeyOutcome{ Question = "Test question 5", TimeLimit = BsonDateTime.Create(DateTime.Now).ToString()},
+                    //            new KeyOutcome{ Question = "Test question 6", TimeLimit = BsonDateTime.Create(DateTime.Now).ToString()},
+                    //        },
+                    //        Weight = 50,
+                    //        Approved = true,
+                    //        Name = "School Manager",
+                    //        Status = new ApprovalStatus { Employee =true, Hod = false, IsAccepted = true }
+                    //    }
+                    //};
 
-                    collection.InsertMany(dataToAdd);
+                    //collection.InsertMany(dataToAdd);
 
                 }
 
@@ -71,23 +71,37 @@ namespace Resourceedge.Appraisal.API.Services
                         new CoreValuesKRA()
                         {
                             Name = "Tenece Core Value",
-                            Description = "Kindly select this if you are in tenece",
+                            Description = "5% of total appraisal score, Kindly select this if you are in tenece",
+                            Weight=5,
                             keyOutcomes =
                             {
-                                new KeyOutcome(){Question = "Candour", TimeLimit = "Annual"},
-                                new KeyOutcome(){Question = "Tenecity", TimeLimit = "Annual"},
+                                new KeyOutcome(){Question = "Innovation and Creativity - Designs/Changes process/work to improve/increase value to self, organization and customer.", TimeLimit = "Ongoing"},
+                                new KeyOutcome(){Question = "Building best people - Learns, share knowledge with others and implements learning in the course of work.", TimeLimit = "Ongoing"},
+                                new KeyOutcome(){Question = "Value-oriented leadership - Objectively guiding and inspiring self and others for better outcome while managing different concerns.", TimeLimit = "Ongoing"},
+                                new KeyOutcome(){Question = "Customer focus - Directly and indirectly brings value to customer.", TimeLimit = "Ongoing"},
+                                new KeyOutcome(){Question = "Entrepreneurship - Proposes additional task for company profit purposes. Carries out tasks while considering risk and quality for organizational profit.", TimeLimit = "Ongoing"},
+                                new KeyOutcome(){Question = "Action - Carries out tasks wwith confidence to achieve results, humility to take lessons from mistakes and make required corrections.", TimeLimit = "Ongoing"},
+                                new KeyOutcome(){Question = "Specialization - Expresses deep knowledge and meets expected performance in a subject matter.", TimeLimit = "Ongoing"},
+                                new KeyOutcome(){Question = "Dynamism - Progressively delivers standard results with energy.", TimeLimit = "Ongoing"},
+                                new KeyOutcome(){Question = "Candor - Expresses self with respect for others/authority, while remaining open and honest.", TimeLimit = "Ongoing"},
+                                new KeyOutcome(){Question = "Keep it simple - Encourages clarity and simplicity in communication and work delivery.", TimeLimit = "Ongoing"},
+                                new KeyOutcome(){Question = "Innovation and Creativity - Designs/Changes process/work to improve/increase value to self, organization and customer.", TimeLimit = "Ongoing"},
                             },
                             Approved = true,
                             IsActive = true
+                            
                         },
                         new CoreValuesKRA()
                         {
-                                 Name = "Genesys Core Value",
-                            Description = "Kindly select this if you are in genesys",
+                            Name = "Genesys Core Values",
+                            Description = "10% of total appraisal score",
+                            Weight = 10,
                             keyOutcomes =
                             {
-                                new KeyOutcome(){Question = "Candour", TimeLimit = "Annual"},
-                                new KeyOutcome(){Question = "Tenecity", TimeLimit = "Annual"},
+                                new KeyOutcome(){Question = "Passion - Approaches work with positivity, optimism, enthusiasm and belief", TimeLimit = "Ongoing"},
+                                new KeyOutcome(){Question = "Excellence - Delivers top quality work with little supervision in record time while constantly exploring opportunities for growth and improvement", TimeLimit = "Ongoing"},
+                                new KeyOutcome(){Question = "Collaboration - Works well with team mates, finds and shares knowledge to propel the team to success", TimeLimit = "Ongoing"},
+                                new KeyOutcome(){Question = "Candor - Expresses self with respect for others/authority, while remaining open and honest.", TimeLimit = "Ongoing"},
                             },
                             Approved = true,
                             IsActive = true
@@ -97,96 +111,6 @@ namespace Resourceedge.Appraisal.API.Services
 
                     coreValueCollection.InsertMany(data);
                 }
-
-                //var AppraisalCollection = dbContext.Database.GetCollection<AppraisalResult>($"{nameof(AppraisalResult)}s");
-                //if (!AppraisalCollection.AsQueryable().Any())
-                //{
-                //    ObjectId objId = new ObjectId("5e78a4474c0bf888746215e8");
-                //    var result = new List<AppraisalResult>()
-                //    {
-                //        new AppraisalResult()
-                //        {
-                //            Id = ObjectId.GenerateNewId(),
-                //             myId = 1,
-                //            AppraisalConfigId = ObjectId.GenerateNewId(),
-                //            AppraisalCycleId = ObjectId.GenerateNewId(),
-                //            KeyResultArea = collection.Find(a => a.Id == objId).FirstOrDefault(),
-                //            KeyOutcomeScore =
-                //            {
-                //                new AppraisalKeyOutcome()
-                //                {
-                //                    KeyOutcomeId = ObjectId.GenerateNewId(),
-                //                    EmployeeScore = 4,
-                //                    AppraisalScore = 3,
-                //                    HodScore = 3
-                //                },
-                //                new AppraisalKeyOutcome(){ KeyOutcomeId = ObjectId.GenerateNewId(),
-                //                EmployeeScore = 4,
-                //                AppraisalScore = 3,
-                //                HodScore = 3
-                //                }
-                //            },
-                //            AppraiseeFeedBack = new FeedBack()
-                //            {
-                //                Comment = "Need to pay attention to details", Recommendation = "Training on personal development"
-                //            },
-                //            EmployeeAccept = new AcceptanceStatus()
-                //            {
-                //                IsAccepted = true,
-                //                Reason = ""
-                //            },
-                //            HodAccept = new AcceptanceStatus()
-                //            {
-                //                IsAccepted = true,
-                //                Reason = ""
-                //            },
-                //            IsAccepted = true,
-                //            IsCompleted = true,
-                //            CurrentSupervisor = "HOD"
-                //        },
-                //        new AppraisalResult()
-                //        {
-                //            Id = ObjectId.GenerateNewId(),
-                //             myId = 1,
-                //            AppraisalConfigId= ObjectId.GenerateNewId(),
-                //            AppraisalCycleId=ObjectId.GenerateNewId(),
-                //            KeyResultArea = collection.Find(a => a.Id == objId).FirstOrDefault(),
-                //            KeyOutcomeScore =
-                //            {
-                //                new AppraisalKeyOutcome()
-                //                { KeyOutcomeId = ObjectId.GenerateNewId(),
-                //                    EmployeeScore = 4,
-                //                    AppraisalScore = 3,
-                //                    HodScore = 3
-                //                },
-                //                new AppraisalKeyOutcome(){ KeyOutcomeId = ObjectId.GenerateNewId(),
-                //                EmployeeScore = 4,
-                //                AppraisalScore = 3,
-                //                HodScore = 3
-                //                }
-                //            },
-                //            AppraiseeFeedBack = new FeedBack()
-                //            {
-                //                Comment = "Impressive Growth", Recommendation = "Training on Agile Software Development"
-                //            },
-                //            EmployeeAccept = new AcceptanceStatus()
-                //            {
-                //                IsAccepted = true,
-                //                Reason = ""
-                //            },
-                //            HodAccept = new AcceptanceStatus()
-                //            {
-                //                IsAccepted = true,
-                //                Reason = ""
-                //            },
-                //            IsAccepted = true,
-                //            IsCompleted = true,
-                //            CurrentSupervisor = "HOD"
-                //        }
-                //    };
-
-                //    AppraisalCollection.InsertMany(result);
-                //}
             }
         }
     }

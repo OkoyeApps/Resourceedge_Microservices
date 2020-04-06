@@ -12,5 +12,6 @@ namespace Resourceedge.Authentication.Domain.Interfaces
         Task<(bool, string)> GetUserbyEmail(string email);
         Task<(bool, string)> Login(LoginViewModel model);
         Task<(bool, string)> AddClaimToUser(string userId, IEnumerable<Claim> claims);
+        Task<(bool, string)> SendResetPasswordEmail(string email);
     }
 }

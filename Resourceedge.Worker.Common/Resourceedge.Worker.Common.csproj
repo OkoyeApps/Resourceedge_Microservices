@@ -11,5 +11,12 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Sendgrid" Version="9.13.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Resourceedge.Email.Api\Resourceedge.Email.Api.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\" />
   </ItemGroup>
 </Project>
