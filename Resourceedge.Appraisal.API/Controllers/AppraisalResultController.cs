@@ -6,6 +6,7 @@ using Resourceedge.Appraisal.API.Interfaces;
 using Resourceedge.Appraisal.Domain.Entities;
 using Resourceedge.Appraisal.Domain.Models;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Resourceedge.Appraisal.API.Controllers
@@ -42,75 +43,36 @@ namespace Resourceedge.Appraisal.API.Controllers
         }
 
         [HttpPost("{whoami}")]
-        public IActionResult SumbitApprisal(string whoami, AppraisalResultForCreationDtoString appraisalResultForCreation)
+        public IActionResult SumbitApprisal(string whoami, IEnumerable<AppraisalResultForCreationDtoString> appraisalResultForCreation)
         {
             if (appraisalResultForCreation == null)
             {
                 return BadRequest();
             }
 
-            List<AppraisalKeyOutcomeDto> Outcomes = new List<AppraisalKeyOutcomeDto>();
-
-            foreach (var item in appraisalResultForCreation.KeyOutcomeScore)
-            {
-                var outcome = new AppraisalKeyOutcomeDto()
-                {
-                    EmployeeScore = item.EmployeeScore,
-                    KeyOutcomeId = new ObjectId(item.KeyOutcomeId)
-                };
-                Outcomes.Add(outcome);
-            }
-
-            var appraisalResultToSubmit = new AppraisalResultForCreationDto()
-            {
-                myId = appraisalResultForCreation.myId,
-                whoami = whoami,
-                AppraisalConfigId = new ObjectId(appraisalResultForCreation.AppraisalConfigId),
-                AppraisalCycleId = new ObjectId(appraisalResultForCreation.AppraisalCycleId),
-                KeyResultAreaId = new ObjectId(appraisalResultForCreation.KeyResultAreaId),
-                KeyOutcomeScore = Outcomes,
-                AppraiseeFeedBack = appraisalResultForCreation.AppraiseeFeedBack
-            };
+            var appraisalResultToSubmit = mapper.Map<IEnumerable<AppraisalResultForCreationDtoString>, IEnumerable<AppraisalResultForCreationDto>>(appraisalResultForCreation);
 
             appraisalResult.SubmitAppraisal(appraisalResultToSubmit);
-            //var appraisalResultToReturn = mapper.Map<AppraisalResult>(appraisalResultForCreation);
+            var appraisalResultToReturn = mapper.Map<IEnumerable<AppraisalResult>>(appraisalResultToSubmit);
+         
 
-            return CreatedAtRoute("MyAppraisal", new { employee = appraisalResultToSubmit.myId, appraisalConfig = appraisalResultToSubmit.AppraisalConfigId, appraisalCycle = appraisalResultToSubmit.AppraisalCycleId }, appraisalResultToSubmit);
+            return CreatedAtRoute("MyAppraisal", new { employee = appraisalResultToSubmit.FirstOrDefault().myId, appraisalConfig = appraisalResultToSubmit.FirstOrDefault().AppraisalConfigId, appraisalCycle = appraisalResultToSubmit.FirstOrDefault().AppraisalCycleId }, appraisalResultToReturn);
         }
 
         [HttpPost]
-        public IActionResult SumbitApprisal(AppraisalResultForCreationDtoString appraisalResultForCreation)
+        public IActionResult SumbitApprisal(IEnumerable<AppraisalResultForCreationDtoString> appraisalResultForCreation)
         {
-            if (appraisalResultForCreation == null)
+            if (!appraisalResultForCreation.Any())
             {
                 return BadRequest();
             }
 
-            List<AppraisalKeyOutcomeDto> Outcomes = new List<AppraisalKeyOutcomeDto>();
-
-            foreach (var item in appraisalResultForCreation.KeyOutcomeScore)
-            {
-                var outcome = new AppraisalKeyOutcomeDto()
-                {
-                    EmployeeScore = item.EmployeeScore,
-                    KeyOutcomeId = new ObjectId(item.KeyOutcomeId)
-                };
-                Outcomes.Add(outcome);
-            }
-
-            var appraisalResultToSubmit = new AppraisalResultForCreationDto()
-            {
-                myId = appraisalResultForCreation.myId,
-                AppraisalConfigId = new ObjectId(appraisalResultForCreation.AppraisalConfigId),
-                AppraisalCycleId = new ObjectId(appraisalResultForCreation.AppraisalCycleId),
-                KeyResultAreaId = new ObjectId(appraisalResultForCreation.KeyResultAreaId),
-                KeyOutcomeScore = Outcomes
-            };
+            var appraisalResultToSubmit = mapper.Map<IEnumerable<AppraisalResultForCreationDtoString>, IEnumerable<AppraisalResultForCreationDto>>(appraisalResultForCreation);
 
             appraisalResult.SubmitAppraisal(appraisalResultToSubmit);
-            //var appraisalResultToReturn = mapper.Map<AppraisalResult>(appraisalResultForCreation);
+            var appraisalResultToReturn = mapper.Map<IEnumerable<AppraisalResult>>(appraisalResultToSubmit);
 
-            return CreatedAtRoute("MyAppraisal", new { employee = appraisalResultToSubmit.myId, appraisalConfig = appraisalResultToSubmit.AppraisalConfigId, appraisalCycle = appraisalResultToSubmit.AppraisalCycleId }, appraisalResultToSubmit);
+            return CreatedAtRoute("MyAppraisal", new { employee = appraisalResultToSubmit.FirstOrDefault().myId, appraisalConfig = appraisalResultToSubmit.FirstOrDefault().AppraisalConfigId, appraisalCycle = appraisalResultToSubmit.FirstOrDefault().AppraisalCycleId }, appraisalResultToReturn);
         }
 
         [HttpPatch("{Id}/AcceptAppraisal")]

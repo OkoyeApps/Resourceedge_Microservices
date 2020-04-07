@@ -46,93 +46,104 @@ namespace Resourceedge.Appraisal.API.Services
             Collection.InsertOne(entity);
         }
 
-        public async void SubmitAppraisal(AppraisalResultForCreationDto entity)
+        public async void SubmitAppraisal(IEnumerable<AppraisalResultForCreationDto> entities)
         {
-
-            var filter = Builders<AppraisalResult>.Filter.Where(a => a.myId == entity.myId && a.AppraisalConfigId == entity.AppraisalConfigId && a.AppraisalCycleId == entity.AppraisalCycleId && a.KeyResultArea.Id == entity.KeyResultAreaId);
-            var result = Collection.Find(a => a.myId == entity.myId && a.AppraisalConfigId == entity.AppraisalConfigId && a.AppraisalCycleId == entity.AppraisalCycleId && a.KeyResultArea.Id == entity.KeyResultAreaId).FirstOrDefault();
-            var keyResultArea = await resultAreaRepo.QuerySingle(entity.KeyResultAreaId);
-            var employee = await resultAreaRepo.GetEmployee(entity.myId);
-
-            string subject = $"Pending Appraisal for {employee.FullName}";
-            string msg = $"has submitted his/her appraisal for the key result area {keyResultArea.Name}, Kindly attend to it as soon as possible.";
-            string title = "Approval For Approval";
-            string url = "https://resourceedge.herokuapp.com/";
-
-
-            SingleEmailDto emailDto = new SingleEmailDto();
-            if (entity.whoami == null)
+            foreach (var entity in entities)
             {
-                var myAppraisal = mapper.Map<AppraisalResult>(entity);
+                var filter = Builders<AppraisalResult>.Filter.Where(a => a.myId == entity.myId && a.AppraisalConfigId == entity.AppraisalConfigId && a.AppraisalCycleId == entity.AppraisalCycleId && a.KeyResultArea.Id == entity.KeyResultAreaId);
+                var result = Collection.Find(a => a.myId == entity.myId && a.AppraisalConfigId == entity.AppraisalConfigId && a.AppraisalCycleId == entity.AppraisalCycleId && a.KeyResultArea.Id == entity.KeyResultAreaId).FirstOrDefault();
+                var keyResultArea = await resultAreaRepo.QuerySingle(entity.KeyResultAreaId);
+                var employee = await resultAreaRepo.GetEmployee(entity.myId);
 
-                myAppraisal.KeyResultArea = keyResultArea;
-                this.InsertResult(myAppraisal);
+                string subject = $"Pending Appraisal for {employee.FullName}";
+                string msg = $"has submitted his/her appraisal for the key result area {keyResultArea.Name}, Kindly attend to it as soon as possible.";
+                string title = "Approval For Approval";
+                string url = "https://resourceedge.herokuapp.com/";
 
-                emailDto = new SingleEmailDto()
+
+                SingleEmailDto emailDto = new SingleEmailDto();
+                if (entity.whoami == null)
                 {
-                    ReceiverFullName = keyResultArea.AppraiserDetails.Name,
-                    ReceiverEmailAddress = keyResultArea.AppraiserDetails.Email,
-                    HtmlContent = await sender.FormatEmail(employee.FullName, keyResultArea.AppraiserDetails.Name, msg, title,url),
-                };
-            }
-            else if (entity.whoami == "APPRAISAL")
-            {
-                result.CurrentSupervisor = "Appraisal";
-                result.AppraiseeFeedBack = entity.AppraiseeFeedBack;
-                foreach (var item in entity.KeyOutcomeScore)
-                {
-                    if (result.KeyOutcomeScore.Any(a => a.KeyOutcomeId == item.KeyOutcomeId))
+                    var myAppraisal = mapper.Map<AppraisalResult>(entity);
+                    myAppraisal.EmployeeAccept = new AcceptanceStatus()
                     {
-                        foreach (var item1 in result.KeyOutcomeScore)
+                        IsAccepted = true
+                    };
+
+                    myAppraisal.KeyResultArea = keyResultArea;
+                    this.InsertResult(myAppraisal);
+
+                    emailDto = new SingleEmailDto()
+                    {
+                        ReceiverFullName = keyResultArea.AppraiserDetails.Name,
+                        ReceiverEmailAddress = keyResultArea.AppraiserDetails.Email,
+                        HtmlContent = await sender.FormatEmail(employee.FullName, keyResultArea.AppraiserDetails.Name, msg, title, url),
+                    };
+                }
+                else if (entity.whoami == "APPRAISAL")
+                {
+                    result.CurrentSupervisor = "Appraisal";
+                    result.AppraiseeFeedBack = entity.AppraiseeFeedBack;
+                    
+                    foreach (var item in entity.KeyOutcomeScore)
+                    {
+                        if (result.KeyOutcomeScore.Any(a => a.KeyOutcomeId == item.KeyOutcomeId))
                         {
-                            if (item.KeyOutcomeId == item1.KeyOutcomeId)
+                            foreach (var item1 in result.KeyOutcomeScore)
                             {
-                                result.KeyOutcomeScore.FirstOrDefault(x => x.KeyOutcomeId == item1.KeyOutcomeId).AppraisalScore = item.EmployeeScore;
+                                if (item.KeyOutcomeId == item1.KeyOutcomeId)
+                                {
+                                    result.KeyOutcomeScore.FirstOrDefault(x => x.KeyOutcomeId == item1.KeyOutcomeId).AppraisalScore = item.EmployeeScore;
+                                }
                             }
                         }
                     }
-                }
-                var entityToUpdate = result.ToBsonDocument();
-                var update = new BsonDocument("$set", entityToUpdate);
-                Collection.FindOneAndUpdate(filter, update, options: new FindOneAndUpdateOptions<AppraisalResult> { ReturnDocument = ReturnDocument.After });
+                    var entityToUpdate = result.ToBsonDocument();
+                    var update = new BsonDocument("$set", entityToUpdate);
+                    Collection.FindOneAndUpdate(filter, update, options: new FindOneAndUpdateOptions<AppraisalResult> { ReturnDocument = ReturnDocument.After });
 
-                emailDto = new SingleEmailDto()
-                {
-                    ReceiverFullName = keyResultArea.HodDetails.Name,
-                    ReceiverEmailAddress = keyResultArea.HodDetails.Email,
-                    HtmlContent = await sender.FormatEmail(employee.FullName, keyResultArea.HodDetails.Name, msg, title,url),
-                };
-            }
-            else if (entity.whoami == "HOD")
-            {
-                foreach (var item in entity.KeyOutcomeScore)
-                {
-                    if (result.KeyOutcomeScore.Any(a => a.KeyOutcomeId == item.KeyOutcomeId))
+                    emailDto = new SingleEmailDto()
                     {
-                        foreach (var item1 in result.KeyOutcomeScore)
+                        ReceiverFullName = keyResultArea.HodDetails.Name,
+                        ReceiverEmailAddress = keyResultArea.HodDetails.Email,
+                        HtmlContent = await sender.FormatEmail(employee.FullName, keyResultArea.HodDetails.Name, msg, title, url),
+                    };
+                }
+                else if (entity.whoami == "HOD")
+                {
+                    foreach (var item in entity.KeyOutcomeScore)
+                    {
+                        if (result.KeyOutcomeScore.Any(a => a.KeyOutcomeId == item.KeyOutcomeId))
                         {
-                            if (item.KeyOutcomeId == item1.KeyOutcomeId)
+                            foreach (var item1 in result.KeyOutcomeScore)
                             {
-                                result.KeyOutcomeScore.FirstOrDefault(x => x.KeyOutcomeId == item1.KeyOutcomeId).HodScore = item.EmployeeScore;
+                                if (item.KeyOutcomeId == item1.KeyOutcomeId)
+                                {
+                                    result.KeyOutcomeScore.FirstOrDefault(x => x.KeyOutcomeId == item1.KeyOutcomeId).HodScore = item.EmployeeScore;
+                                }
                             }
                         }
                     }
-                }
-                result.HodAccept.IsAccepted = true;
-                var newAppraisalResult = result.HodApproval("");
-                var entityToUpdate = newAppraisalResult.ToBsonDocument();
-                var update = new BsonDocument("$set", entityToUpdate);
-                Collection.FindOneAndUpdate(filter, update, options: new FindOneAndUpdateOptions<AppraisalResult> { ReturnDocument = ReturnDocument.After });
-                msg = $"who is your HOD has completed your appraisal for the key result area {keyResultArea.Name}, You are to accept or reject it";
-                emailDto = new SingleEmailDto()
-                {
-                    ReceiverFullName = employee.FullName,
-                    ReceiverEmailAddress = employee.Email,
-                    HtmlContent = await sender.FormatEmail(keyResultArea.HodDetails.Name, employee.FullName, msg, title,url),
-                };
+                    result.HodAccept = new AcceptanceStatus()
+                    {
+                        IsAccepted = true
+                    };
+                    var newAppraisalResult = result.HodApproval("");
+                    var entityToUpdate = newAppraisalResult.ToBsonDocument();
+                    var update = new BsonDocument("$set", entityToUpdate);
+                    Collection.FindOneAndUpdate(filter, update, options: new FindOneAndUpdateOptions<AppraisalResult> { ReturnDocument = ReturnDocument.After });
+                    msg = $"who is your HOD has completed your appraisal for the key result area {keyResultArea.Name}, You are to accept or reject it";
+                    emailDto = new SingleEmailDto()
+                    {
+                        ReceiverFullName = employee.FullName,
+                        ReceiverEmailAddress = employee.Email,
+                        HtmlContent = await sender.FormatEmail(keyResultArea.HodDetails.Name, employee.FullName, msg, title, url),
+                    };
 
+                }
+                await sender.SendToSingleEmployee(subject, emailDto);
             }
-            await sender.SendToSingleEmployee(subject, emailDto);
+                
         }
 
         public async Task<UpdateResult> EmployeeAcceptOrReject(ObjectId appraisalResultId, AcceptanceStatus status)

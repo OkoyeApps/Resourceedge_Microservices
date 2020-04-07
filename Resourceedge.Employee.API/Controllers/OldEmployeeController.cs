@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
+using Resourceedge.Common.Archive;
 using Resourceedge.Common.Util;
 using Resourceedge.Employee.API.Helpers;
 using Resourceedge.Employee.Domain.Dtos;
 using Resourceedge.Employee.Domain.Interfaces;
-using Resourceedge.Common.Archive;
-using Microsoft.AspNetCore.Authorization;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Resourceedge.Employee.API.Controllers
 {
@@ -50,15 +47,12 @@ namespace Resourceedge.Employee.API.Controllers
             return Ok(mapper.Map<OldEmployeeDto>(EmployeeRepo.GetEmployeeByEmployeeId(Id)));
         }
 
-        [HttpGet("userid/{Id}", Name ="GetEmployeeByUserId")]
+        [HttpGet("userid/{Id}", Name = "GetEmployeeByUserId")]
         public IActionResult GetEmployeeByUserId(string Id)
         {
             return Ok(mapper.Map<OldEmployeeDto>(EmployeeRepo.GetEmployeeByUserId(Id)));
         }
-
-
-
-
+        
         private IEnumerable<LinkDto> CreateLinksForEmployees(EmployeeResourceParameter employeeResourceParameters, bool hasNext, bool hasPrevious)
         {
             var links = new List<LinkDto>();
@@ -81,9 +75,44 @@ namespace Resourceedge.Employee.API.Controllers
         [HttpGet("SearchEmployee/{empId:int}")]
         public IActionResult GetEmployeeBySearch(int empId, [FromQuery]PaginationResourceParameter resourceParameters)
         {
-           var result = EmployeeRepo.GetEmployeesWithSeachQuery(empId, resourceParameters);
+            var result = EmployeeRepo.GetEmployeesWithSeachQuery(empId, resourceParameters);
             return Ok(result);
         }
-        
+
+        [HttpPost("AddEmployee")]
+        public async Task<IActionResult> AddNewEmployee(string Email)
+        {
+            if (string.IsNullOrEmpty(Email))
+            {
+                return BadRequest();
+            }
+
+            var res = await EmployeeRepo.AddNewEmployeeByEmail(Email);
+            if (!res)
+            {
+                return BadRequest();
+            }
+
+            return Ok();
+
+            //return CreatedAtRoute("GetEmployeeByEmail", new { email = Email });
+        }
+
+        [HttpPost("AddEmployees")]
+        public async Task<IActionResult> AddNewEmployees(IList<string> Emails)
+        {
+            if (!Emails.Any())
+            {
+                return BadRequest();
+            }
+
+            var res = await EmployeeRepo.AddMultipleEmployeeByEmail(Emails);
+            if (!res)
+            {
+                return BadRequest();
+            }
+
+            return Ok();
+        }
     }
 }
