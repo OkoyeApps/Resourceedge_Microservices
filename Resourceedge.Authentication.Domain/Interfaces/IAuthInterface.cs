@@ -16,5 +16,6 @@ namespace Resourceedge.Authentication.Domain.Interfaces
         Task<(bool, ApplicationUser, string)> GetResetPasswordToken(string email);
         Task<(bool, string)> SendResetPasswordEmail(ApplicationUser currentUser, string url);
         Task<bool> ResetUserPassword(ResetPasswordViewModel model);
+        public Task<bool> LogoutUser();
     }
 }

@@ -4,36 +4,45 @@
     Layout = "Shared/_AuthLayout.cshtml";
 }
 
-    <div class="login-box">
-   
-        <div class="name-box">
-            <span class="welcome-text">Welcome Back!</span>
-        </div>
-        <p class="text">We know you’ve been working hard, let’s measure your progress</p>
-        <form asp-controller="Auth" asp-action="VerifyEmail" method="post">
-            <input type="hidden" name="ReturnUrl" value="@Model.ReturnUrl" />
-            <div class="form-control enter-mail">
-                <div class="row h-100">
-                    <div class="col-2"></div>
-                    <div class="col-8 h-100">
-                        <div>
-                            <input class="w-100 h-100 text-center" type="email" id="email" name="email"
-                                   placeholder="Please enter your company email address" required />
-                        </div>
-                        @if (ViewBag.Error != null)
+<div class="login-box">
+
+    <div class="name-box">
+        <span class="welcome-text">Welcome Back!</span>
+    </div>
+    <p class="text">We know you’ve been working hard, let’s measure your progress</p>
+    <form asp-controller="Auth" asp-action="VerifyEmail" method="post">
+        <input type="hidden" name="ReturnUrl" value="@Model.ReturnUrl" />
+        <div class="form-control enter-mail">
+            <div class="row h-100">
+                <div class="col-2"></div>
+                <div class="col-8 h-100 d-flex">
+                    <div class="w-100">
+                        <input class="w-100 h-100 text-center" type="email" id="email" name="email"
+                               placeholder="Please enter your company email address" required />
+                    </div>
+
+                </div>
+                <div class="col-2 d-flex align-items-center justify-content-center">
+                    <img src="~/images/goodIcon.svg" alt="good" class="d-none" id="valid_email_ico" />
+                </div>
+                @if (ViewBag.Error != null)
                         {
-                            <div class="text-danger">
-                                <span>@ViewBag.Error.ToString()</span>
-                            </div>
+                <div class="col-12">
+                    <span class="text-danger" id="errorShow">@ViewBag.Error.ToString()</span>
+                </div>
 
                         }
-                    </div>
-                    <div class="col-2 d-flex align-items-center justify-content-center">
-                        <img src="~/images/goodIcon.svg" alt="good" />
-                    </div>
-                </div>
             </div>
-            <button type="submit" class="btn proceed">Proceed</button>
-        </form>
+        </div>
+        <button type="submit" class="btn proceed">Proceed</button>
+    </form>
 
-    </div>
+</div>
+
+@section scripts {
+    <script src="~/js/validator.js"></script>
+    <script>
+       
+    </script>
+}
+

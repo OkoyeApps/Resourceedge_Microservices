@@ -34,6 +34,7 @@
   text-align: center;
   color: #999999;
 }
+
 .enter-mail:focus {
   outline: 1px solid black;
 }
@@ -53,8 +54,13 @@
   text-align: center;
   color: #ffffff;
 }
+
+
+.forgetlink {
+    text-decoration: underline
+}
 .login-box {
-  text-align: center;
+    text-align: center;
 }
 .login-box > p {
   margin-bottom: 140px;

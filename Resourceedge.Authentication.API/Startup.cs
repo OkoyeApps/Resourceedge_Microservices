@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -58,8 +59,13 @@ namespace Resourceedge.Authentication.API
             {
                 config.LoginPath = "/Auth/Authenticate";
                 config.Cookie.Name = "IdentityServer.Cookie";
+                config.LogoutPath = "/Auth/signout";
             });
             var assembly = typeof(Startup).Assembly.GetName().Name;
+
+            //var certificate = new X509Certificate2()
+
+
             services.AddIdentityServer()
                 .AddCorsPolicyService<CorsPolicyImplementation>()
                 .AddAspNetIdentity<ApplicationUser>()
@@ -74,6 +80,7 @@ namespace Resourceedge.Authentication.API
                         sql => sql.MigrationsAssembly(assembly));
                 })
                 .AddDeveloperSigningCredential();
+            //.AddSigningCredential()
 
             services.AddTransient<ISGClient, SGClient>(ctx => SGClient.Create(
                 configuration.GetSection("SendGrid:SENDGRID_API_KEY").Value));
@@ -81,8 +88,8 @@ namespace Resourceedge.Authentication.API
             services.AddTransient<IAuthInterface, AuthServices>();
             services.AddTransient<IExternalServiceInterface, ExternalApprisalService>();
 
-            services.AddControllersWithViews();
-            //.AddRazorRuntimeCompilation();
+            services.AddControllersWithViews()
+            .AddRazorRuntimeCompilation();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

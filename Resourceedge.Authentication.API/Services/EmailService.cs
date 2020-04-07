@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Resourceedge.Authentication.API.Services
@@ -27,20 +28,34 @@ namespace Resourceedge.Authentication.API.Services
 
         public async Task<string> FormatEmail(string Name, string Url)
         {
-            string body = "";
-            var AppDomains = AppDomain.CurrentDomain.FriendlyName;
-            string filename = Path.GetFullPath("Utils\\EmailTemplate\\ResetPassword.html");
-            using (StreamReader sr = new StreamReader(filename))
+            try
             {
-                body = await sr.ReadToEndAsync();
+                string body = "";
+
+                var fileInfo = new FileInfo(@"Utils\EmailTemplate\ResetPassword.html");
+              var name =   fileInfo.FullName;
+                var exist = fileInfo.Exists;
+                
+                string filename = Path.GetFullPath(@"Utils\EmailTemplate\ResetPassword.html");
+                using (StreamReader sr = new StreamReader(fileInfo.FullName))
+                {
+                   
+                    body = await sr.ReadToEndAsync();
+                }
+
+                body = body.Replace("{FullName}", Name);
+                body = body.Replace("{GroupName}", "RESOURCE EDGE");
+                body = body.Replace("{Link}", Url);
+                body = body.Replace("{Url}", Url);
+
+                return body;
             }
-
-            body = body.Replace("{FullName}", Name);
-            body = body.Replace("{GroupName}", "RESOURCE EDGE");
-            body = body.Replace("{Link}", Url);
-            body = body.Replace("{Url}", Url);
-
-            return body;
+            catch(Exception ex)
+            {
+                //log exception here later
+                return null;
+            }
+            
         }
     }
 
