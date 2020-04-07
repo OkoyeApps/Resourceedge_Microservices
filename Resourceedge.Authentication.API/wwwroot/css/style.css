@@ -27,12 +27,16 @@
   border: 1px solid #dddddd;
   box-sizing: border-box;
   border-radius: 5px;
-  margin-bottom: 70px;
+  margin-bottom: 20px;
   font-weight: normal;
   font-size: 14px;
   line-height: 19px;
   text-align: center;
   color: #999999;
+}
+
+.login-box form .enter-email:last-child {
+   margin-bottom: 50px 
 }
 .enter-mail:focus {
   outline: 1px solid black;
@@ -53,8 +57,13 @@
   text-align: center;
   color: #ffffff;
 }
+
+
+.forgetlink {
+    text-decoration: underline
+}
 .login-box {
-  text-align: center;
+    text-align: center;
 }
 .login-box > p {
   margin-bottom: 140px;

@@ -3,10 +3,13 @@
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS base
 WORKDIR /app
 EXPOSE 80
+EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
 COPY ["Resourceedge.Authentication.API/Resourceedge.Authentication.API.csproj", "Resourceedge.Authentication.API/"]
+COPY ["Resourceedge.Email.Api/Resourceedge.Email.Api.csproj", "Resourceedge.Email.Api/"]
+COPY ["Resourceedge.Authentication.Domain/Resourceedge.Authentication.Domain.csproj", "Resourceedge.Authentication.Domain/"]
 RUN dotnet restore "Resourceedge.Authentication.API/Resourceedge.Authentication.API.csproj"
 COPY . .
 WORKDIR "/src/Resourceedge.Authentication.API"

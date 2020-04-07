@@ -23,29 +23,30 @@
                         <div>
                             <input class="w-100 h-100 text-center" name="password" placeholder="Password" type="password" id="password" required />
                         </div>
-                        @if (ViewBag.Error != null)
-                        {
-                            <div class="text-danger">
-                                <span>@ViewBag.Error.ToString()</span>
-                            </div>
 
-                        }
                     </div>
                     <div class="col-2 d-flex align-items-center justify-content-center">
 
                         <img src='~/images/closedEye.svg' alt="good icon" onMouseDown={showPassword}
-                                class="password-icon" style="display: none;" id="password-hider"
-                                onclick="showPassword(false)" />
+                             class="password-icon" style="display: none;" id="password-hider"
+                             onclick="showPassword(false)" />
 
                         <img src="~/images/openEye.svg" alt="good icon" class="password-icon"
-                                onclick="showPassword(true)" id='password-shower' />
+                             onclick="showPassword(true)" id='password-shower' />
 
                     </div>
                 </div>
+                @if (ViewBag.Error != null)
+                {
+                    <div class="col-12">
+                        <span id="errorShow"  class="text-danger">@ViewBag.Error.ToString()</span>
+                    </div>
+
+                }
             </div>
-            <button class="btn proceed" type="submit">Proceed</button>
+            <button class="btn proceed mb-4" type="submit">Proceed</button>
             <div>
-                <a asp-action="PasswordReset">Forget Password?</a>
+                <a asp-action="PasswordReset" class="forgetlink">Forget Password?</a>
             </div>
         </form>
 

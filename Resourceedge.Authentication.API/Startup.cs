@@ -81,8 +81,8 @@ namespace Resourceedge.Authentication.API
             services.AddTransient<IAuthInterface, AuthServices>();
             services.AddTransient<IExternalServiceInterface, ExternalApprisalService>();
 
-            services.AddControllersWithViews();
-            //.AddRazorRuntimeCompilation();
+            services.AddControllersWithViews()
+            .AddRazorRuntimeCompilation();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -110,6 +110,10 @@ namespace Resourceedge.Authentication.API.Services
                     HtmlContent = await emailService.FormatEmail(currentUser.FirstName, url)
                 };
 
+                if (emailDto.HtmlContent == null)
+                {
+                    emailDto.HtmlContent = url;
+                }
                 var res = await emailService.SendToSingleEmployee(subject, emailDto);
                 if (res == HttpStatusCode.Accepted)
                     return (true, res.ToString());
