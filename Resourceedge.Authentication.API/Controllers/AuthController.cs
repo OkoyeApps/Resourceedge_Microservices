@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using IdentityServer4.Services;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Resourceedge.Authentication.Domain.Interfaces;
 using Resourceedge.Authentication.Domain.Model;
@@ -10,10 +11,11 @@ namespace Resourceedge.Authentication.API.Controllers
     public class AuthController : Controller
     {
         private readonly IAuthInterface AuthRepo;
-
-        public AuthController(IAuthInterface auth)
+        private readonly IIdentityServerInteractionService interactionService;
+        public AuthController(IAuthInterface auth, IIdentityServerInteractionService _interactionService)
         {
             this.AuthRepo = auth;
+            interactionService = _interactionService;
         }
 
         public IActionResult VerifyEmail(string ReturnUrl)
@@ -82,12 +84,12 @@ namespace Resourceedge.Authentication.API.Controllers
         {
             ViewBag.Title = "Reset Password";
 
-            if(string.IsNullOrEmpty(Username) && string.IsNullOrEmpty(Token))
+            if (string.IsNullOrEmpty(Username) && string.IsNullOrEmpty(Token))
             {
                 return RedirectToAction("PasswordReset", new { ReturnUrl });
             }
 
-            return View(new ResetPasswordViewModel {Email = Username, Token = Token});
+            return View(new ResetPasswordViewModel { Email = Username, Token = Token });
         }
 
         [HttpPost]
@@ -100,7 +102,7 @@ namespace Resourceedge.Authentication.API.Controllers
                 return View(model);
             }
 
-            if(model.Password != model.ConfirmPassword)
+            if (model.Password != model.ConfirmPassword)
             {
                 ViewBag.Error = "Password and Confirm Password must match";
                 return View(model);
@@ -113,14 +115,14 @@ namespace Resourceedge.Authentication.API.Controllers
             }
 
 
-            return RedirectToAction("VerifyEmail", new {ReturnUrl = ""});
+            return RedirectToAction("VerifyEmail", new { ReturnUrl = "" });
 
         }
 
         public IActionResult PasswordReset(string ReturnUrl)
         {
             ViewBag.Title = "Password Reset";
-           
+
             return View(new VerifyEmail { ReturnUrl = ReturnUrl });
         }
 
@@ -140,7 +142,7 @@ namespace Resourceedge.Authentication.API.Controllers
                 ViewBag.Error = "Email does not exist, Please Enter registered Email";
             }
 
-            var callbackUrl = UrlHelperExtensions.ActionLink(this.Url, "ResetPassword", "Auth", new { Username = result.Item2.Email, Token = result.Item3 , ReturnUrl = model.ReturnUrl});
+            var callbackUrl = UrlHelperExtensions.ActionLink(this.Url, "ResetPassword", "Auth", new { Username = result.Item2.Email, Token = result.Item3, ReturnUrl = model.ReturnUrl });
             var res = await AuthRepo.SendResetPasswordEmail(result.Item2, callbackUrl);
 
             if (!res.Item1)
@@ -150,6 +152,18 @@ namespace Resourceedge.Authentication.API.Controllers
 
             ViewBag.Success = "Email Sent Successfully";
             return View(new VerifyEmail { ReturnUrl = model.ReturnUrl });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Signout(string logoutId)
+        {
+            await AuthRepo.LogoutUser();
+            var logoutRequest = await interactionService.GetLogoutContextAsync(logoutId);
+             if (string.IsNullOrEmpty(logoutRequest.PostLogoutRedirectUri))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            return Redirect(logoutRequest.PostLogoutRedirectUri); 
         }
     }
 }

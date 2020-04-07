@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using IdentityServer4.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Resourceedge.Authentication.Domain.Entities;
 using Resourceedge.Authentication.Domain.Extensions;
@@ -23,7 +24,8 @@ namespace Resourceedge.Authentication.API.Services
         private readonly ILogger<AuthServices> Logger;
         private readonly EmailService emailService;
 
-        public AuthServices(SignInManager<ApplicationUser> _signInManager, UserManager<ApplicationUser> usermanager, EdgeDbContext _context, ILogger<AuthServices> logger, ISGClient _client)
+        public AuthServices(SignInManager<ApplicationUser> _signInManager, UserManager<ApplicationUser> usermanager,
+            EdgeDbContext _context, ILogger<AuthServices> logger, ISGClient _client)
         {
             SignInManager = _signInManager;
             this.UserManager = usermanager;
@@ -68,8 +70,8 @@ namespace Resourceedge.Authentication.API.Services
             {
                 return (false, "Email or password incorrect");
             }
-              
-            var result = await SignInManager.PasswordSignInAsync(currentuser.UserName,model.Password,false, false);
+
+            var result = await SignInManager.PasswordSignInAsync(currentuser.UserName, model.Password, false, false);
             if (result.Succeeded)
             {
                 return (result.Succeeded, "sign in successful");
@@ -77,20 +79,20 @@ namespace Resourceedge.Authentication.API.Services
             return (false, "Email or password incorrect");
         }
 
-        public async Task<(bool,ApplicationUser ,string)> GetResetPasswordToken(string email)
+        public async Task<(bool, ApplicationUser, string)> GetResetPasswordToken(string email)
         {
             try
             {
                 var currentUser = await UserManager.FindByEmailAsync(email);
                 if (currentUser == null)
                 {
-                    return (false, null ,"Email does not exist, kindly see your HR for registration");
+                    return (false, null, "Email does not exist, kindly see your HR for registration");
                 }
 
                 var token = await UserManager.GeneratePasswordResetTokenAsync(currentUser);
 
-          
-                return (true,currentUser , token);
+
+                return (true, currentUser, token);
             }
             catch (Exception ex)
             {
@@ -150,6 +152,12 @@ namespace Resourceedge.Authentication.API.Services
 
                 throw ex;
             }
+        }
+
+        public async Task<bool> LogoutUser()
+        {
+            await SignInManager.SignOutAsync();
+            return await Task.FromResult(true);
         }
     }
 }
