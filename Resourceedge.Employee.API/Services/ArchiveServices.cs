@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Resourceedge.Employee.API.Services
@@ -89,6 +90,69 @@ namespace Resourceedge.Employee.API.Services
             return e => e.FullName.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase) || e.EmpEmail.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase)
             && e.EmployeeId != empId && e.Isactive == true;
             
+        }
+
+        public async Task Insert(OldEmployee employee)
+        {
+            await Collection.InsertOneAsync(employee);
+        }
+
+        public async Task<bool> AddNewEmployeeByEmail(string email)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(email))
+                {
+                    return false;
+                }
+
+                var emp = GetEmployeeByEmail(email);
+                if (emp != null)
+                {
+                    return false;
+                }
+
+                var response = await HttpClient.GetAsync($"/api/settings/GetEmployeeByEmail/{email}/");
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                    var result = JsonSerializer.Deserialize<OldEmployee>(content, options);
+
+                    await Insert(result);
+
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }   
+        }
+
+        public async Task<bool> AddMultipleEmployeeByEmail(IList<string> emails)
+        {
+            try
+            {
+                if (!emails.Any())
+                {
+                    return false;
+                }
+
+                foreach (var email in emails)
+                {
+                    await AddNewEmployeeByEmail(email);
+                }
+
+                return true;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }        
         }
     }
 }

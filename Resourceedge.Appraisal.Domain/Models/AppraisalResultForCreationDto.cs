@@ -20,6 +20,7 @@ namespace Resourceedge.Appraisal.Domain.Models
     public class AppraisalResultForCreationDtoString
     {
         public int myId { get; set; }
+        public string whoami { get; set; }
         public string AppraisalConfigId { get; set; }
         public string AppraisalCycleId { get; set; }
         public string KeyResultAreaId { get; set; }

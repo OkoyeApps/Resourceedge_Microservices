@@ -18,5 +18,8 @@ namespace Resourceedge.Employee.Domain.Interfaces
         OldEmployee GetEmployeeByEmail(string email);
         PagedList<OldEmployeeForViewDto> GetEmployeesWithSeachQuery(int empId, PaginationResourceParameter resourceParam);
         Task<IEnumerable<OldEmployee>> GetMultipleEmployeesById(IEnumerable<int> Ids);
+        Task<bool> AddNewEmployeeByEmail(string email);
+        Task<bool> AddMultipleEmployeeByEmail(IList<string> emails);
+        Task Insert(OldEmployee employee);
     }
 }

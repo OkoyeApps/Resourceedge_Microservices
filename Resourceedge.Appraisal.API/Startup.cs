@@ -55,6 +55,7 @@ namespace Resourceedge.Appraisal.API
                 config.DefaultRequestHeaders.Clear();
                 config.DefaultRequestHeaders.Add("Accept", "application/json");
             }).AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(5, _ => TimeSpan.FromMilliseconds(500))); 
+            
             services.AddHttpClient("discoveryEndpoint", config =>
             {
                 config.BaseAddress = new Uri(Configuration["Services:Authority"]);
