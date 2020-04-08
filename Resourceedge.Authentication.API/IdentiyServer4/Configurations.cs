@@ -65,8 +65,7 @@ namespace Resourceedge.Authentication.API.IdentiyServer4
                      RedirectUris = {"http://localhost:3000/auth/redirect", "https://staging-resourceedge.herokuapp.com/auth/redirect", "https://resourceedge.herokuapp.com/auth/redirect" },
                      AllowAccessTokensViaBrowser = true,
                      RequireConsent = false,
-                     PostLogoutRedirectUris = {"http://localhost:3000/signout", "https://staging-resourceedge.herokuapp.com", "https://resourceedge.herokuapp.com"},
-                     //AccessTokenLifetime = 1,
+                     PostLogoutRedirectUris = {"http://localhost:3000", "https://staging-resourceedge.herokuapp.com", "https://resourceedge.herokuapp.com"},
                      //Allow CORS
                      AllowedCorsOrigins = { "http://localhost:3000", "https://staging-resourceedge.herokuapp.com", "https://resourceedge.herokuapp.com" },
 

@@ -1,6 +1,6 @@
 ﻿let errorText = document.getElementById('errorShow');
 if (errorText) {
-    setTimeout(function () { errorText.style = 'display: none;'; }, 10000)
+    setTimeout(function () { errorText.style = 'display: none;'; }, 5000)
 }
 
 $('#email').on('keypress', function (e) {

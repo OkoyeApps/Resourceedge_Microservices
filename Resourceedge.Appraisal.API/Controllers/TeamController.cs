@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Resourceedge.Appraisal.API.Interfaces;
+using Resourceedge.Appraisal.Domain.Entities;
+using Resourceedge.Appraisal.Domain.Models;
 using Resourceedge.Common.Archive;
 using Resourceedge.Common.Util;
 using System.Collections.Generic;
@@ -25,7 +27,7 @@ namespace Resourceedge.Appraisal.API.Controllers
         [HttpGet(Name = "GetEmployeesToAppraise")]
         public async Task<IActionResult> GetEmployeesToAppraise(int Id)
         {
-            var resultFromRepo = await teamRepo.GetEmployeesToAppraise(Id);
+            var resultFromRepo = await teamRepo.GetEmployeesToApproveEPA(Id);
             var resultForView = mapper.Map<IEnumerable<OldEmployeeDto>>(resultFromRepo);
             return Ok(resultForView);
         }

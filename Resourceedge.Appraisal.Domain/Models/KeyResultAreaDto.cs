@@ -27,8 +27,8 @@ namespace Resourceedge.Appraisal.Domain.Models
         public string Name { get; set; }
         public int EmployeeId { get; set; }
         public decimal Weight { get; set; }
-        public NameEmail HeadOfDepartment { get; set; }
-        public NameEmail Appraiser { get; set; }
+        public NameEmail HeadOfDepartment { get; set; } = new NameEmail();
+        public NameEmail Appraiser { get; set; } = new NameEmail();
         public bool? Approved { get; set; }
         public string whoami { get; set; }
         public ICollection<KeyOutcome> keyOutcomes { get; set; } = new List<KeyOutcome>();

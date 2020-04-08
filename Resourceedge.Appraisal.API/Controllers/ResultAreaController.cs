@@ -132,8 +132,8 @@ namespace Resourceedge.Appraisal.API.Controllers
             return NotFound();
         }
 
-        [HttpPost("{KeyResultAreaId}/Approval/{whoami}")]
-        public async Task<IActionResult> ApprovalKeyOutCome(int empId, string KeyResultAreaId, string whoami, StatusForUpdateDto entity)
+        [HttpPost("member/{memberId}/{KeyResultAreaId}/Approval/{whoami}")]
+        public async Task<IActionResult> ApprovalKeyOutCome(int empId, int memberId,  string KeyResultAreaId, string whoami, StatusForUpdateDto entity)
         {
             var keyResultAreaId = new ObjectId(KeyResultAreaId);
 
@@ -142,7 +142,7 @@ namespace Resourceedge.Appraisal.API.Controllers
                 return BadRequest();
             }
 
-            var result = await resultArea.HodApproval(empId, keyResultAreaId, whoami, entity);
+            var result = await resultArea.HodApproval(empId, memberId,  keyResultAreaId, whoami, entity);
             if (result != null)
             {
                 return CreatedAtRoute("GetEmployeeKpiById", new { empId = empId, KeyResultAreaId = result.Id.ToString() }, result);

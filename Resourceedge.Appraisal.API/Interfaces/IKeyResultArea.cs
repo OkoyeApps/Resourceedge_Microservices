@@ -20,7 +20,7 @@ namespace Resourceedge.Appraisal.API.Interfaces
         public IEnumerable<KeyResultArea> GetPersonalkpis(int empId, string resultArea = null);
         public KeyResultArea Update(ObjectId Id, KeyResultAreaForUpdateMainDto entity);
         Task<long> UpdateKeyOutcome(ObjectId Id, ObjectId outcomeId, int empId, KeyOutcomeForUpdateDto entity);
-        Task<KeyResultArea> HodApproval(int empId, ObjectId keyResultAreaId, string whoami, StatusForUpdateDto entity);
+        Task<KeyResultArea> HodApproval(int empId, int memberId, ObjectId keyResultAreaId, string whoami, StatusForUpdateDto entity);
         Task<KeyResultArea> EmployeeApproval(int empId, ObjectId keyResultAreaId, StatusForUpdateDto entity);
         IEnumerable<KeyResultArea> GetKeyResultAreasForAppraiser(int appraiserId, int employeeId);
         void SendApprovalNotification(IEnumerable<KeyResultArea> keyAreas);

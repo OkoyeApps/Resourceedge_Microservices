@@ -15,6 +15,7 @@ using Resourceedge.Email.Api.SGridClient;
 using Resourceedge.Worker.Auth.Services;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -22,6 +23,8 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Collections;
+using Resourceedge.Common.Util;
 
 namespace Resourceedge.Appraisal.API.Services
 {
@@ -219,31 +222,40 @@ namespace Resourceedge.Appraisal.API.Services
             return result.ModifiedCount;
         }
 
-        public async Task<KeyResultArea> HodApproval(int empId, ObjectId keyResultAreaId, string whoami, StatusForUpdateDto entity)
+        public async Task<KeyResultArea> HodApproval(int empId, int memberId, ObjectId keyResultAreaId, string whoami, StatusForUpdateDto entity)
         {
             try
             {
-                var filter = Builders<KeyResultArea>.Filter.Where(r => r.EmployeeId == empId && r.Id == keyResultAreaId);
+                var filter = Builders<KeyResultArea>.Filter.Where(r => r.EmployeeId == memberId && r.Id == keyResultAreaId && (r.HodDetails.EmployeeId == empId || r.AppraiserDetails.EmployeeId == empId));
                 var oldKeyResultArea = Collection.Find(filter).FirstOrDefault();
-
-                if (whoami == "HOD")
+                if (oldKeyResultArea != null)
                 {
-                    oldKeyResultArea.Status.Hod = entity.Approve;
-                }
-                else
-                {
-                    oldKeyResultArea.Status.IsAccepted = entity.Approve;
-                    oldKeyResultArea.SetActive();
-                }
-                var newKeyResultArea = oldKeyResultArea.ToBsonDocument();
+                    if(oldKeyResultArea.HodDetails.EmployeeId == empId && oldKeyResultArea.AppraiserDetails.EmployeeId == empId)
+                    {
+                        oldKeyResultArea.Status.Hod = entity.Approve;
+                        oldKeyResultArea.Approved = entity.Approve;
+                    }
+                    else if (whoami == "HOD")
+                    {
+                        oldKeyResultArea.Status.Hod = entity.Approve;
+                    }
+                    else
+                    {
+                        oldKeyResultArea.Status.IsAccepted = entity.Approve;
+                        oldKeyResultArea.SetActive();
+                    }
+                    var newKeyResultArea = oldKeyResultArea.ToBsonDocument();
 
-                var update = new BsonDocument("$set", newKeyResultArea);
-                var result = await Collection.FindOneAndUpdateAsync(filter, update, options: new FindOneAndUpdateOptions<KeyResultArea> { ReturnDocument = ReturnDocument.After });
+                    var update = new BsonDocument("$set", newKeyResultArea);
+                    var result = await Collection.FindOneAndUpdateAsync(filter, update, options: new FindOneAndUpdateOptions<KeyResultArea> { ReturnDocument = ReturnDocument.After });
 
-                return result;
+                    return result;
+                }
+                return null;
             }
             catch (Exception ex)
             {
+                //throw ex.InnerException;
                 logger.LogError("update of appraisal configuration failed", ex);
                 return null;
             }
@@ -285,7 +297,8 @@ namespace Resourceedge.Appraisal.API.Services
             string htmlContent = "";
             string textContent = "";
 
-            List<EmailObject> emailObj = keyAreas.Select(x => new EmailObject() { ReceiverEmailAddress = x.HodDetails.Email, ReceiverFullName = x.HodDetails.Name }).ToList();
+            var comparer = EdgeComparer.Get<KeyResultArea>((x, y) => x.HodDetails.Email == y.HodDetails.Email);
+            List<EmailObject> emailObj = keyAreas.Distinct(comparer).Select(x => new EmailObject() { ReceiverEmailAddress = x.HodDetails.Email, ReceiverFullName = x.HodDetails.Name }).ToList();
             emailObj.AddRange(keyAreas.Select(x => new EmailObject() { ReceiverEmailAddress = x.AppraiserDetails.Email, ReceiverFullName = x.AppraiserDetails.Name }).ToList());
 
             var employee = await GetEmployee(keyAreas.FirstOrDefault().EmployeeId);
@@ -337,6 +350,19 @@ namespace Resourceedge.Appraisal.API.Services
         {
             var year = DateTime.Now.Year;
             return QueryableCollection.Any(x => x.EmployeeId == employeeId && x.Year == year);
+        }
+    }
+
+    public class Compare : IEqualityComparer<KeyResultArea>
+    {
+        public bool Equals([AllowNull] KeyResultArea x, [AllowNull] KeyResultArea y)
+        {
+            return x.HodDetails.Email == y.HodDetails.Email;
+        }
+
+        public int GetHashCode([DisallowNull] KeyResultArea obj)
+        {
+            return 0;
         }
     }
 }
