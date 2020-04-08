@@ -1,4 +1,5 @@
-﻿using Resourceedge.Email.Api.Model;
+﻿using Resourceedge.Email.Api.Interfaces;
+using Resourceedge.Email.Api.Model;
 using Resourceedge.Email.Api.Services;
 using Resourceedge.Email.Api.SGridClient;
 using SendGrid.Helpers.Mail;
@@ -9,16 +10,16 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace Resourceedge.Appraisal.API.Helpers
+namespace Resourceedge.Appraisal.API.Services
 {
-    public class EmailSender
+    public class EmailSender : IEmailSender
     {
         private readonly ISGClient client;
         EmailDispatcher dispatcher;
-        public EmailSender(ISGClient _client)
+        public EmailSender(ISGClient _client, EmailDispatcher _dispatcher)
         {
             client = _client;
-            dispatcher = new EmailDispatcher(client);
+            dispatcher = _dispatcher;
         }
 
         public async Task<HttpStatusCode> SendToSingleEmployee(string Subject, SingleEmailDto singleEmail)
@@ -35,8 +36,7 @@ namespace Resourceedge.Appraisal.API.Helpers
             return await dispatcher.SendSingleMailToMultipleEmail(subject, textContent, htmlContent, emails);
 
         }
-
-
+        
         public async Task<HttpStatusCode> SendMultipleEmail(string subject, string employeeName, EmailDtoForMultiple emailDtos, string message, string title)
         {
             try

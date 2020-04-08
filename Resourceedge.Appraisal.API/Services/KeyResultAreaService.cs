@@ -9,6 +9,7 @@ using Resourceedge.Appraisal.Domain.DBContexts;
 using Resourceedge.Appraisal.Domain.Entities;
 using Resourceedge.Appraisal.Domain.Models;
 using Resourceedge.Common.Archive;
+using Resourceedge.Email.Api.Interfaces;
 using Resourceedge.Email.Api.Model;
 using Resourceedge.Email.Api.SGridClient;
 using Resourceedge.Worker.Auth.Services;
@@ -31,23 +32,23 @@ namespace Resourceedge.Appraisal.API.Services
         private readonly ILogger<KeyResultArea> logger;
         private readonly ITokenAccesor tokenAccesor;
         private readonly AuthService authService;
+        private readonly IEmailSender sender;
         private readonly HttpClient HttpClient;
         private readonly HttpClient AuthHttpClient;
-        EmailSender sender;
 
 
-        public KeyResultAreaService(IDbContext context, ILogger<KeyResultArea> _logger, IHttpClientFactory _httpClientFactory, ISGClient _client, ITokenAccesor _tokenAccesor, AuthService _authService)
+        public KeyResultAreaService(IDbContext context, ILogger<KeyResultArea> _logger, IHttpClientFactory _httpClientFactory, ISGClient _client, ITokenAccesor _tokenAccesor, AuthService _authService, IEmailSender _sender)
         {
             Collection = context.Database.GetCollection<KeyResultArea>($"{nameof(KeyResultArea)}s");
             QueryableCollection = Collection.AsQueryable<KeyResultArea>();
             logger = _logger;
             tokenAccesor = _tokenAccesor;
             authService = _authService;
+            sender = _sender;
             HttpClient = _httpClientFactory.CreateClient("EmployeeService");
             AuthHttpClient = _httpClientFactory.CreateClient("Auth");
             //HttpClient.SetBearerToken(tokenAccesor.TokenResponse.AccessToken);
             //AuthHttpClient.SetBearerToken(tokenAccesor.TokenResponse.AccessToken);
-            sender = new EmailSender(_client);
         }
 
 

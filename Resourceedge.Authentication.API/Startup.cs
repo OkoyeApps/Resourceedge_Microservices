@@ -16,6 +16,8 @@ using Resourceedge.Authentication.API.IdentiyServer4;
 using Resourceedge.Authentication.API.Services;
 using Resourceedge.Authentication.Domain.Entities;
 using Resourceedge.Authentication.Domain.Interfaces;
+using Resourceedge.Email.Api.Interfaces;
+using Resourceedge.Email.Api.Services;
 using Resourceedge.Email.Api.SGridClient;
 
 namespace Resourceedge.Authentication.API
@@ -85,6 +87,8 @@ namespace Resourceedge.Authentication.API
             services.AddTransient<ISGClient, SGClient>(ctx => SGClient.Create(
                 configuration.GetSection("SendGrid:SENDGRID_API_KEY").Value));
 
+            services.AddTransient(typeof(EmailDispatcher));
+            services.AddTransient<IEmailSender, EmailService>();
             services.AddTransient<IAuthInterface, AuthServices>();
             services.AddTransient<IExternalServiceInterface, ExternalApprisalService>();
 

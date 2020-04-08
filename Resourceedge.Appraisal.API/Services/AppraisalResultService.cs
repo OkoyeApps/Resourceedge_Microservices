@@ -6,6 +6,7 @@ using Resourceedge.Appraisal.API.Interfaces;
 using Resourceedge.Appraisal.Domain.DBContexts;
 using Resourceedge.Appraisal.Domain.Entities;
 using Resourceedge.Appraisal.Domain.Models;
+using Resourceedge.Email.Api.Interfaces;
 using Resourceedge.Email.Api.Model;
 using Resourceedge.Email.Api.SGridClient;
 using System.Collections.Generic;
@@ -21,10 +22,9 @@ namespace Resourceedge.Appraisal.API.Services
         private readonly IDbContext context;
         private readonly IMapper mapper;
         private readonly IKeyResultArea resultAreaRepo;
-        private EmailSender sender;
+        private readonly IEmailSender sender;
 
-
-        public AppraisalResultService(IDbContext _context, IMapper _mapper, ISGClient _client, IKeyResultArea _resultAreaRepo)
+        public AppraisalResultService(IDbContext _context, IMapper _mapper, ISGClient _client, IKeyResultArea _resultAreaRepo, IEmailSender _sender)
         {
             Collection = _context.Database.GetCollection<AppraisalResult>($"{nameof(AppraisalResult)}s");
             KraCollection = _context.Database.GetCollection<KeyResultArea>($"{nameof(KeyResultArea)}s");
@@ -32,7 +32,7 @@ namespace Resourceedge.Appraisal.API.Services
             context = _context;
             mapper = _mapper;
             resultAreaRepo = _resultAreaRepo;
-            sender = new EmailSender(_client);
+            sender = _sender;
         }
 
         public IEnumerable<AppraisalResult> Get(ObjectId AppraisalConfigId, ObjectId CycleId, int? EmployeeId)

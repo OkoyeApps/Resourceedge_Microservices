@@ -1,4 +1,5 @@
-﻿using Resourceedge.Email.Api.Model;
+﻿using Resourceedge.Email.Api.Interfaces;
+using Resourceedge.Email.Api.Model;
 using Resourceedge.Email.Api.Services;
 using Resourceedge.Email.Api.SGridClient;
 using System;
@@ -11,14 +12,14 @@ using System.Threading.Tasks;
 
 namespace Resourceedge.Authentication.API.Services
 {
-    public class EmailService
+    public class EmailService : IEmailSender
     {
         private readonly ISGClient client;
         EmailDispatcher dispatcher;
-        public EmailService(ISGClient _client)
+        public EmailService(ISGClient _client, EmailDispatcher _dispatcher)
         {
             client = _client;
-            dispatcher = new EmailDispatcher(client);
+            dispatcher = _dispatcher;
         }
 
         public async Task<HttpStatusCode> SendToSingleEmployee(string Subject, SingleEmailDto singleEmail)
@@ -56,6 +57,16 @@ namespace Resourceedge.Authentication.API.Services
                 return null;
             }
             
+        }
+
+        public Task<HttpStatusCode> SendMultipleEmail(string subject, string employeeName, EmailDtoForMultiple emailDtos, string message, string title)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<string> FormatEmail(string Name, string supervisor, string message, string title, string Url)
+        {
+            throw new NotImplementedException();
         }
     }
 

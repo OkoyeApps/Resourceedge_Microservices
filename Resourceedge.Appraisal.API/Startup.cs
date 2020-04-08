@@ -18,6 +18,8 @@ using Resourceedge.Appraisal.API.Interfaces;
 using Resourceedge.Appraisal.API.Services;
 using Resourceedge.Appraisal.Domain.DBContexts;
 using Resourceedge.Appraisal.Domain.Entities;
+using Resourceedge.Email.Api.Interfaces;
+using Resourceedge.Email.Api.Services;
 using Resourceedge.Email.Api.SGridClient;
 using Resourceedge.Worker.Auth.Services;
 
@@ -78,6 +80,8 @@ namespace Resourceedge.Appraisal.API
             services.AddTransient<ISGClient, SGClient>(ctx => SGClient.Create(
                 Configuration.GetSection("SendGrid:SENDGRID_API_KEY").Value));
 
+            services.AddTransient(typeof(EmailDispatcher));
+            services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<IKeyResultArea, KeyResultAreaService>();
             services.AddTransient<IAppraisalConfig, AppraisalConfigService>();
             services.AddTransient<IAppraisalResult, AppraisalResultService>();

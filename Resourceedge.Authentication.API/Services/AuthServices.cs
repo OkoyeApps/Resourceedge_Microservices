@@ -5,6 +5,7 @@ using Resourceedge.Authentication.Domain.Entities;
 using Resourceedge.Authentication.Domain.Extensions;
 using Resourceedge.Authentication.Domain.Interfaces;
 using Resourceedge.Authentication.Domain.Model;
+using Resourceedge.Email.Api.Interfaces;
 using Resourceedge.Email.Api.Model;
 using Resourceedge.Email.Api.SGridClient;
 using System;
@@ -22,17 +23,16 @@ namespace Resourceedge.Authentication.API.Services
         private readonly UserManager<ApplicationUser> UserManager;
         private readonly EdgeDbContext context;
         private readonly ILogger<AuthServices> Logger;
-        private readonly EmailService emailService;
+        private readonly IEmailSender sender;
 
         public AuthServices(SignInManager<ApplicationUser> _signInManager, UserManager<ApplicationUser> usermanager,
-            EdgeDbContext _context, ILogger<AuthServices> logger, ISGClient _client)
+            EdgeDbContext _context, ILogger<AuthServices> logger, ISGClient _client, IEmailSender _sender)
         {
             SignInManager = _signInManager;
             this.UserManager = usermanager;
             context = _context;
             this.Logger = logger;
-            emailService = new EmailService(_client);
-
+            sender = _sender;
         }
 
         public async Task<(bool, string)> AddClaimToUser(string userId, IEnumerable<System.Security.Claims.Claim> claims)
@@ -109,14 +109,14 @@ namespace Resourceedge.Authentication.API.Services
                 {
                     ReceiverEmailAddress = currentUser.Email,
                     ReceiverFullName = currentUser.FullName,
-                    HtmlContent = await emailService.FormatEmail(currentUser.FirstName, url)
+                    HtmlContent = await sender.FormatEmail(currentUser.FirstName, url)
                 };
 
                 if (emailDto.HtmlContent == null)
                 {
                     emailDto.HtmlContent = url;
                 }
-                var res = await emailService.SendToSingleEmployee(subject, emailDto);
+                var res = await sender.SendToSingleEmployee(subject, emailDto);
                 if (res == HttpStatusCode.Accepted)
                     return (true, res.ToString());
                 else
