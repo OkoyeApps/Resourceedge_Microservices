@@ -27,7 +27,7 @@
                 </div>
                 @if (ViewBag.Error != null)
                         {
-                <div class="col-12">
+                <div class="col-12 mt-4">
                     <span class="text-danger" id="errorShow">@ViewBag.Error.ToString()</span>
                 </div>
 
@@ -41,8 +41,5 @@
 
 @section scripts {
     <script src="~/js/validator.js"></script>
-    <script>
-       
-    </script>
 }
 

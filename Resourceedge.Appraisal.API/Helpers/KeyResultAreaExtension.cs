@@ -11,7 +11,7 @@ namespace Resourceedge.Appraisal.API.Helpers
 
         public static KeyResultArea SetActive(this KeyResultArea resultArea)
         {
-            if (resultArea.Status.Hod.Value && resultArea.Status.Employee.Value && resultArea.Status.IsAccepted.Value)
+            if ((resultArea.Status.Hod.HasValue && resultArea.Status.Hod.Value)&& (resultArea.Status.Employee.HasValue && resultArea.Status.Employee.Value) &&(resultArea.Status.IsAccepted.HasValue && resultArea.Status.IsAccepted.Value))
             {
                 resultArea.IsActive = true;
                 resultArea.Approved = true;

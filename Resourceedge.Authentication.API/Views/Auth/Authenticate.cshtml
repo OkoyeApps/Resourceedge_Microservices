@@ -38,7 +38,7 @@
                 </div>
                 @if (ViewBag.Error != null)
                 {
-                    <div class="col-12">
+                    <div class="col-12 mt-4">
                         <span id="errorShow"  class="text-danger">@ViewBag.Error.ToString()</span>
                     </div>
 
@@ -46,7 +46,7 @@
             </div>
             <button class="btn proceed mb-4" type="submit">Proceed</button>
             <div>
-                <a asp-action="PasswordReset" class="forgetlink">Forget Password?</a>
+                <a asp-action="PasswordReset" class="forgetlink">Forgot Password?</a>
             </div>
         </form>
 
@@ -72,6 +72,6 @@
         }
 
         let errorText = document.getElementById('errorShow');
-        setTimeout(function () { errorText.style = 'display: none;'}, 10000)
+        setTimeout(function () { errorText.style = 'display: none;'}, 5000)
    
     </script>

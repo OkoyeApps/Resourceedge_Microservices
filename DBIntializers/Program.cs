@@ -31,7 +31,8 @@ namespace DBIntializers
                 UserName = x.Email,
                 Id = x.Id,
                 NormalizedEmail = x.Email.ToLowerInvariant(),
-                NormalizedUserName= x.Email.ToLowerInvariant()
+                NormalizedUserName= x.Email.ToLowerInvariant(),
+                SecurityStamp = x.SecurityStamp
             }).Distinct();
 
             //newDbContext.AspNetUsers.Add(seed1);

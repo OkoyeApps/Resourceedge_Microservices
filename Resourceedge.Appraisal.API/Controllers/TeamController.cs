@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Resourceedge.Appraisal.API.Interfaces;
+using Resourceedge.Appraisal.Domain.Entities;
+using Resourceedge.Appraisal.Domain.Models;
 using Resourceedge.Common.Archive;
 using Resourceedge.Common.Util;
 using System.Collections.Generic;

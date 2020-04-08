@@ -218,31 +218,35 @@ namespace Resourceedge.Appraisal.API.Services
             return result.ModifiedCount;
         }
 
-        public async Task<KeyResultArea> HodApproval(int empId, ObjectId keyResultAreaId, string whoami, StatusForUpdateDto entity)
+        public async Task<KeyResultArea> HodApproval(int empId, int memberId, ObjectId keyResultAreaId, string whoami, StatusForUpdateDto entity)
         {
             try
             {
-                var filter = Builders<KeyResultArea>.Filter.Where(r => r.EmployeeId == empId && r.Id == keyResultAreaId);
+                var filter = Builders<KeyResultArea>.Filter.Where(r => r.EmployeeId == memberId && r.Id == keyResultAreaId && (r.HodDetails.EmployeeId == empId || r.AppraiserDetails.EmployeeId == empId));
                 var oldKeyResultArea = Collection.Find(filter).FirstOrDefault();
-
-                if (whoami == "HOD")
+                if (oldKeyResultArea != null)
                 {
-                    oldKeyResultArea.Status.Hod = entity.Approve;
-                }
-                else
-                {
-                    oldKeyResultArea.Status.IsAccepted = entity.Approve;
-                    oldKeyResultArea.SetActive();
-                }
-                var newKeyResultArea = oldKeyResultArea.ToBsonDocument();
+                    if (whoami == "HOD")
+                    {
+                        oldKeyResultArea.Status.Hod = entity.Approve;
+                    }
+                    else
+                    {
+                        oldKeyResultArea.Status.IsAccepted = entity.Approve;
+                        oldKeyResultArea.SetActive();
+                    }
+                    var newKeyResultArea = oldKeyResultArea.ToBsonDocument();
 
-                var update = new BsonDocument("$set", newKeyResultArea);
-                var result = await Collection.FindOneAndUpdateAsync(filter, update, options: new FindOneAndUpdateOptions<KeyResultArea> { ReturnDocument = ReturnDocument.After });
+                    var update = new BsonDocument("$set", newKeyResultArea);
+                    var result = await Collection.FindOneAndUpdateAsync(filter, update, options: new FindOneAndUpdateOptions<KeyResultArea> { ReturnDocument = ReturnDocument.After });
 
-                return result;
+                    return result;
+                }
+                return null;
             }
             catch (Exception ex)
             {
+                //throw ex.InnerException;
                 logger.LogError("update of appraisal configuration failed", ex);
                 return null;
             }

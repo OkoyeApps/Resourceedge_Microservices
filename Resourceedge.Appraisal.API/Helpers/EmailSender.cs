@@ -56,6 +56,11 @@ namespace Resourceedge.Appraisal.API.Helpers
                         ReceiverFullName = item.Name
                     };
 
+                    if(singleEmail.HtmlContent == null)
+                    {
+                        singleEmail.HtmlContent = @$"<p>{employeeName} has added you as a supervisor, kindly login to resourceedge and approve his EPA.</p>";
+                    }
+
                      await dispatcher.SendSingleEmail(subject, singleEmail);
                 }
                 return HttpStatusCode.OK;        
@@ -70,22 +75,30 @@ namespace Resourceedge.Appraisal.API.Helpers
         public async Task<string> FormatEmail(string Name, string supervisor,string message, string title,string Url)
         {
             //var mailMessage = new MailMessage();
-            string body = "";
-            var AppDomains = AppDomain.CurrentDomain.FriendlyName;
-            string filename = Path.GetFullPath("EmailTemplate\\AppraisalNotification.html");
-            using (StreamReader sr = new StreamReader(filename))
+            try
             {
-                body = await sr.ReadToEndAsync();
+                string body = "";
+                var AppDomains = AppDomain.CurrentDomain.FriendlyName;
+                string filename = Path.GetFullPath("EmailTemplate\\AppraisalNotification.html");
+                using (StreamReader sr = new StreamReader(filename))
+                {
+                    body = await sr.ReadToEndAsync();
+                }
+
+                body = body.Replace("{FullName}", Name);
+                body = body.Replace("{GroupName}", "RESOURCE EDGE");
+                body = body.Replace("{Supervisor}", supervisor);
+                body = body.Replace("{Message}", message);
+                body = body.Replace("{Title}", title);
+                body = body.Replace("{Link}", Url);
+
+                return body;
             }
-
-            body = body.Replace("{FullName}", Name);
-            body = body.Replace("{GroupName}", "RESOURCE EDGE");
-            body = body.Replace("{Supervisor}", supervisor);
-            body = body.Replace("{Message}", message);
-            body = body.Replace("{Title}", title);
-            body = body.Replace("{Link}", Url);
-
-            return body;
+            catch(Exception ex)
+            {
+                return null;
+            }
+          
         }
 
     }

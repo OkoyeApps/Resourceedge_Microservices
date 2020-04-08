@@ -90,7 +90,8 @@ namespace Resourceedge.Appraisal.API.Services
                     Weight = x.Weight,
                     keyOutcomes = x.keyOutcomes,
                     Id = x.Id,
-                    Status = x.Status
+                    Status = x.Status,
+                     Appraiser  = x.AppraiserDetails, HeadOfDepartment =x.HodDetails
                 }
             );
             return result;
