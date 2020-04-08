@@ -27,7 +27,7 @@ namespace Resourceedge.Appraisal.API.Controllers
         [HttpGet(Name = "GetEmployeesToAppraise")]
         public async Task<IActionResult> GetEmployeesToAppraise(int Id)
         {
-            var resultFromRepo = await teamRepo.GetEmployeesToAppraise(Id);
+            var resultFromRepo = await teamRepo.GetEmployeesToApproveEPA(Id);
             var resultForView = mapper.Map<IEnumerable<OldEmployeeDto>>(resultFromRepo);
             return Ok(resultForView);
         }

@@ -14,6 +14,7 @@ using Resourceedge.Email.Api.SGridClient;
 using Resourceedge.Worker.Auth.Services;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -21,6 +22,8 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Collections;
+using Resourceedge.Common.Util;
 
 namespace Resourceedge.Appraisal.API.Services
 {
@@ -226,7 +229,12 @@ namespace Resourceedge.Appraisal.API.Services
                 var oldKeyResultArea = Collection.Find(filter).FirstOrDefault();
                 if (oldKeyResultArea != null)
                 {
-                    if (whoami == "HOD")
+                    if(oldKeyResultArea.HodDetails.EmployeeId == empId && oldKeyResultArea.AppraiserDetails.EmployeeId == empId)
+                    {
+                        oldKeyResultArea.Status.Hod = entity.Approve;
+                        oldKeyResultArea.Approved = entity.Approve;
+                    }
+                    else if (whoami == "HOD")
                     {
                         oldKeyResultArea.Status.Hod = entity.Approve;
                     }
@@ -288,7 +296,8 @@ namespace Resourceedge.Appraisal.API.Services
             string htmlContent = "";
             string textContent = "";
 
-            List<EmailObject> emailObj = keyAreas.Select(x => new EmailObject() { ReceiverEmailAddress = x.HodDetails.Email, ReceiverFullName = x.HodDetails.Name }).ToList();
+            var comparer = EdgeComparer.Get<KeyResultArea>((x, y) => x.HodDetails.Email == y.HodDetails.Email);
+            List<EmailObject> emailObj = keyAreas.Distinct(comparer).Select(x => new EmailObject() { ReceiverEmailAddress = x.HodDetails.Email, ReceiverFullName = x.HodDetails.Name }).ToList();
             emailObj.AddRange(keyAreas.Select(x => new EmailObject() { ReceiverEmailAddress = x.AppraiserDetails.Email, ReceiverFullName = x.AppraiserDetails.Name }).ToList());
 
             var employee = await GetEmployee(keyAreas.FirstOrDefault().EmployeeId);
@@ -340,6 +349,19 @@ namespace Resourceedge.Appraisal.API.Services
         {
             var year = DateTime.Now.Year;
             return QueryableCollection.Any(x => x.EmployeeId == employeeId && x.Year == year);
+        }
+    }
+
+    public class Compare : IEqualityComparer<KeyResultArea>
+    {
+        public bool Equals([AllowNull] KeyResultArea x, [AllowNull] KeyResultArea y)
+        {
+            return x.HodDetails.Email == y.HodDetails.Email;
+        }
+
+        public int GetHashCode([DisallowNull] KeyResultArea obj)
+        {
+            return 0;
         }
     }
 }

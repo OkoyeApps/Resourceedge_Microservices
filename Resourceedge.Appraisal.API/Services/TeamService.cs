@@ -52,28 +52,48 @@ namespace Resourceedge.Appraisal.API.Services
         }
         public async Task<IEnumerable<OldEmployeeDto>> GetEmployeesToAppraise(int employeeId)
         {
-            var EmployeesToAppraise = QueryableCollection.Where(x => x.AppraiserDetails.EmployeeId == employeeId || x.HodDetails.EmployeeId == employeeId).Select(x => x.EmployeeId).Distinct().ToList();
+            var EmployeesToAppraise = QueryableCollection.Where(x => x.AppraiserDetails.EmployeeId == employeeId || x.HodDetails.EmployeeId == employeeId).Select(x => x.EmployeeId.ToString()).Distinct().ToList();
 
             if (EmployeesToAppraise.Any())
             {
-                var AA = string.Join(",", EmployeesToAppraise.Select(X => X));
-                //Make Http Request to the Employee Service to fetch employees
-                var response = await HttpClient.GetAsync($"/api/employeecollection/({string.Join(",", EmployeesToAppraise.Select(X => X))})");
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = await response.Content.ReadAsByteArrayAsync();
-                    var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-                    var result = JsonSerializer.Deserialize<IEnumerable<OldEmployeeDto>>(content, options);
+                return await FetchEmployeesDetailsFromEmployeeService(EmployeesToAppraise);
+            }
 
-                    return result;
-                }
+            return new List<OldEmployeeDto>();
+        }
+
+        public async Task<IEnumerable<OldEmployeeDto>> GetEmployeesToApproveEPA(int employeeId)
+        {
+            var EmployeesToAppraise = QueryableCollection.Where(x => x.HodDetails.EmployeeId == employeeId).Select(x => x.EmployeeId.ToString()).Distinct().ToList();
+
+            if (EmployeesToAppraise.Any())
+            {
+                return await FetchEmployeesDetailsFromEmployeeService(EmployeesToAppraise);
             }
             return new List<OldEmployeeDto>();
         }
 
+
+        public async Task<IEnumerable<OldEmployeeDto>> FetchEmployeesDetailsFromEmployeeService(IEnumerable<string> Ids)
+        {
+            var response = await HttpClient.GetAsync($"/api/employeecollection/({string.Join(",", Ids)})");
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsByteArrayAsync();
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                var result = JsonSerializer.Deserialize<IEnumerable<OldEmployeeDto>>(content, options);
+
+                return result;
+            }
+            return new List<OldEmployeeDto>();
+        }
+
+
         public async Task<IEnumerable<KeyResultAreaForViewDto>> GetTeamMemberKpi(int MyId, int TeammeberId)
         {
-            var result = resultArea.GetKeyResultAreasForAppraiser(MyId, TeammeberId);
+            //var result = resultArea.GetKeyResultAreasForAppraiser(MyId, TeammeberId);
+            var year = DateTime.Now.Year;
+            var result = QueryableCollection.Where(x => x.HodDetails.EmployeeId == MyId && x.Year == year);
             return UpdateWhoAmIForList(result, MyId);
         }
 
@@ -83,7 +103,8 @@ namespace Resourceedge.Appraisal.API.Services
             var result = resultArea.Select(x =>
                 new KeyResultAreaForViewDto
                 {
-                    whoami = x.AppraiserDetails.EmployeeId == employeeId ? "APPRAISER" : "HOD",
+                    //whoami = x.AppraiserDetails.EmployeeId == employeeId ? "APPRAISER" : "HOD",
+                    whoami = "HOD",
                     Approved = x.Approved,
                     EmployeeId = x.EmployeeId,
                     Name = x.Name,
@@ -91,7 +112,8 @@ namespace Resourceedge.Appraisal.API.Services
                     keyOutcomes = x.keyOutcomes,
                     Id = x.Id,
                     Status = x.Status,
-                     Appraiser  = x.AppraiserDetails, HeadOfDepartment =x.HodDetails
+                    Appraiser = x.AppraiserDetails,
+                    HeadOfDepartment = x.HodDetails
                 }
             );
             return result;
