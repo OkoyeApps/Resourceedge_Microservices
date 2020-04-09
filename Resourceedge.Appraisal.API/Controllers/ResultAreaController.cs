@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
+using System.IO;
 
 namespace Resourceedge.Appraisal.API.Controllers
 {
@@ -59,13 +60,15 @@ namespace Resourceedge.Appraisal.API.Controllers
                 {
                     item.myId = empId;
                 }
+                if (!resultArea.HasUploadedEpa(int.Parse(empId)))
+                {
+                    var entityToAdd = mapper.Map<IEnumerable<KeyResultAreaDtoForCreation>, IEnumerable<KeyResultArea>>(model);
+                    var result = await resultArea.AddKeyOutcomes(entityToAdd);
 
-                var entityToAdd = mapper.Map<IEnumerable<KeyResultAreaDtoForCreation>, IEnumerable<KeyResultArea>>(model);
-                var result = await resultArea.AddKeyOutcomes(entityToAdd);
-
-                var entityToReturn = mapper.Map<IEnumerable<KeyResultArea>>(entityToAdd);
-                resultArea.SendApprovalNotification(entityToReturn);
-                return CreatedAtRoute("Mykpi", new { empId = empId }, entityToReturn);
+                    var entityToReturn = mapper.Map<IEnumerable<KeyResultArea>>(entityToAdd);
+                    resultArea.SendApprovalNotification(entityToReturn);
+                }
+                return CreatedAtRoute("Mykpi", new { empId = empId });
             }
             catch (Exception ex)
             {
@@ -133,7 +136,7 @@ namespace Resourceedge.Appraisal.API.Controllers
         }
 
         [HttpPost("member/{memberId}/{KeyResultAreaId}/Approval/{whoami}")]
-        public async Task<IActionResult> ApprovalKeyOutCome(int empId, int memberId,  string KeyResultAreaId, string whoami, StatusForUpdateDto entity)
+        public async Task<IActionResult> ApprovalKeyOutCome(int empId, int memberId, string KeyResultAreaId, string whoami, StatusForUpdateDto entity)
         {
             var keyResultAreaId = new ObjectId(KeyResultAreaId);
 
@@ -142,7 +145,7 @@ namespace Resourceedge.Appraisal.API.Controllers
                 return BadRequest();
             }
 
-            var result = await resultArea.HodApproval(empId, memberId,  keyResultAreaId, whoami, entity);
+            var result = await resultArea.HodApproval(empId, memberId, keyResultAreaId, whoami, entity);
             if (result != null)
             {
                 return CreatedAtRoute("GetEmployeeKpiById", new { empId = empId, KeyResultAreaId = result.Id.ToString() }, result);
@@ -191,6 +194,26 @@ namespace Resourceedge.Appraisal.API.Controllers
         {
             var result = resultArea.HasUploadedEpa(empId);
             return Ok(result);
-        } 
+        }
+
+        [AllowAnonymous]
+        [Route("check/email/template/for/valid"), HttpGet]
+        public async Task<IActionResult> CheckEmailTemplate()
+        {
+            var temp = Path.Combine(Directory.GetCurrentDirectory(), "EmailTemplate\\AppraisalNotification.html");
+            var fileInfo = new FileInfo(temp);
+            var body = "";
+            //if (fileInfo.Exists)
+            //{
+            //    using (StreamReader stream = new StreamReader(fileInfo.FullName))
+            //    {
+            //        body = await stream.ReadToEndAsync();
+            //    }
+
+            //}
+            resultArea.SendApprovalNotification(new List<KeyResultArea> { new KeyResultArea { EmployeeId = 194, HodDetails = new NameEmail { Email = "c.okoye@genesystechhub.com" } } });
+            return Ok(body);
+
+        }
     }
 }

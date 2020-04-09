@@ -10,7 +10,7 @@ namespace Resourceedge.Authentication.Domain.Interfaces
 {
     public interface IAuthInterface
     {
-        Task<(bool, string)> GetUserbyEmail(string email);
+        Task<(bool, string)> GetUserbyEmailAsync(string email);
         Task<(bool, string)> Login(LoginViewModel model);
         Task<(bool, string)> AddClaimToUser(string userId, IEnumerable<Claim> claims);
         Task<(bool, ApplicationUser, string)> GetResetPasswordToken(string email);
