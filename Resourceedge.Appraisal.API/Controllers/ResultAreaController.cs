@@ -194,9 +194,13 @@ namespace Resourceedge.Appraisal.API.Controllers
 
             if (keyResult != null)
             {
-                resultArea.DeleteKeyOutcome(objId, keyResult);
+               var result = await resultArea.DeleteKeyOutcome(objId, keyResult);
+                if(result == null)
+                {
+                    return BadRequest();
+                }
 
-                return Ok(new { success = true });
+                return Ok(new { success = true, result });
             }
 
             return NoContent();

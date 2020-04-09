@@ -103,7 +103,7 @@ namespace Resourceedge.Appraisal.API.Services
             }
         }
 
-        public async void DeleteKeyOutcome(ObjectId id, KeyResultArea entity)
+        public async Task<KeyResultArea> DeleteKeyOutcome(ObjectId id, KeyResultArea entity)
         {
             if (id != null)
             {
@@ -111,9 +111,12 @@ namespace Resourceedge.Appraisal.API.Services
                 var filter = Builders<KeyResultArea>.Filter.Eq("keyOutcomes.Id", id);
                 var update = Builders<KeyResultArea>.Update.Pull("keyOutcomes", keyoutcome);
 
-                    await Collection.FindOneAndUpdateAsync<KeyResultArea>(filter ,update);
-                    //await Collection.UpdateOne<KeyResultArea>(filter ,update);
+                 var result = await Collection.FindOneAndUpdateAsync<KeyResultArea>(filter ,update, options: new FindOneAndUpdateOptions<KeyResultArea>{ ReturnDocument = ReturnDocument.After });
+
+                return result;
             }
+
+            return null;
         }
 
         public async void Delete(KeyResultArea entity)
