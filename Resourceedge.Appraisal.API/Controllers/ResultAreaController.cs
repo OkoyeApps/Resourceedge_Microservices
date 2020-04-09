@@ -174,7 +174,7 @@ namespace Resourceedge.Appraisal.API.Controllers
             return NoContent();
         }
 
-        [HttpDelete("Delete/{Id}")]
+        [HttpDelete("{Id}")]
         public async Task<IActionResult> DeleteKeyResultArea(string empId, string Id)
         {
             ObjectId objId = new ObjectId(Id);
@@ -190,6 +190,25 @@ namespace Resourceedge.Appraisal.API.Controllers
             return NoContent();
         }
 
+        [HttpDelete("Delete/{Id}")]
+        public async Task<IActionResult> DeleteKeyOutcome(string empId, string Id)
+        {
+            ObjectId objId = new ObjectId(Id);
+            var keyResult = await resultArea.QuerySingleByKeyOutcome(objId);
+
+            if (keyResult != null)
+            {
+               var result = await resultArea.DeleteKeyOutcome(objId, keyResult);
+                if(result == null)
+                {
+                    return BadRequest();
+                }
+
+                return Ok(new { success = true, result });
+            }
+
+            return NoContent();
+        }
         [HttpGet("checkuploaded")]
         public IActionResult CheckUserUploadedEpaForYear(int empId)
         {
