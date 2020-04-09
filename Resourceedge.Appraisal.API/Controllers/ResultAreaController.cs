@@ -60,7 +60,8 @@ namespace Resourceedge.Appraisal.API.Controllers
                 {
                     item.myId = empId;
                 }
-                if (!resultArea.HasUploadedEpa(int.Parse(empId)))
+                var hasUploaded = resultArea.HasUploadedEpa(int.Parse(empId));
+                if (!hasUploaded)
                 {
                     var entityToAdd = mapper.Map<IEnumerable<KeyResultAreaDtoForCreation>, IEnumerable<KeyResultArea>>(model);
                     var result = await resultArea.AddKeyOutcomes(entityToAdd);
@@ -68,7 +69,7 @@ namespace Resourceedge.Appraisal.API.Controllers
                     var entityToReturn = mapper.Map<IEnumerable<KeyResultArea>>(entityToAdd);
                     resultArea.SendApprovalNotification(entityToReturn);
                 }
-                return CreatedAtRoute("Mykpi", new { empId = empId });
+                return CreatedAtRoute("Mykpi", new { empId = empId }, model);
             }
             catch (Exception ex)
             {

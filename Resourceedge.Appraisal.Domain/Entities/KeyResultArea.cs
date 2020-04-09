@@ -21,6 +21,8 @@ namespace Resourceedge.Appraisal.Domain.Entities
         public bool IsActive { get; set; }
         public ICollection<KeyOutcome> keyOutcomes { get; set; } = new List<KeyOutcome>();
         public ApprovalStatus Status { get; set; } = new ApprovalStatus();
+        public DateTime CreatedAt { get; set; } = new DateTime();
+        public DateTime UpdatedAt { get; set; }
 
 
     }
