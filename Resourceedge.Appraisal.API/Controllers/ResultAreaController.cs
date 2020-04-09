@@ -168,16 +168,17 @@ namespace Resourceedge.Appraisal.API.Controllers
             var result = await resultArea.EmployeeApproval(empId, entity);
             if (result > 0)
             {
-                return CreatedAtRoute("Mykpi", new { empId = empId });
+                return Ok();
             }
 
-            return NotFound();
+            return NoContent();
         }
 
         [HttpDelete("Id")]
-        public async Task<IActionResult> DeleteKeyResultArea(string Id)
+        public async Task<IActionResult> DeleteKeyResultArea(string empId, string Id)
         {
             ObjectId objId = new ObjectId(Id);
+            ObjectId objempId = new ObjectId(empId);
             var keyResult = await resultArea.QuerySingle(objId);
 
             if (keyResult != null)
