@@ -164,10 +164,10 @@ namespace Resourceedge.Appraisal.API.Controllers
             var result = await resultArea.EmployeeApproval(empId, entity);
             if (result > 0)
             {
-                return CreatedAtRoute("Mykpi", new { empId = empId });
+                return Ok();
             }
 
-            return NotFound();
+            return NoContent();
         }
 
         [HttpDelete("Id")]
