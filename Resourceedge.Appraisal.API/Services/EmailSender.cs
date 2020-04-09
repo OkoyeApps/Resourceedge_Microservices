@@ -101,5 +101,9 @@ namespace Resourceedge.Appraisal.API.Services
           
         }
 
+        public Task<string> FormatEmail(string Name, string Url)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

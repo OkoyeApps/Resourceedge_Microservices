@@ -297,16 +297,17 @@ namespace Resourceedge.Appraisal.API.Services
             string htmlContent = "";
             string textContent = "";
 
-            var comparer = EdgeComparer.Get<KeyResultArea>((x, y) => x.HodDetails.Email == y.HodDetails.Email);
-            List<EmailObject> emailObj = keyAreas.Distinct(comparer).Select(x => new EmailObject() { ReceiverEmailAddress = x.HodDetails.Email, ReceiverFullName = x.HodDetails.Name }).ToList();
+            var comparer = EdgeComparer.Get<EmailObject>((x, y) => x.ReceiverEmailAddress == y.ReceiverEmailAddress);
+            List<EmailObject> emailObj = keyAreas.Select(x => new EmailObject() { ReceiverEmailAddress = x.HodDetails.Email, ReceiverFullName = x.HodDetails.Name }).ToList();
             emailObj.AddRange(keyAreas.Select(x => new EmailObject() { ReceiverEmailAddress = x.AppraiserDetails.Email, ReceiverFullName = x.AppraiserDetails.Name }).ToList());
 
+            var distinctEmailObject = emailObj.Distinct(comparer).Select(x => x).ToList();
             var employee = await GetEmployee(keyAreas.FirstOrDefault().EmployeeId);
             EmailDtoForMultiple emailDtos = new EmailDtoForMultiple()
             {
                 PlainTextContent = textContent,
                 HtmlContent = htmlContent,
-                EmailObjects = emailObj
+                EmailObjects = distinctEmailObject
             };
 
             var result = sender.SendMultipleEmail(subject, employee.FullName, emailDtos, message, title);
@@ -353,14 +354,18 @@ namespace Resourceedge.Appraisal.API.Services
         }
     }
 
-    public class Compare : IEqualityComparer<KeyResultArea>
+    public class Compare : IEqualityComparer<EmailObject>
     {
-        public bool Equals([AllowNull] KeyResultArea x, [AllowNull] KeyResultArea y)
+        public bool Equals([AllowNull] EmailObject x, [AllowNull] EmailObject y)
         {
-            return x.HodDetails.Email == y.HodDetails.Email;
+            if (Object.ReferenceEquals(x, y)) return true;
+
+            if (x.ReceiverFullName == y.ReceiverFullName && x.ReceiverEmailAddress == y.ReceiverEmailAddress) return true;
+
+            return false;
         }
 
-        public int GetHashCode([DisallowNull] KeyResultArea obj)
+        public int GetHashCode([DisallowNull] EmailObject obj)
         {
             return 0;
         }
