@@ -261,25 +261,24 @@ namespace Resourceedge.Appraisal.API.Services
             }
         }
 
-        public async Task<KeyResultArea> EmployeeApproval(int empId, ObjectId keyResultAreaId, StatusForUpdateDto entity)
+        public async Task<long> EmployeeApproval(int empId, StatusForUpdateDto entity)
         {
             try
             {
-                var filter = Builders<KeyResultArea>.Filter.Where(r => r.EmployeeId == empId && r.Id == keyResultAreaId);
+                var filter = Builders<KeyResultArea>.Filter.Where(r => r.EmployeeId == empId && r.Year == DateTime.Now.Year);
 
-                var oldKeyResultArea = Collection.Find(filter).FirstOrDefault();
-                oldKeyResultArea.Status.Employee = entity.Approve;
-                var newKeyResultArea = oldKeyResultArea.ToBsonDocument();
+                var oldKeyResultArea = Collection.Find(filter).ToList();
+                oldKeyResultArea.ForEach(x => x.Status.Employee = entity.Approve);
 
-                var update = new BsonDocument("$set", newKeyResultArea);
-                var result = await Collection.FindOneAndUpdateAsync(filter, update, options: new FindOneAndUpdateOptions<KeyResultArea> { ReturnDocument = ReturnDocument.After });
+                var update = Builders<KeyResultArea>.Update.Set("Status.Employee", entity.Approve);
+                var result = await Collection.UpdateManyAsync(filter, update);
 
-                return result;
+                return result.ModifiedCount;
             }
             catch (Exception ex)
             {
                 logger.LogError("update of appraisal configuration failed", ex);
-                return null;
+                return 0;
             }
         }
 

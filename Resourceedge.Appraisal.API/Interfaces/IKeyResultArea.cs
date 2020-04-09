@@ -21,7 +21,7 @@ namespace Resourceedge.Appraisal.API.Interfaces
         public KeyResultArea Update(ObjectId Id, KeyResultAreaForUpdateMainDto entity);
         Task<long> UpdateKeyOutcome(ObjectId Id, ObjectId outcomeId, int empId, KeyOutcomeForUpdateDto entity);
         Task<KeyResultArea> HodApproval(int empId, int memberId, ObjectId keyResultAreaId, string whoami, StatusForUpdateDto entity);
-        Task<KeyResultArea> EmployeeApproval(int empId, ObjectId keyResultAreaId, StatusForUpdateDto entity);
+        Task<long> EmployeeApproval(int empId, StatusForUpdateDto entity);
         IEnumerable<KeyResultArea> GetKeyResultAreasForAppraiser(int appraiserId, int employeeId);
         void SendApprovalNotification(IEnumerable<KeyResultArea> keyAreas);
         Task<OldEmployeeForViewDto> GetEmployee(int empId);
