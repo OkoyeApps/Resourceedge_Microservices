@@ -152,7 +152,7 @@ namespace Resourceedge.Appraisal.API.Controllers
         }
 
         [HttpPost("Approval")]
-        public IActionResult ApprovalKeyOutCome(int empId, StatusForUpdateDto entity)
+        public async Task<IActionResult> ApprovalKeyOutCome(int empId, StatusForUpdateDto entity)
         {
             //var keyResultAreaId = new ObjectId(KeyResultAreaId);
 
@@ -161,10 +161,10 @@ namespace Resourceedge.Appraisal.API.Controllers
                 return BadRequest();
             }
 
-            var result = resultArea.EmployeeApproval(empId, entity);
-            if (result != null)
+            var result = await resultArea.EmployeeApproval(empId, entity);
+            if (result > 0)
             {
-                return CreatedAtRoute("GetEmployeeKpiById", new { empId = empId, KeyResultAreaId = result.Id.ToString() }, result);
+                return CreatedAtRoute("Mykpi", new { empId = empId });
             }
 
             return NotFound();
