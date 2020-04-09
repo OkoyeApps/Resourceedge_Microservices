@@ -261,14 +261,14 @@ namespace Resourceedge.Appraisal.API.Services
             }
         }
 
-        public async Task<KeyResultArea> EmployeeApproval(int empId, ObjectId keyResultAreaId, StatusForUpdateDto entity)
+        public async Task<KeyResultArea> EmployeeApproval(int empId, StatusForUpdateDto entity)
         {
             try
             {
-                var filter = Builders<KeyResultArea>.Filter.Where(r => r.EmployeeId == empId && r.Id == keyResultAreaId);
+                var filter = Builders<KeyResultArea>.Filter.Where(r => r.EmployeeId == empId);
 
-                var oldKeyResultArea = Collection.Find(filter).FirstOrDefault();
-                oldKeyResultArea.Status.Employee = entity.Approve;
+                var oldKeyResultArea = Collection.Find(filter).ToList();
+                oldKeyResultArea.ForEach(x => x.Status.Employee = entity.Approve);
                 var newKeyResultArea = oldKeyResultArea.ToBsonDocument();
 
                 var update = new BsonDocument("$set", newKeyResultArea);

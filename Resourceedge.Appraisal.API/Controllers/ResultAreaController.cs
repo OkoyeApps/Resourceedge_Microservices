@@ -151,17 +151,17 @@ namespace Resourceedge.Appraisal.API.Controllers
             return NotFound();
         }
 
-        [HttpPost("{KeyResultAreaId}/Approval")]
-        public IActionResult ApprovalKeyOutCome(int empId, string KeyResultAreaId, StatusForUpdateDto entity)
+        [HttpPost("Approval")]
+        public IActionResult ApprovalKeyOutCome(int empId, StatusForUpdateDto entity)
         {
-            var keyResultAreaId = new ObjectId(KeyResultAreaId);
+            //var keyResultAreaId = new ObjectId(KeyResultAreaId);
 
             if (entity == null)
             {
                 return BadRequest();
             }
 
-            var result = resultArea.EmployeeApproval(empId, keyResultAreaId, entity);
+            var result = resultArea.EmployeeApproval(empId, entity);
             if (result != null)
             {
                 return CreatedAtRoute("GetEmployeeKpiById", new { empId = empId, KeyResultAreaId = result.Id.ToString() }, result);
