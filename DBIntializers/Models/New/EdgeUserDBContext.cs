@@ -6,8 +6,8 @@ namespace DBIntializers.Models.New
 {
     public partial class EdgeUserDBContext : DbContext
     {
-        //const string connectionString = "Server=tcp:davidson.database.windows.net,1433;Initial Catalog=EdgeUserDB;Persist Security Info=False;User ID=davidson;Password=@A1234567;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
-        const string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=EdgeUserDb;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+        const string connectionString = "Server=tcp:davidson.database.windows.net,1433;Initial Catalog=EdgeUserDB;Persist Security Info=False;User ID=davidson;Password=@A1234567;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+        //const string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=EdgeUserDb;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
         public EdgeUserDBContext()
         {
         }

@@ -25,6 +25,8 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Collections;
 using Resourceedge.Common.Util;
+using Resourceedge.Common.Models;
+using Resourceedge.Common.Comparers;
 
 namespace Resourceedge.Appraisal.API.Services
 {
@@ -50,6 +52,9 @@ namespace Resourceedge.Appraisal.API.Services
             sender = _sender;
             HttpClient = _httpClientFactory.CreateClient("EmployeeService");
             AuthHttpClient = _httpClientFactory.CreateClient("Auth");
+
+            //Collection.UpdateMany(Builders<KeyResultArea>.Filter.Where(x=>x.EmployeeId !=0 ), Builders<KeyResultArea>.Update.Unset(x => x.HodDetails.Type));
+            //Collection.UpdateMany(Builders<KeyResultArea>.Filter.Where(x=>x.EmployeeId !=0 ), Builders<KeyResultArea>.Update.Unset(x => x.AppraiserDetails.Type));
             //HttpClient.SetBearerToken(tokenAccesor.TokenResponse.AccessToken);
             //AuthHttpClient.SetBearerToken(tokenAccesor.TokenResponse.AccessToken);
         }
@@ -90,7 +95,7 @@ namespace Resourceedge.Appraisal.API.Services
             var filter = Builders<KeyResultArea>.Filter.Where(r => r.Id == Id);
             var aa = entity.ToBsonDocument();
             var update = new BsonDocument("$set", aa);
-            Collection.UpdateOne(filter, update);
+            Collection.UpdateOne(filter, update, new UpdateOptions { IsUpsert = true });
 
             return null;
         }
@@ -111,7 +116,7 @@ namespace Resourceedge.Appraisal.API.Services
                 var filter = Builders<KeyResultArea>.Filter.Eq("keyOutcomes.Id", id);
                 var update = Builders<KeyResultArea>.Update.Pull("keyOutcomes", keyoutcome);
 
-                 var result = await Collection.FindOneAndUpdateAsync<KeyResultArea>(filter ,update, options: new FindOneAndUpdateOptions<KeyResultArea>{ ReturnDocument = ReturnDocument.After });
+                var result = await Collection.FindOneAndUpdateAsync<KeyResultArea>(filter, update, options: new FindOneAndUpdateOptions<KeyResultArea> { ReturnDocument = ReturnDocument.After });
 
                 return result;
             }
@@ -139,7 +144,6 @@ namespace Resourceedge.Appraisal.API.Services
         public async Task<bool> AddKeyOutcomes(IEnumerable<KeyResultArea> entity)
         {
             Collection.InsertMany(entity);
-
             var superviorsAndClaims = new Dictionary<string, List<Claim>>();
 
             superviorsAndClaims = FormatHodDetailsForClaims(entity, superviorsAndClaims);
@@ -154,19 +158,22 @@ namespace Resourceedge.Appraisal.API.Services
         {
             foreach (var resultArea in entity)
             {
-                if (superviorsAndClaims.ContainsKey(resultArea.HodDetails.Email))
+                if (resultArea.HodDetails.Email != null)
                 {
-                    //Add claims for Supervisor
-                    var currentClaims = superviorsAndClaims[resultArea.HodDetails.Email];
-                    var exisitingClam = currentClaims.FirstOrDefault(X => X.Value == "hod");
-                    if (exisitingClam == null)
+                    if (superviorsAndClaims.ContainsKey(resultArea.HodDetails.Email))
                     {
-                        superviorsAndClaims[resultArea.HodDetails.Email].Add(new Claim("privilege_appraisal", "hod"));
+                        //Add claims for Supervisor
+                        var currentClaims = superviorsAndClaims[resultArea.HodDetails.Email];
+                        var exisitingClam = currentClaims.FirstOrDefault(X => X.Value == "hod");
+                        if (exisitingClam == null)
+                        {
+                            superviorsAndClaims[resultArea.HodDetails.Email].Add(new Claim("privilege_appraisal", "hod"));
+                        }
                     }
-                }
-                else
-                {
-                    superviorsAndClaims[resultArea.HodDetails.Email] = new List<Claim> { new Claim("privilege_appraisal", "hod") };
+                    else
+                    {
+                        superviorsAndClaims[resultArea.HodDetails.Email] = new List<Claim> { new Claim("privilege_appraisal", "hod") };
+                    }
                 }
             }
             return superviorsAndClaims;
@@ -178,20 +185,24 @@ namespace Resourceedge.Appraisal.API.Services
         {
             foreach (var resultArea in entity)
             {
-                if (superviorsAndClaims.ContainsKey(resultArea.AppraiserDetails.Email))
+                if (resultArea.AppraiserDetails.Email != null)
                 {
-                    //Add claims for Supervisor
-                    var currentClaims = superviorsAndClaims[resultArea.AppraiserDetails.Email];
-                    var exisitingClam = currentClaims.FirstOrDefault(X => X.Value == "appraiser");
-                    if (exisitingClam == null)
+                    if (superviorsAndClaims.ContainsKey(resultArea.AppraiserDetails.Email))
                     {
-                        superviorsAndClaims[resultArea.AppraiserDetails.Email].Add(new Claim("privilege_appraisal", "appraiser"));
+                        //Add claims for Supervisor
+                        var currentClaims = superviorsAndClaims[resultArea.AppraiserDetails.Email];
+                        var exisitingClam = currentClaims.FirstOrDefault(X => X.Value == "appraiser");
+                        if (exisitingClam == null)
+                        {
+                            superviorsAndClaims[resultArea.AppraiserDetails.Email].Add(new Claim("privilege_appraisal", "appraiser"));
+                        }
+                    }
+                    else
+                    {
+                        superviorsAndClaims[resultArea.AppraiserDetails.Email] = new List<Claim> { new Claim("privilege_appraisal", "appraiser") };
                     }
                 }
-                else
-                {
-                    superviorsAndClaims[resultArea.AppraiserDetails.Email] = new List<Claim> { new Claim("privilege_appraisal", "appraiser") };
-                }
+
             }
             return superviorsAndClaims;
         }
@@ -213,9 +224,12 @@ namespace Resourceedge.Appraisal.API.Services
             return QueryableCollection.Where(x => x.EmployeeId == userId).ToList();
         }
 
-        public Task<KeyResultArea> Update(ObjectId Id, KeyResultArea entity)
+        public async Task<KeyResultArea> Update(ObjectId Id, KeyResultArea entity)
         {
-            throw new NotImplementedException();
+            var filter = Builders<KeyResultArea>.Filter.Where(r => r.Id == Id);
+            var update = new BsonDocument("$set", entity.ToBsonDocument());
+            var result = await Collection.FindOneAndUpdateAsync(filter, update, options: new FindOneAndUpdateOptions<KeyResultArea> { ReturnDocument = ReturnDocument.After });
+            return result;
         }
 
         public async Task<KeyResultArea> QuerySingleUserKeyOutcome(ObjectId id, ObjectId outcomeId, int UserId)
@@ -234,13 +248,9 @@ namespace Resourceedge.Appraisal.API.Services
         {
             entity.keyOutcomes.Id = outcomeId;
             var filter = Builders<KeyResultArea>.Filter.Where(r => r.Id == Id && r.EmployeeId == UserId && r.keyOutcomes.Any(a => a.Id == outcomeId));
-            //var update = new BsonDocument("$set", entity.ToBsonDocument());
             var bsonElement = entity.keyOutcomes.ToBsonDocument();
-
             var update = Builders<KeyResultArea>.Update.Set("keyOutcomes.$", bsonElement);
-
             var result = await Collection.UpdateOneAsync(filter, update);
-
             return result.ModifiedCount;
         }
 
@@ -252,7 +262,7 @@ namespace Resourceedge.Appraisal.API.Services
                 var oldKeyResultArea = Collection.Find(filter).FirstOrDefault();
                 if (oldKeyResultArea != null)
                 {
-                    if(oldKeyResultArea.HodDetails.EmployeeId == empId && oldKeyResultArea.AppraiserDetails.EmployeeId == empId)
+                    if (oldKeyResultArea.HodDetails.EmployeeId == empId && oldKeyResultArea.AppraiserDetails.EmployeeId == empId)
                     {
                         oldKeyResultArea.Status.Hod = entity.Approve;
                         oldKeyResultArea.Approved = entity.Approve;
@@ -260,6 +270,7 @@ namespace Resourceedge.Appraisal.API.Services
                     else if (whoami == "HOD")
                     {
                         oldKeyResultArea.Status.Hod = entity.Approve;
+                        oldKeyResultArea.Approved = entity.Approve;
                     }
                     else
                     {
@@ -320,7 +331,6 @@ namespace Resourceedge.Appraisal.API.Services
 
             var comparer = EdgeComparer.Get<EmailObject>((x, y) => x.ReceiverEmailAddress == y.ReceiverEmailAddress);
             List<EmailObject> emailObj = keyAreas.Select(x => new EmailObject() { ReceiverEmailAddress = x.HodDetails.Email, ReceiverFullName = x.HodDetails.Name }).ToList();
-            //emailObj.AddRange(keyAreas.Select(x => new EmailObject() { ReceiverEmailAddress = x.AppraiserDetails.Email, ReceiverFullName = x.AppraiserDetails.Name }).ToList());
 
             var distinctEmailObject = emailObj.Distinct(comparer).Select(x => x).ToList();
             var employee = await GetEmployee(keyAreas.FirstOrDefault().EmployeeId);
@@ -373,22 +383,41 @@ namespace Resourceedge.Appraisal.API.Services
             var year = DateTime.Now.Year;
             return QueryableCollection.Any(x => x.EmployeeId == employeeId && x.Year == year);
         }
-    }
 
-    public class Compare : IEqualityComparer<EmailObject>
-    {
-        public bool Equals([AllowNull] EmailObject x, [AllowNull] EmailObject y)
-        {
-            if (Object.ReferenceEquals(x, y)) return true;
+        //public async Task<IEnumerable<NameEmailWithType>> GetAllSupervisorsForClaims()
+        //{
+        //    var comparer = EdgeComparer.Get<NameEmailWithType>((x, y) => x.EmployeeId == y.EmployeeId && x.Email.ToLower() == y.Email.ToLower());
+        //    var CombinedDetails = new List<NameEmailWithType>() { };
+        //    var Hods = QueryableCollection.Select(X => new NameEmailWithType { Email = X.HodDetails.Email, EmployeeId = X.HodDetails.EmployeeId, Name = X.HodDetails.Name, Type = "hod" })
+        //        .ToList().Distinct(new NameEmailComparer());
+        //    var supervisors = QueryableCollection.Select(X => new NameEmailWithType { Email = X.AppraiserDetails.Email, EmployeeId = X.AppraiserDetails.EmployeeId, Name = X.AppraiserDetails.Name, Type = "appraiser" })
+        //        .ToList().Distinct(new NameEmailComparer());
 
-            if (x.ReceiverFullName == y.ReceiverFullName && x.ReceiverEmailAddress == y.ReceiverEmailAddress) return true;
+        //    CombinedDetails.AddRange(Hods);
+        //    CombinedDetails.AddRange(supervisors);
 
-            return false;
-        }
+        //    var superviorsAndClaims = new Dictionary<string, List<Claim>>();
 
-        public int GetHashCode([DisallowNull] EmailObject obj)
-        {
-            return 0;
-        }
+
+        //    var KeyResultAreaFormat = new List<KeyResultArea>();
+
+        //    foreach (var item in Hods)
+        //    {
+        //        KeyResultAreaFormat.Add(new KeyResultArea { HodDetails = item });
+        //    }
+        //    foreach (var item in supervisors)
+        //    {
+        //        KeyResultAreaFormat.Add(new KeyResultArea { AppraiserDetails = item });
+        //    }
+
+        //    KeyResultAreaFormat.RemoveAll(x => x == null);
+
+        //    superviorsAndClaims = FormatHodDetailsForClaims(KeyResultAreaFormat, superviorsAndClaims);
+        //    superviorsAndClaims = FormatAppraiserForClaims(KeyResultAreaFormat, superviorsAndClaims);
+
+        //    await authService.AddUserClaimsByEmail(superviorsAndClaims);
+
+        //    return CombinedDetails;
+        //}
     }
 }

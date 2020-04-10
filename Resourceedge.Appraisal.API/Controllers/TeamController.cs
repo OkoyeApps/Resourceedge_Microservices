@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Resourceedge.Appraisal.API.Interfaces;
 using Resourceedge.Appraisal.Domain.Entities;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace Resourceedge.Appraisal.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/team/{Id}")]
     public class TeamController : Controller

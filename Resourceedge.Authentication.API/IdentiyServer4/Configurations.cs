@@ -66,6 +66,7 @@ namespace Resourceedge.Authentication.API.IdentiyServer4
                      AllowAccessTokensViaBrowser = true,
                      RequireConsent = false,
                      PostLogoutRedirectUris = {"http://localhost:3000", "https://staging-resourceedge.herokuapp.com", "https://resourceedge.herokuapp.com"},
+                     AccessTokenLifetime = 2,
                      //Allow CORS
                      AllowedCorsOrigins = { "http://localhost:3000", "https://staging-resourceedge.herokuapp.com", "https://resourceedge.herokuapp.com" },
 

@@ -87,7 +87,7 @@ namespace Resourceedge.Appraisal.API
             services.AddTransient<IAppraisalResult, AppraisalResultService>();
             services.AddTransient<ITeamRepository, TeamService>();
             services.AddTransient<ICoreValue, CoreValueService>();
-            services.AddTransient<ITokenAccesor, TokenAccessorService>();
+            services.AddScoped<ITokenAccesor, TokenAccessorService>();
             services.AddTransient(typeof(AuthService));
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -103,10 +103,12 @@ namespace Resourceedge.Appraisal.API
             services.AddControllers(setupAction =>
             {
                 setupAction.ReturnHttpNotAcceptable = true;
-            }).AddXmlDataContractSerializerFormatters()
-            .AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
+            })
+            .AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver())
+            .AddXmlDataContractSerializerFormatters();
 
-      
+
+
 
         }
 

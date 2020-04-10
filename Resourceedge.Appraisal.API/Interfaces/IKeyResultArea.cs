@@ -2,6 +2,7 @@
 using Resourceedge.Appraisal.Domain.Entities;
 using Resourceedge.Appraisal.Domain.Models;
 using Resourceedge.Common.Archive;
+using Resourceedge.Common.Models;
 using Resourceedge.Common.Util;
 using Resourceedge.Email.Api.Model;
 using System;
@@ -28,6 +29,9 @@ namespace Resourceedge.Appraisal.API.Interfaces
         bool HasUploadedEpa(int employeeId);
         Task<KeyResultArea> DeleteKeyOutcome(ObjectId id, KeyResultArea entity);
         Task<KeyResultArea> QuerySingleByKeyOutcome(ObjectId id);
+
+        //To be deleted later
+        //Task<IEnumerable<NameEmailWithType>> GetAllSupervisorsForClaims();
 
     }
 }
