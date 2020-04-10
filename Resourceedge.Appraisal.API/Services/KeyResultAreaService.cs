@@ -304,6 +304,11 @@ namespace Resourceedge.Appraisal.API.Services
             }
         }
 
+        public void SetKRAActive()
+        {
+
+        }
+
         public IEnumerable<KeyResultArea> GetKeyResultAreasForAppraiser(int appraiserId, int employeeId)
         {
             var result = QueryableCollection.Where(x => x.HodDetails.EmployeeId == appraiserId || x.AppraiserDetails.EmployeeId == appraiserId && x.EmployeeId == employeeId).ToList();

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using AutoMapper;
+using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Resourceedge.Common.Archive;
@@ -20,8 +21,9 @@ namespace Resourceedge.Employee.API.Services
         private readonly HttpClient HttpClient;
         private readonly IMongoCollection<OldEmployee> Collection;
         private readonly IQueryable<OldEmployee> QueryableCollection;
+        private readonly IMapper mapper;
 
-        public ArchiveServices(IHttpClientFactory _httpClientFactory, ILogger<ArchiveServices> _logger, IDbContext _dbContext)
+        public ArchiveServices(IHttpClientFactory _httpClientFactory, ILogger<ArchiveServices> _logger, IDbContext _dbContext, IMapper _mapper)
         {
             if (_httpClientFactory != null && _logger != null && _dbContext != null)
             {
@@ -39,6 +41,7 @@ namespace Resourceedge.Employee.API.Services
                 throw new ArgumentNullException(nameof(logger));
             }
 
+            mapper = _mapper;
         }
 
         public OldEmployee GetEmployeeByEmail(string email)
@@ -117,9 +120,11 @@ namespace Resourceedge.Employee.API.Services
                 {
                     var content = await response.Content.ReadAsStringAsync();
                     var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-                    var result = JsonSerializer.Deserialize<OldEmployee>(content, options);
+                    var result = JsonSerializer.Deserialize<OldEmployeeDtoForCreate>(content, options);
 
-                    await Insert(result);
+                    var EmployeeToAdd = mapper.Map<OldEmployee>(result);
+
+                    await Insert(EmployeeToAdd);
 
                     return true;
                 }
