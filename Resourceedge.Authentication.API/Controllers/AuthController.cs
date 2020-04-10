@@ -34,7 +34,7 @@ namespace Resourceedge.Authentication.API.Controllers
                 ViewBag.Error = "Email is required";
                 return View(model);
             }
-            var result = await AuthRepo.GetUserbyEmail(model.Email);
+            var result = await AuthRepo.GetUserbyEmailAsync(model.Email);
             if (!result.Item1)
             {
                 ViewData["error"] = result.Item2;
@@ -133,6 +133,13 @@ namespace Resourceedge.Authentication.API.Controllers
 
             if (!ModelState.IsValid)
             {
+                return RedirectToAction("PasswordReset", new { ReturnUrl = "" });
+            }
+
+            var isEmailInDb =await AuthRepo.GetUserbyEmailAsync(model.Email);
+            if(!isEmailInDb.Item1)
+            {
+                ViewBag.Error = isEmailInDb.Item2;
                 return RedirectToAction("PassordReset", new { ReturnUrl = "" });
             }
 

@@ -6,6 +6,7 @@ using Resourceedge.Appraisal.API.Interfaces;
 using Resourceedge.Appraisal.Domain.Entities;
 using Resourceedge.Appraisal.Domain.Models;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 

@@ -325,7 +325,7 @@ namespace Resourceedge.Appraisal.API.Services
 
             var comparer = EdgeComparer.Get<EmailObject>((x, y) => x.ReceiverEmailAddress == y.ReceiverEmailAddress);
             List<EmailObject> emailObj = keyAreas.Select(x => new EmailObject() { ReceiverEmailAddress = x.HodDetails.Email, ReceiverFullName = x.HodDetails.Name }).ToList();
-            emailObj.AddRange(keyAreas.Select(x => new EmailObject() { ReceiverEmailAddress = x.AppraiserDetails.Email, ReceiverFullName = x.AppraiserDetails.Name }).ToList());
+            //emailObj.AddRange(keyAreas.Select(x => new EmailObject() { ReceiverEmailAddress = x.AppraiserDetails.Email, ReceiverFullName = x.AppraiserDetails.Name }).ToList());
 
             var distinctEmailObject = emailObj.Distinct(comparer).Select(x => x).ToList();
             var employee = await GetEmployee(keyAreas.FirstOrDefault().EmployeeId);
@@ -344,7 +344,7 @@ namespace Resourceedge.Appraisal.API.Services
         {
             HttpClient.SetBearerToken(tokenAccesor.TokenResponse.AccessToken);
             var response = await HttpClient.GetAsync($"api/employee/employeeId/{empId}");
-            if (response.IsSuccessStatusCode)
+            if (response.IsSuccessStatusCode && response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 var content = await response.Content.ReadAsByteArrayAsync();
                 var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };

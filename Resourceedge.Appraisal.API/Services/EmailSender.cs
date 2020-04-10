@@ -78,7 +78,6 @@ namespace Resourceedge.Appraisal.API.Services
             try
             {
                 string body = "";
-                var AppDomains = AppDomain.CurrentDomain.FriendlyName;
                 string filename = Path.GetFullPath("EmailTemplate\\AppraisalNotification.html");
                 using (StreamReader sr = new StreamReader(filename))
                 {

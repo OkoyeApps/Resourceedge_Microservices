@@ -46,7 +46,7 @@ namespace Resourceedge.Authentication.API.Services
             return (true, "claim(s) added for user");
         }
 
-        public async Task<(bool, string)> GetUserbyEmail(string email)
+        public async Task<(bool, string)> GetUserbyEmailAsync(string email)
         {
             try
             {

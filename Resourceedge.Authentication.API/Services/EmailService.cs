@@ -33,30 +33,31 @@ namespace Resourceedge.Authentication.API.Services
             {
                 string body = "";
 
-                var fileInfo = new FileInfo(@"Utils\EmailTemplate\ResetPassword.html");
-              var name =   fileInfo.FullName;
-                var exist = fileInfo.Exists;
-                
-                string filename = Path.GetFullPath(@"Utils\EmailTemplate\ResetPassword.html");
-                using (StreamReader sr = new StreamReader(fileInfo.FullName))
+                var tempPath = Path.Combine(Directory.GetCurrentDirectory(), "EmailTemplate\\ResetPassword.html");
+                var fileInfo = new FileInfo(tempPath);
+                string filename = Path.GetFullPath("EmailTemplate\\AppraisalNotification.html");
+                if (fileInfo.Exists)
                 {
-                   
-                    body = await sr.ReadToEndAsync();
+                    using (StreamReader sr = new StreamReader(fileInfo.FullName))
+                    {
+                        body = await sr.ReadToEndAsync();
+                    }
+
+                    body = body.Replace("{FullName}", Name);
+                    body = body.Replace("{GroupName}", "RESOURCE EDGE");
+                    body = body.Replace("{Link}", Url);
+                    body = body.Replace("{Url}", Url);
+
+                    return body;
                 }
-
-                body = body.Replace("{FullName}", Name);
-                body = body.Replace("{GroupName}", "RESOURCE EDGE");
-                body = body.Replace("{Link}", Url);
-                body = body.Replace("{Url}", Url);
-
-                return body;
+                return null;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 //log exception here later
                 return null;
             }
-            
+
         }
 
         public Task<HttpStatusCode> SendMultipleEmail(string subject, string employeeName, EmailDtoForMultiple emailDtos, string message, string title)
