@@ -98,6 +98,17 @@ namespace Resourceedge.Appraisal.API.Services
                             }
                         }
                     }
+
+                    if(result.KeyResultArea.HodDetails.EmployeeId == result.KeyResultArea.AppraiserDetails.EmployeeId)
+                    {
+                        result.HodAccept = new AcceptanceStatus()
+                        {
+                            IsAccepted = true
+                        };
+
+                        result = result.HodApproval("");
+                    }
+
                     var entityToUpdate = result.ToBsonDocument();
                     var update = new BsonDocument("$set", entityToUpdate);
                     Collection.FindOneAndUpdate(filter, update, options: new FindOneAndUpdateOptions<AppraisalResult> { ReturnDocument = ReturnDocument.After });

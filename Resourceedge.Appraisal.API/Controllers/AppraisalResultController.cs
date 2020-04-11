@@ -55,9 +55,10 @@ namespace Resourceedge.Appraisal.API.Controllers
 
             appraisalResult.SubmitAppraisal(appraisalResultToSubmit);
             var appraisalResultToReturn = mapper.Map<IEnumerable<AppraisalResult>>(appraisalResultToSubmit);
-         
 
-            return CreatedAtRoute("MyAppraisal", new { employee = appraisalResultToSubmit.FirstOrDefault().myId, appraisalConfig = appraisalResultToSubmit.FirstOrDefault().AppraisalConfigId, appraisalCycle = appraisalResultToSubmit.FirstOrDefault().AppraisalCycleId }, appraisalResultToReturn);
+            return Ok(new { success = true });
+
+            //return CreatedAtRoute("MyAppraisal", new { employee = appraisalResultToSubmit.FirstOrDefault().myId, appraisalConfig = appraisalResultToSubmit.FirstOrDefault().AppraisalConfigId, appraisalCycle = appraisalResultToSubmit.FirstOrDefault().AppraisalCycleId }, appraisalResultToReturn);
         }
 
         [HttpPost]
@@ -73,7 +74,7 @@ namespace Resourceedge.Appraisal.API.Controllers
             appraisalResult.SubmitAppraisal(appraisalResultToSubmit);
             var appraisalResultToReturn = mapper.Map<IEnumerable<AppraisalResult>>(appraisalResultToSubmit);
 
-            return CreatedAtRoute("MyAppraisal", new { employee = appraisalResultToSubmit.FirstOrDefault().myId, appraisalConfig = appraisalResultToSubmit.FirstOrDefault().AppraisalConfigId, appraisalCycle = appraisalResultToSubmit.FirstOrDefault().AppraisalCycleId }, appraisalResultToReturn);
+            return Ok(new { success = true});
         }
 
         [HttpPatch("{Id}/AcceptAppraisal")]
