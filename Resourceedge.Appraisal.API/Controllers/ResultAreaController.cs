@@ -80,23 +80,23 @@ namespace Resourceedge.Appraisal.API.Controllers
         [HttpPatch("Update/{KeyResultAreaId}")]
         public async Task<IActionResult> UpdateKPI(int empId, string KeyResultAreaId, JsonPatchDocument<KeyResultAreaForUpdateDto> entityForUpdate)
         {
-            var Kpi = new KeyResultAreaForUpdateDto();
-            entityForUpdate.ApplyTo(Kpi);
-
             ObjectId Id = new ObjectId(KeyResultAreaId);
             var keyResult = await resultArea.QuerySingleByUserId(Id, empId);
-
-            if (keyResult != null)
+            if (keyResult == null)
             {
-                var resultAreaForUpdate = mapper.Map<KeyResultAreaForUpdateMainDto>(Kpi);
-
-                var entityToUpdate = resultArea.Update(Id, resultAreaForUpdate);
-                var entityToReturn = mapper.Map<KeyResultAreaDtoForCreation>(entityToUpdate);
-
-                return CreatedAtRoute("Mykpi", new { empId = empId }, entityToReturn);
+                return NotFound();
             }
+            var aa = new KeyResultAreaForUpdateDto();
 
-            return Ok();
+            var resultAreaToPatch = mapper.Map<KeyResultArea, KeyResultAreaForUpdateDto>(keyResult);
+
+            entityForUpdate.ApplyTo(resultAreaToPatch);
+            mapper.Map(resultAreaToPatch, keyResult);
+
+            var entityToUpdate = await resultArea.Update(Id, keyResult);
+            var entityToReturn = mapper.Map<KeyResultAreaDtoForCreation>(entityToUpdate);
+
+            return Ok(entityToReturn);
         }
 
         [HttpPost("Update/{KeyResultAreaId}")]
@@ -149,7 +149,7 @@ namespace Resourceedge.Appraisal.API.Controllers
             var result = await resultArea.HodApproval(empId, memberId, keyResultAreaId, whoami, entity);
             if (result != null)
             {
-                return CreatedAtRoute("GetEmployeeKpiById", new { empId = empId, KeyResultAreaId = result.Id.ToString() }, result);
+                return Ok(result);
             }
 
             return NotFound();
@@ -158,8 +158,6 @@ namespace Resourceedge.Appraisal.API.Controllers
         [HttpPost("Approval")]
         public async Task<IActionResult> ApprovalKeyOutCome(int empId, StatusForUpdateDto entity)
         {
-            //var keyResultAreaId = new ObjectId(KeyResultAreaId);
-
             if (entity == null)
             {
                 return BadRequest();
@@ -170,7 +168,6 @@ namespace Resourceedge.Appraisal.API.Controllers
             {
                 return Ok();
             }
-
             return NoContent();
         }
 
@@ -184,9 +181,8 @@ namespace Resourceedge.Appraisal.API.Controllers
             {
                 resultArea.Delete(objId);
 
-                return Ok(new {success = true });
+                return Ok(new { success = true });
             }
-
             return NoContent();
         }
 
@@ -198,8 +194,8 @@ namespace Resourceedge.Appraisal.API.Controllers
 
             if (keyResult != null)
             {
-               var result = await resultArea.DeleteKeyOutcome(objId, keyResult);
-                if(result == null)
+                var result = await resultArea.DeleteKeyOutcome(objId, keyResult);
+                if (result == null)
                 {
                     return BadRequest();
                 }
@@ -216,24 +212,6 @@ namespace Resourceedge.Appraisal.API.Controllers
             return Ok(result);
         }
 
-        [AllowAnonymous]
-        [Route("check/email/template/for/valid"), HttpGet]
-        public async Task<IActionResult> CheckEmailTemplate()
-        {
-            var temp = Path.Combine(Directory.GetCurrentDirectory(), "EmailTemplate\\AppraisalNotification.html");
-            var fileInfo = new FileInfo(temp);
-            var body = "";
-            //if (fileInfo.Exists)
-            //{
-            //    using (StreamReader stream = new StreamReader(fileInfo.FullName))
-            //    {
-            //        body = await stream.ReadToEndAsync();
-            //    }
 
-            //}
-            resultArea.SendApprovalNotification(new List<KeyResultArea> { new KeyResultArea { EmployeeId = 194, HodDetails = new NameEmail { Email = "c.okoye@genesystechhub.com" } } });
-            return Ok(body);
-
-        }
     }
 }

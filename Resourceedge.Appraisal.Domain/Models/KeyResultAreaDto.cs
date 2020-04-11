@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Resourceedge.Appraisal.Domain.Entities;
+using Resourceedge.Common.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,6 +18,7 @@ namespace Resourceedge.Appraisal.Domain.Models
         public bool? Approved { get; set; }
         public ICollection<KeyOutcome> keyOutcomes { get; set; } = new List<KeyOutcome>();
         public ApprovalStatus Status { get; set; } = new ApprovalStatus();
+        public BsonDateTime CreatedAt { get; set; } = BsonDateTime.Create(DateTime.Now);
 
     }
 

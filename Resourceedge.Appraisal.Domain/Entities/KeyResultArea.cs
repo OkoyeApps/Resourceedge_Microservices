@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using Resourceedge.Common.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,6 +8,7 @@ using System.Text;
 namespace Resourceedge.Appraisal.Domain.Entities
 {
 
+    [BsonIgnoreExtraElements]
     public class KeyResultArea
     {
         public ObjectId Id { get; set; }
@@ -14,24 +16,25 @@ namespace Resourceedge.Appraisal.Domain.Entities
         public int EmployeeId { get; set; }
         public string Name { get; set; }
         public decimal Weight { get; set; }
+        [BsonIgnoreIfDefault]
         public NameEmail HodDetails { get; set; } = new NameEmail();
+        [BsonIgnoreIfDefault]
         public NameEmail AppraiserDetails { get; set; } = new NameEmail();
         public bool? Approved { get; set; }
         public int Year { get; set; } = DateTime.Now.Year;
         public bool IsActive { get; set; }
         public ICollection<KeyOutcome> keyOutcomes { get; set; } = new List<KeyOutcome>();
         public ApprovalStatus Status { get; set; } = new ApprovalStatus();
-        public DateTime CreatedAt { get; set; } = new DateTime();
-        public DateTime UpdatedAt { get; set; }
+        public BsonDateTime CreatedAt { get; set; }
+        public BsonDateTime UpdatedAt { get; set; }
 
 
     }
 
-    public class NameEmail
+    [BsonIgnoreExtraElements]
+    public class NameEmailForResultArea : NameEmail
     {
-        public int EmployeeId { get; set; }
-        public string Name { get; set; }
-        public string Email { get; set; }
+        //public string Type { get; set; }
     }
 
     public class KeyOutcome
