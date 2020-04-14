@@ -18,11 +18,13 @@ namespace Resourceedge.Appraisal.API.Controllers
     {
         private readonly IAppraisalResult appraisalResult;
         private readonly IMapper mapper;
+        private readonly IAppraisalFinalResult finalResultRepo;
 
-        public AppraisalResultController(IAppraisalResult _appraisalResult, IMapper _mapper)
+        public AppraisalResultController(IAppraisalResult _appraisalResult, IMapper _mapper, IAppraisalFinalResult _finalResultRepo)
         {
             appraisalResult = _appraisalResult;
             mapper = _mapper;
+            finalResultRepo = _finalResultRepo;
         }
 
         [HttpGet(Name = "MyAppraisal")]
@@ -56,6 +58,8 @@ namespace Resourceedge.Appraisal.API.Controllers
             appraisalResult.SubmitAppraisal(appraisalResultToSubmit);
             var appraisalResultToReturn = mapper.Map<IEnumerable<AppraisalResult>>(appraisalResultToSubmit);
 
+            finalResultRepo.CalculateResult(appraisalResultToReturn.FirstOrDefault().myId, appraisalResultToReturn.FirstOrDefault().AppraisalCycleId);
+
             return Ok(new { success = true });
 
             //return CreatedAtRoute("MyAppraisal", new { employee = appraisalResultToSubmit.FirstOrDefault().myId, appraisalConfig = appraisalResultToSubmit.FirstOrDefault().AppraisalConfigId, appraisalCycle = appraisalResultToSubmit.FirstOrDefault().AppraisalCycleId }, appraisalResultToReturn);
@@ -73,6 +77,8 @@ namespace Resourceedge.Appraisal.API.Controllers
 
             appraisalResult.SubmitAppraisal(appraisalResultToSubmit);
             var appraisalResultToReturn = mapper.Map<IEnumerable<AppraisalResult>>(appraisalResultToSubmit);
+
+            finalResultRepo.CalculateResult(appraisalResultToReturn.FirstOrDefault().myId, appraisalResultToReturn.FirstOrDefault().AppraisalCycleId);
 
             return Ok(new { success = true});
         }

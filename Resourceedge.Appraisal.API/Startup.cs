@@ -86,6 +86,7 @@ namespace Resourceedge.Appraisal.API
             services.AddTransient<IAppraisalConfig, AppraisalConfigService>();
             services.AddTransient<IAppraisalResult, AppraisalResultService>();
             services.AddTransient<ITeamRepository, TeamService>();
+            services.AddTransient<IAppraisalFinalResult, AppraisalFinalResultService>();
             services.AddTransient<ICoreValue, CoreValueService>();
             services.AddScoped<ITokenAccesor, TokenAccessorService>();
             services.AddTransient(typeof(AuthService));
