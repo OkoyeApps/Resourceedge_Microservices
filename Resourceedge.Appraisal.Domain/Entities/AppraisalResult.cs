@@ -17,6 +17,8 @@ namespace Resourceedge.Appraisal.Domain.Entities
         public string CurrentSupervisor { get; set; }
         public AcceptanceStatus EmployeeAccept { get; set; }
         public AcceptanceStatus HodAccept { get; set; }
+        public AppraisalCalculationByKRA EmployeeCalculation { get; set; }
+        public AppraisalCalculationByKRA FinalCalculation { get; set; }
     }
 
     public class AppraisalKeyOutcome
@@ -37,5 +39,12 @@ namespace Resourceedge.Appraisal.Domain.Entities
     {
         public bool? IsAccepted { get; set; }
         public string Reason { get; set; }
+    }
+
+    public class AppraisalCalculationByKRA
+    {
+        public double ScoreTotal { get; set; }
+        public double Average { get; set; }
+        public double WeightContribution { get; set; }
     }
 }

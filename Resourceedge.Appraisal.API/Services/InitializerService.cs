@@ -112,7 +112,34 @@ namespace Resourceedge.Appraisal.API.Services
 
                     coreValueCollection.InsertMany(data);
                 }
+
+                SeedAppraisalConfig(dbContext);
+
             }
+        }
+
+        private static void SeedAppraisalConfig(IDbContext dbContext)
+        {
+            var collection = dbContext.Database.GetCollection<AppraisalConfig>($"{nameof(AppraisalConfig)}s");
+            if (collection.AsQueryable().Any())
+            {
+                var data = new AppraisalConfig()
+                {
+                    Name = $"{DateTime.Now.Year} Appraisal Cycle",
+                    Year = DateTime.Now.Year,
+                    TotalCycle = 4,
+                    Cycles = new List<AppraisalCycle>()
+                    {
+                        new AppraisalCycle(){StartDate = DateTime.Now, StopDate = DateTime.Now},
+                        new AppraisalCycle(){StartDate = DateTime.Now, StopDate = DateTime.Now},
+                        new AppraisalCycle(){StartDate = DateTime.Now, StopDate = DateTime.Now},
+                        new AppraisalCycle(){StartDate = DateTime.Now, StopDate = DateTime.Now}
+                    }
+                };
+
+                collection.InsertOne(data);
+            }
+
         }
     }
 }

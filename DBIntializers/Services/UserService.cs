@@ -36,14 +36,14 @@ namespace DBIntializers.Services
                     NormalizedEmail = x.Email.ToLowerInvariant(),
                     NormalizedUserName = x.Email.ToLowerInvariant(),
                     SecurityStamp = x.SecurityStamp
-                }).Distinct();
+                }).Distinct().ToList();
 
                 newDbContext.AspNetUsers.AddRange(newUsers);
                 newDbContext.SaveChanges();
 
                 return newUsers.Select(x => x.Id).ToList();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return null;
             }

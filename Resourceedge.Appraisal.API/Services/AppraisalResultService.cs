@@ -9,6 +9,7 @@ using Resourceedge.Appraisal.Domain.Models;
 using Resourceedge.Email.Api.Interfaces;
 using Resourceedge.Email.Api.Model;
 using Resourceedge.Email.Api.SGridClient;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -70,7 +71,15 @@ namespace Resourceedge.Appraisal.API.Services
                         IsAccepted = true
                     };
 
+                    var average = result.KeyOutcomeScore.Average(x => x.EmployeeScore.Value);
                     myAppraisal.KeyResultArea = keyResultArea;
+                    myAppraisal.EmployeeCalculation = new AppraisalCalculationByKRA()
+                    {
+                        ScoreTotal = myAppraisal.KeyOutcomeScore.Sum(x => x.EmployeeScore).Value,
+                        Average = average,
+                        WeightContribution = (average * (Convert.ToDouble(result.KeyResultArea.Weight) / 100) / result.KeyOutcomeScore.Count())
+                    };
+
                     this.InsertResult(myAppraisal);
 
                     emailDto = new SingleEmailDto()
@@ -97,7 +106,7 @@ namespace Resourceedge.Appraisal.API.Services
                                 }
                             }
                         }
-                    }
+                    }                  
 
                     if(result.KeyResultArea.HodDetails.EmployeeId == result.KeyResultArea.AppraiserDetails.EmployeeId)
                     {
@@ -108,7 +117,13 @@ namespace Resourceedge.Appraisal.API.Services
 
                         result = result.HodApproval("");
                     }
-
+                    var average = result.KeyOutcomeScore.Average(x => x.AppraisalScore.Value);
+                    result.FinalCalculation = new AppraisalCalculationByKRA()
+                    {
+                        ScoreTotal = result.KeyOutcomeScore.Sum(x => x.AppraisalScore.Value),
+                        Average = average,
+                        WeightContribution = (average * (Convert.ToDouble(result.KeyResultArea.Weight) / 100) / result.KeyOutcomeScore.Count())
+                    };
                     var entityToUpdate = result.ToBsonDocument();
                     var update = new BsonDocument("$set", entityToUpdate);
                     Collection.FindOneAndUpdate(filter, update, options: new FindOneAndUpdateOptions<AppraisalResult> { ReturnDocument = ReturnDocument.After });
@@ -135,10 +150,17 @@ namespace Resourceedge.Appraisal.API.Services
                             }
                         }
                     }
-                    result.HodAccept = new AcceptanceStatus()
+                    
+                    result.HodAccept = new AcceptanceStatus() { IsAccepted = true };
+                    var average = result.KeyOutcomeScore.Average(x => x.HodScore.Value);
+                    result.FinalCalculation = new AppraisalCalculationByKRA()
                     {
-                        IsAccepted = true
+                        ScoreTotal = result.KeyOutcomeScore.Sum(x => x.AppraisalScore.Value),
+                        Average = average,
+                        WeightContribution = (average * (Convert.ToDouble(result.KeyResultArea.Weight) / 100) / result.KeyOutcomeScore.Count())
+
                     };
+
                     var newAppraisalResult = result.HodApproval("");
                     var entityToUpdate = newAppraisalResult.ToBsonDocument();
                     var update = new BsonDocument("$set", entityToUpdate);
@@ -217,5 +239,7 @@ namespace Resourceedge.Appraisal.API.Services
             }
             return null;
         }
+
+
     }
 }
