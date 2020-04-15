@@ -113,7 +113,7 @@ namespace Resourceedge.Appraisal.API.Services
                     coreValueCollection.InsertMany(data);
                 }
 
-                SeedAppraisalConfig(dbContext);
+               // SeedAppraisalConfig(dbContext);
 
             }
         }

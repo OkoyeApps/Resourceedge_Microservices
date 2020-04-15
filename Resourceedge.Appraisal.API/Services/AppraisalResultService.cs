@@ -101,6 +101,7 @@ namespace Resourceedge.Appraisal.API.Services
                 {
                     result.CurrentSupervisor = "Appraisal";
                     result.AppraiseeFeedBack = entity.AppraiseeFeedBack;
+                    result.IsAccepted = true;
 
                     foreach (var item in entity.KeyOutcomeScore)
                     {

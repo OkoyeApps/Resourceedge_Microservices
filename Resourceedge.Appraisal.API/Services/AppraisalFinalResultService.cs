@@ -29,17 +29,32 @@ namespace Resourceedge.Appraisal.API.Services
             try
             {
                 var appraisalResult = AppraisalResultCollection.AsQueryable().Where(x => x.myId == empId && x.AppraisalCycleId == cycleId);
-
-                var finalResult = new FinalAppraisalResult()
+                var filter = Builders<FinalAppraisalResult>.Filter.Where(x => x.EmployeeId == empId && x.AppraisalCycleId == cycleId);
+                var oldFinalResult = Collection.Find(filter).FirstOrDefault();
+                if(oldFinalResult == null)
                 {
-                    AppraisalConfigId = appraisalResult.FirstOrDefault().AppraisalConfigId,
-                    AppraisalCycleId = appraisalResult.FirstOrDefault().AppraisalCycleId,
-                    EmployeeId = appraisalResult.FirstOrDefault().myId,
-                    EmployeeResult = appraisalResult.Sum(x => x.EmployeeCalculation.WeightContribution),
-                    FinalResult = (appraisalResult.FirstOrDefault().IsAccepted != null) ? appraisalResult.Sum(x => x.FinalCalculation.WeightContribution) : 0
-                };
+                    var finalResult = new FinalAppraisalResult()
+                    {
+                        AppraisalConfigId = appraisalResult.FirstOrDefault().AppraisalConfigId,
+                        AppraisalCycleId = appraisalResult.FirstOrDefault().AppraisalCycleId,
+                        EmployeeId = appraisalResult.FirstOrDefault().myId,
+                        EmployeeResult = appraisalResult.Sum(x => x.EmployeeCalculation.WeightContribution),
+                        FinalResult = (appraisalResult.FirstOrDefault().IsAccepted != null) ? appraisalResult.Sum(x => x.FinalCalculation.WeightContribution) : 0
+                    };
 
-                Collection.InsertOne(finalResult);
+                    Collection.InsertOne(finalResult);
+                }
+                else
+                {
+                    oldFinalResult.EmployeeResult = appraisalResult.Sum(x => x.EmployeeCalculation.WeightContribution);
+                    oldFinalResult.FinalResult = appraisalResult.Sum(x => x.FinalCalculation.WeightContribution);
+
+                    var finalResult = oldFinalResult.ToBsonDocument();
+                    var update = new BsonDocument("$set", finalResult);
+
+                    Collection.UpdateOne(filter, update);
+                }
+           
             }
             catch (Exception ex)
             {
