@@ -66,7 +66,7 @@ namespace Resourceedge.Appraisal.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult SumbitApprisal(IEnumerable<AppraisalResultForCreationDtoString> appraisalResultForCreation)
+        public async Task<IActionResult> SumbitApprisal(IEnumerable<AppraisalResultForCreationDtoString> appraisalResultForCreation)
         {
             if (!appraisalResultForCreation.Any())
             {
@@ -75,10 +75,12 @@ namespace Resourceedge.Appraisal.API.Controllers
 
             var appraisalResultToSubmit = mapper.Map<IEnumerable<AppraisalResultForCreationDtoString>, IEnumerable<AppraisalResultForCreationDto>>(appraisalResultForCreation);
 
-            appraisalResult.SubmitAppraisal(appraisalResultToSubmit);
+            await appraisalResult.SubmitAppraisal(appraisalResultToSubmit);
             var appraisalResultToReturn = mapper.Map<IEnumerable<AppraisalResult>>(appraisalResultToSubmit);
-
-            finalResultRepo.CalculateResult(appraisalResultToReturn.FirstOrDefault().myId, appraisalResultToReturn.FirstOrDefault().AppraisalCycleId);
+            if(appraisalResultToReturn.Any())
+            {
+                finalResultRepo.CalculateResult(appraisalResultToReturn.FirstOrDefault().myId, appraisalResultToReturn.FirstOrDefault().AppraisalCycleId);
+            }
 
             return Ok(new { success = true});
         }

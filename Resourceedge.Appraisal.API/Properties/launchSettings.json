@@ -3,7 +3,7 @@
     "Resourceedge.Appraisal.API": {
       "commandName": "Project",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Production"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "applicationUrl": "https://localhost:6000;http://localhost:6001"
     },

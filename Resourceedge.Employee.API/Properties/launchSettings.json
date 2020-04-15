@@ -3,7 +3,7 @@
     "Resourceedge.Employee.API": {
       "commandName": "Project",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Production"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "applicationUrl": "https://localhost:8000;http://localhost:8001"
     },

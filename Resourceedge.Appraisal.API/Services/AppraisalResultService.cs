@@ -47,7 +47,7 @@ namespace Resourceedge.Appraisal.API.Services
             Collection.InsertOne(entity);
         }
 
-        public async void SubmitAppraisal(IEnumerable<AppraisalResultForCreationDto> entities)
+        public async Task SubmitAppraisal(IEnumerable<AppraisalResultForCreationDto> entities)
         {
             foreach (var entity in entities)
             {
@@ -71,13 +71,13 @@ namespace Resourceedge.Appraisal.API.Services
                         IsAccepted = true
                     };
 
-                    var average = result.KeyOutcomeScore.Average(x => x.EmployeeScore.Value);
+                    var average = myAppraisal.KeyOutcomeScore.Average(x => x.EmployeeScore.Value);
                     myAppraisal.KeyResultArea = keyResultArea;
                     myAppraisal.EmployeeCalculation = new AppraisalCalculationByKRA()
                     {
                         ScoreTotal = myAppraisal.KeyOutcomeScore.Sum(x => x.EmployeeScore).Value,
                         Average = average,
-                        WeightContribution = (average * (Convert.ToDouble(result.KeyResultArea.Weight) / 100) / result.KeyOutcomeScore.Count())
+                        WeightContribution = (average * (Convert.ToDouble(myAppraisal.KeyResultArea.Weight) / 100) / myAppraisal.KeyOutcomeScore.Count())
                     };
 
                     this.InsertResult(myAppraisal);

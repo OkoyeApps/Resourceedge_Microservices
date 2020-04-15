@@ -36,7 +36,7 @@ namespace Resourceedge.Appraisal.API.Services
                     AppraisalCycleId = appraisalResult.FirstOrDefault().AppraisalCycleId,
                     EmployeeId = appraisalResult.FirstOrDefault().myId,
                     EmployeeResult = appraisalResult.Sum(x => x.EmployeeCalculation.WeightContribution),
-                    FinalResult = appraisalResult.Sum(x => x.FinalCalculation.WeightContribution)
+                    FinalResult = (appraisalResult.FirstOrDefault().IsAccepted != null) ? appraisalResult.Sum(x => x.FinalCalculation.WeightContribution) : 0
                 };
 
                 Collection.InsertOne(finalResult);

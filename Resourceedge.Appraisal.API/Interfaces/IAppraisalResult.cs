@@ -15,7 +15,7 @@ namespace Resourceedge.Appraisal.API.Interfaces
 
         void InsertResult(AppraisalResult entity);
 
-        void SubmitAppraisal(IEnumerable<AppraisalResultForCreationDto> entity);
+        Task SubmitAppraisal(IEnumerable<AppraisalResultForCreationDto> entity);
 
         Task<UpdateResult> EmployeeAcceptOrReject(ObjectId appraisalResultId, AcceptanceStatus status);
 
