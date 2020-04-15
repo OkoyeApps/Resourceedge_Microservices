@@ -6,6 +6,7 @@ using Resourceedge.Appraisal.API.Interfaces;
 using Resourceedge.Appraisal.Domain.DBContexts;
 using Resourceedge.Appraisal.Domain.Entities;
 using Resourceedge.Appraisal.Domain.Models;
+using Resourceedge.Common.Util;
 using Resourceedge.Email.Api.Interfaces;
 using Resourceedge.Email.Api.Model;
 using Resourceedge.Email.Api.SGridClient;
@@ -55,20 +56,20 @@ namespace Resourceedge.Appraisal.API.Services
 
         public async Task SubmitAppraisal(IEnumerable<AppraisalResultForCreationDto> entities)
         {
+            var employee = await resultAreaRepo.GetEmployee(entities.FirstOrDefault().myId);
+            string subject = $"Pending Appraisal for {employee.FullName}";
+            string title = "Pending Appraisal";
+            List<SingleEmailDto> emailDto = new List<SingleEmailDto>();
+
             foreach (var entity in entities)
             {
                 var filter = Builders<AppraisalResult>.Filter.Where(a => a.myId == entity.myId && a.AppraisalConfigId == entity.AppraisalConfigId && a.AppraisalCycleId == entity.AppraisalCycleId && a.KeyResultArea.Id == entity.KeyResultAreaId);
                 var result = Collection.Find(a => a.myId == entity.myId && a.AppraisalConfigId == entity.AppraisalConfigId && a.AppraisalCycleId == entity.AppraisalCycleId && a.KeyResultArea.Id == entity.KeyResultAreaId).FirstOrDefault();
                 var keyResultArea = await resultAreaRepo.QuerySingle(entity.KeyResultAreaId);
-                var employee = await resultAreaRepo.GetEmployee(entity.myId);
 
-                string subject = $"Pending Appraisal for {employee.FullName}";
-                string msg = $"has submitted his/her appraisal for the key result area {keyResultArea.Name}, Kindly attend to it as soon as possible.";
-                string title = "Approval For Approval";
+                string msg = $"has performed his/her appraisal for these quarter, Kindly attend to it as soon as possible.";
                 string url = "https://resourceedge.herokuapp.com/";
-
-
-                SingleEmailDto emailDto = new SingleEmailDto();
+                
                 if (entity.whoami == null)
                 {
                     var myAppraisal = mapper.Map<AppraisalResult>(entity);
@@ -88,12 +89,20 @@ namespace Resourceedge.Appraisal.API.Services
 
                     this.InsertResult(myAppraisal);
 
-                    emailDto = new SingleEmailDto()
+
+
+                    SingleEmailDto email = new SingleEmailDto()
                     {
                         ReceiverFullName = keyResultArea.AppraiserDetails.Name,
                         ReceiverEmailAddress = keyResultArea.AppraiserDetails.Email,
                         HtmlContent = await sender.FormatEmail(employee.FullName, keyResultArea.AppraiserDetails.Name, msg, title, url),
                     };
+
+                    if (email.HtmlContent == null)
+                    {
+                        email.HtmlContent = @$"<p>{employee.FullName} has participated in these quarter, kindly login to resourceedge and Appraise him/her.</p>";
+                    }
+                    emailDto.Add(email);
                 }
                 else if (entity.whoami == "APPRAISAL")
                 {
@@ -135,12 +144,17 @@ namespace Resourceedge.Appraisal.API.Services
                     var update = new BsonDocument("$set", entityToUpdate);
                     Collection.FindOneAndUpdate(filter, update, options: new FindOneAndUpdateOptions<AppraisalResult> { ReturnDocument = ReturnDocument.After });
 
-                    emailDto = new SingleEmailDto()
+                    SingleEmailDto email = new SingleEmailDto()
                     {
                         ReceiverFullName = keyResultArea.HodDetails.Name,
                         ReceiverEmailAddress = keyResultArea.HodDetails.Email,
                         HtmlContent = await sender.FormatEmail(employee.FullName, keyResultArea.HodDetails.Name, msg, title, url),
                     };
+
+                    if (email.HtmlContent == null)
+                    {
+                        email.HtmlContent = @$"<p>{keyResultArea.AppraiserDetails.Name} has Completed your appraisal for these quarter, kindly login to resourceedge and View your result.</p>";
+                    }
                 }
                 else if (entity.whoami == "HOD")
                 {
@@ -173,15 +187,31 @@ namespace Resourceedge.Appraisal.API.Services
                     var update = new BsonDocument("$set", entityToUpdate);
                     Collection.FindOneAndUpdate(filter, update, options: new FindOneAndUpdateOptions<AppraisalResult> { ReturnDocument = ReturnDocument.After });
                     msg = $"who is your HOD has completed your appraisal for the key result area {keyResultArea.Name}, You are to accept or reject it";
-                    emailDto = new SingleEmailDto()
+                    SingleEmailDto email = new SingleEmailDto()
                     {
                         ReceiverFullName = employee.FullName,
                         ReceiverEmailAddress = employee.Email,
                         HtmlContent = await sender.FormatEmail(keyResultArea.HodDetails.Name, employee.FullName, msg, title, url),
                     };
+
+                    if (email.HtmlContent == null)
+                    {
+                        email.HtmlContent = @$"<p>{keyResultArea.HodDetails.Name} has Completed your appraisal for these quarter, kindly login to resourceedge and View your result.</p>";
+                    }
                 }
-                await sender.SendToSingleEmployee(subject, emailDto);
+                              
             }
+
+            List<SingleEmailDto> emailDtos = new List<SingleEmailDto>();
+            foreach (var item in emailDto)
+            {
+                if(!emailDtos.Any(x => x.ReceiverEmailAddress == item.ReceiverEmailAddress))
+                {
+                    emailDtos.Add(item);
+                }
+            }
+
+            emailDtos.ForEach(async e => await sender.SendToSingleEmployee(subject, e));           
 
         }
 
