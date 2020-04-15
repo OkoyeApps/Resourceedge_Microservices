@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using Resourceedge.Common.Archive;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Resourceedge.Employee.API.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     [Route("api/employee")]
     public class OldEmployeeController : ControllerBase

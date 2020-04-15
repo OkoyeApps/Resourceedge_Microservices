@@ -20,5 +20,8 @@ namespace Resourceedge.Appraisal.API.Interfaces
         Task<UpdateResult> EmployeeAcceptOrReject(ObjectId appraisalResultId, AcceptanceStatus status);
 
         Task<UpdateResult> HodApprovalOrReject(ObjectId appraisalResultId, AcceptanceStatus status);
+        Task<IEnumerable<AppraisalForApprovalDto>> GetEmployeesToAppraise(int employeeId, string whoami);
+
+        Task<bool> HasPaticipatedInAppraisal(int employeeId);
     }
 }

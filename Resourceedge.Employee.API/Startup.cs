@@ -57,8 +57,9 @@ namespace Resourceedge.Employee.API
             {
                 setupAction.ReturnHttpNotAcceptable = true;
 
-            }).AddXmlDataContractSerializerFormatters()
-            .AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
+            })
+            .AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver())
+            .AddXmlDataContractSerializerFormatters();
 
 
             services.Configure<MvcOptions>(config =>

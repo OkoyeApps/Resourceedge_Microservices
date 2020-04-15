@@ -26,7 +26,6 @@ using System.Threading.Tasks;
 using System.Collections;
 using Resourceedge.Common.Util;
 using Resourceedge.Common.Models;
-using Resourceedge.Common.Comparers;
 
 namespace Resourceedge.Appraisal.API.Services
 {
@@ -52,8 +51,6 @@ namespace Resourceedge.Appraisal.API.Services
             sender = _sender;
             HttpClient = _httpClientFactory.CreateClient("EmployeeService");
             AuthHttpClient = _httpClientFactory.CreateClient("Auth");
-
-            //Collection.UpdateMany(Builders<KeyResultArea>.Filter.Where(x=>x.EmployeeId !=0 ), Builders<KeyResultArea>.Update.Unset(x => x.HodDetails.Type));
             //Collection.UpdateMany(Builders<KeyResultArea>.Filter.Where(x=>x.EmployeeId !=0 ), Builders<KeyResultArea>.Update.Unset(x => x.AppraiserDetails.Type));
             //HttpClient.SetBearerToken(tokenAccesor.TokenResponse.AccessToken);
             //AuthHttpClient.SetBearerToken(tokenAccesor.TokenResponse.AccessToken);

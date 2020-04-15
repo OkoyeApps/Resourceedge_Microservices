@@ -12,8 +12,10 @@ namespace Resourceedge.Common.Models
         //public string Type { get; set; }
     }
 
-    public class NameEmailWithType : NameEmail
+    public class NameEmailWithFullName
     {
-        //public string Type { get; set; }
+        public int EmployeeId { get; set; }
+        public string FullName { get; set; }
+        public string Email { get; set; }
     }
 }

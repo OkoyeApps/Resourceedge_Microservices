@@ -5,6 +5,7 @@ using MongoDB.Bson;
 using Resourceedge.Appraisal.API.Interfaces;
 using Resourceedge.Appraisal.Domain.Entities;
 using Resourceedge.Appraisal.Domain.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -57,7 +58,9 @@ namespace Resourceedge.Appraisal.API.Controllers
             var appraisalResultToReturn = mapper.Map<IEnumerable<AppraisalResult>>(appraisalResultToSubmit);
          
 
-            return CreatedAtRoute("MyAppraisal", new { employee = appraisalResultToSubmit.FirstOrDefault().myId, appraisalConfig = appraisalResultToSubmit.FirstOrDefault().AppraisalConfigId, appraisalCycle = appraisalResultToSubmit.FirstOrDefault().AppraisalCycleId }, appraisalResultToReturn);
+            return CreatedAtRoute("MyAppraisal", new { employee = appraisalResultToSubmit.FirstOrDefault().myId, appraisalConfig = 
+                appraisalResultToSubmit.FirstOrDefault().AppraisalConfigId, 
+                appraisalCycle = appraisalResultToSubmit.FirstOrDefault().AppraisalCycleId }, appraisalResultToReturn);
         }
 
         [HttpPost]
@@ -73,7 +76,9 @@ namespace Resourceedge.Appraisal.API.Controllers
             appraisalResult.SubmitAppraisal(appraisalResultToSubmit);
             var appraisalResultToReturn = mapper.Map<IEnumerable<AppraisalResult>>(appraisalResultToSubmit);
 
-            return CreatedAtRoute("MyAppraisal", new { employee = appraisalResultToSubmit.FirstOrDefault().myId, appraisalConfig = appraisalResultToSubmit.FirstOrDefault().AppraisalConfigId, appraisalCycle = appraisalResultToSubmit.FirstOrDefault().AppraisalCycleId }, appraisalResultToReturn);
+            return CreatedAtRoute("MyAppraisal", new { employee = appraisalResultToSubmit.FirstOrDefault().myId, 
+                appraisalConfig = appraisalResultToSubmit.FirstOrDefault().AppraisalConfigId,
+                appraisalCycle = appraisalResultToSubmit.FirstOrDefault().AppraisalCycleId }, appraisalResultToReturn);
         }
 
         [HttpPatch("{Id}/AcceptAppraisal")]
@@ -105,8 +110,30 @@ namespace Resourceedge.Appraisal.API.Controllers
                 return Ok();
 
             return NotFound();
+        }
+
+        [Route("hasparticipated/{employeeId}"),HttpGet]
+        public async Task<IActionResult> HasParticipated(int employeeId)
+        {
+            var result = await appraisalResult.HasPaticipatedInAppraisal(employeeId);
+            return  Ok(result);
+        }
 
 
+        [Route("getemployeetoappraise/{employeeid}/{whoami}")]
+        public async Task<IActionResult> GetEmployeesWithSubmittedAppraisal(int employeeid, string whoami)
+        {
+            try
+            {
+                var result = await appraisalResult.GetEmployeesToAppraise(employeeid, whoami);
+                var Dto = mapper.Map<IEnumerable<AppraisalForApprovalViewDto>>(result);
+                return Ok(Dto);
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

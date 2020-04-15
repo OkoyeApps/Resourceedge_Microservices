@@ -26,10 +26,10 @@ namespace Resourceedge.Appraisal.API.Controllers
             mapper = _mapper;
         }
 
-        [HttpGet(Name = "GetEmployeesToAppraise")]
-        public async Task<IActionResult> GetEmployeesToAppraise(int Id)
+        [Route("{type?}"), HttpGet(Name = "GetEmployeesToAppraise")]
+        public async Task<IActionResult> GetEmployeesToAppraise(int Id, string type = null)
         {
-            var resultFromRepo = await teamRepo.GetEmployeesToApproveEPA(Id);
+            var resultFromRepo = await teamRepo.GetEmployeesToApproveEPA(Id, type);
             var resultForView = mapper.Map<IEnumerable<OldEmployeeDto>>(resultFromRepo);
             return Ok(resultForView);
         }
