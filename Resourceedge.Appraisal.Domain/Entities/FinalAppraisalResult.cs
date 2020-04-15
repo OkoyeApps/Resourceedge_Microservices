@@ -13,6 +13,7 @@ namespace Resourceedge.Appraisal.Domain.Entities
         public int EmployeeId { get; set; }
         public double EmployeeResult { get; set; }
         public double FinalResult { get; set; }
+        public string Year { get; set; } = DateTime.Now.Year.ToString();
     }
     
 }

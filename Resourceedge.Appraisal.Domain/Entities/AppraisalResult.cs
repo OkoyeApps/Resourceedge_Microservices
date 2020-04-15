@@ -1,4 +1,5 @@
 ﻿using MongoDB.Bson;
+using System;
 using System.Collections.Generic;
 
 namespace Resourceedge.Appraisal.Domain.Entities
@@ -19,6 +20,7 @@ namespace Resourceedge.Appraisal.Domain.Entities
         public AcceptanceStatus HodAccept { get; set; }
         public AppraisalCalculationByKRA EmployeeCalculation { get; set; }
         public AppraisalCalculationByKRA FinalCalculation { get; set; }
+        public string Year { get; set; } = DateTime.Now.Year.ToString();
     }
 
     public class AppraisalKeyOutcome

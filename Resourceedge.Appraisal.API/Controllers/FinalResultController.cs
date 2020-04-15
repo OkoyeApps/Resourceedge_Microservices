@@ -34,9 +34,27 @@ namespace Resourceedge.Appraisal.API.Controllers
             var result = finalResultRepo.GetEmployeeResult(empId, CycleId);
             var resultToReturn = mapper.Map<FinalResultDtoForView>(result);
 
-            return Ok(resultToReturn);
+            if (resultToReturn != null)
+            {
+                return Ok(resultToReturn);
+            }
+
+            return NoContent();
         }
 
+        [HttpGet("{cycleId}")]
+        public async Task<IActionResult> AllAppraisalResult(string cycleId)
+        {
+            ObjectId CycleId = new ObjectId(cycleId);
+
+            var result = await finalResultRepo.GetAllResultByCycle(CycleId);
+            if(result != null)
+            {
+                return Ok(result);
+            }
+            
+            return NoContent();
+        }
 
 
     }

@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Resourceedge.Appraisal.API.Helpers;
@@ -13,7 +12,6 @@ using Resourceedge.Email.Api.SGridClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Resourceedge.Appraisal.API.Services
@@ -115,9 +113,9 @@ namespace Resourceedge.Appraisal.API.Services
                                 }
                             }
                         }
-                    }                  
+                    }
 
-                    if(result.KeyResultArea.HodDetails.EmployeeId == result.KeyResultArea.AppraiserDetails.EmployeeId)
+                    if (result.KeyResultArea.HodDetails.EmployeeId == result.KeyResultArea.AppraiserDetails.EmployeeId)
                     {
                         result.HodAccept = new AcceptanceStatus()
                         {
@@ -159,7 +157,7 @@ namespace Resourceedge.Appraisal.API.Services
                             }
                         }
                     }
-                    
+
                     result.HodAccept = new AcceptanceStatus() { IsAccepted = true };
                     var average = result.KeyOutcomeScore.Average(x => x.HodScore.Value);
                     result.FinalCalculation = new AppraisalCalculationByKRA()
@@ -304,14 +302,14 @@ namespace Resourceedge.Appraisal.API.Services
                 IEnumerable<string> IdsToSend = result.Select(x => x.EmployeeDetail.EmployeeId.ToString()).Distinct();
                 foreach (var item in result)
                 {
-                    if(!finalResultToReturn.Any(x=>x.EmployeeDetail.EmployeeId == item.EmployeeDetail.EmployeeId))
+                    if (!finalResultToReturn.Any(x => x.EmployeeDetail.EmployeeId == item.EmployeeDetail.EmployeeId))
                     {
                         finalResultToReturn.Add(item);
                     }
                     else
                     {
                         var oldResult = finalResultToReturn.FirstOrDefault(x => x.EmployeeDetail.EmployeeId == item.EmployeeDetail.EmployeeId);
-                        if(oldResult != null)
+                        if (oldResult != null)
                         {
                             var oldKra = oldResult.Kra_Details.ToList();
                             oldKra.AddRange(item.Kra_Details);
@@ -319,7 +317,7 @@ namespace Resourceedge.Appraisal.API.Services
                         }
                     }
                 }
-                
+
 
                 var returnedEmployees = await teamRepository.FetchEmployeesDetailsFromEmployeeService(IdsToSend);
                 if (returnedEmployees.Any())

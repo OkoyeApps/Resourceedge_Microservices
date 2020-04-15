@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using Resourceedge.Appraisal.Domain.Entities;
+using Resourceedge.Appraisal.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace Resourceedge.Appraisal.API.Interfaces
     public interface IAppraisalFinalResult
     {
         void CalculateResult(int empId, ObjectId cycleId);
-        IEnumerable<FinalAppraisalResult> GetAllResultByCycle(ObjectId cycleId);
+        Task<IEnumerable<FinalAppraisalResultForViewDto>> GetAllResultByCycle(ObjectId cycleId);
         FinalAppraisalResult GetEmployeeResult(int empId, ObjectId cycleId);
 
 
