@@ -16,6 +16,11 @@ namespace Resourceedge.Appraisal.Domain.Profiles
             CreateMap<AppraisalResult, AppraisalResultForCreationDto>();
             CreateMap<AppraisalKeyOutcome, AppraisalKeyOutcomeDto>();
             CreateMap<AppraisalKeyOutcomeDto, AppraisalKeyOutcome>();
+            CreateMap<AppraisalResult, AppraisalResultForViewDto>();
+            CreateMap<AppraisalResultForViewDto, AppraisalResult>();
+
+            CreateMap<AppraisalForApprovalDto, AppraisalForApprovalViewDto>();
+            CreateMap<AppraisalForApprovalViewDto, AppraisalForApprovalDto>();
 
             CreateMap<AppraisalResultForCreationDtoString, AppraisalResultForCreationDto>()
                 .ForMember(des => des.AppraisalConfigId, opt => opt.MapFrom(src => ObjectId.Parse(src.AppraisalConfigId)))

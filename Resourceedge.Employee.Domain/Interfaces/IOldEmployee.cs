@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Resourceedge.Common.Archive;
+using Resourceedge.Common.Models;
 
 namespace Resourceedge.Employee.Domain.Interfaces
 {
@@ -16,7 +17,7 @@ namespace Resourceedge.Employee.Domain.Interfaces
         OldEmployee GetEmployeeByEmployeeId(int employeeId);
         OldEmployee GetEmployeeByObjectId(ObjectId Id);
         OldEmployee GetEmployeeByEmail(string email);
-        PagedList<OldEmployeeForViewDto> GetEmployeesWithSeachQuery(int empId, PaginationResourceParameter resourceParam);
+        PagedList<NameEmailWithFullName> GetEmployeesWithSeachQuery(int empId, PaginationResourceParameter resourceParam);
         Task<IEnumerable<OldEmployee>> GetMultipleEmployeesById(IEnumerable<int> Ids);
         Task<bool> AddNewEmployeeByEmail(string email);
         Task<bool> AddMultipleEmployeeByEmail(IList<string> emails);

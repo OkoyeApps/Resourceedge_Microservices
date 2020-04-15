@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Resourceedge.Common.Archive;
+using Resourceedge.Common.Models;
 using Resourceedge.Common.Util;
 using Resourceedge.Employee.Domain.DbContext;
 using Resourceedge.Employee.Domain.Interfaces;
@@ -77,12 +78,12 @@ namespace Resourceedge.Employee.API.Services
             return result;
         }
 
-        public PagedList<OldEmployeeForViewDto> GetEmployeesWithSeachQuery(int empId, PaginationResourceParameter resourceParam)
+        public PagedList<NameEmailWithFullName> GetEmployeesWithSeachQuery(int empId, PaginationResourceParameter resourceParam)
         {
 
             var list = QueryableCollection.Where(SearchPredicate(empId, resourceParam.SearchQuery))
-                                          .Select(a => new OldEmployeeForViewDto() { Email = a.EmpEmail, FullName = a.FullName, EmployeeId = a.EmployeeId }).AsQueryable();
-            var pagedList = PagedList<OldEmployeeForViewDto>.Create(list, resourceParam.PageNumber, resourceParam.PageSize);
+                                          .Select(a => new NameEmailWithFullName() { Email = a.EmpEmail, FullName = a.FullName, EmployeeId = a.EmployeeId }).AsQueryable();
+            var pagedList = PagedList<NameEmailWithFullName>.Create(list, resourceParam.PageNumber, resourceParam.PageSize);
 
             return pagedList;
         }
@@ -90,8 +91,8 @@ namespace Resourceedge.Employee.API.Services
 
         private Func<OldEmployee, bool> SearchPredicate(int empId, string SearchQuery)
         {
-            return e => e.FullName.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase) || e.EmpEmail.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase)
-            && e.EmployeeId != empId && e.Isactive == true;
+            return e => (e.FullName.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase) || e.EmpEmail.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase))
+            && (e.EmployeeId != empId && e.Isactive == true);
             
         }
 

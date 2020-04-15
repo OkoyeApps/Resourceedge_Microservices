@@ -5,6 +5,7 @@ using MongoDB.Bson;
 using Resourceedge.Appraisal.API.Interfaces;
 using Resourceedge.Appraisal.Domain.Entities;
 using Resourceedge.Appraisal.Domain.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -114,8 +115,30 @@ namespace Resourceedge.Appraisal.API.Controllers
                 return Ok();
 
             return NotFound();
+        }
+
+        [Route("hasparticipated/{employeeId}"),HttpGet]
+        public async Task<IActionResult> HasParticipated(int employeeId)
+        {
+            var result = await appraisalResult.HasPaticipatedInAppraisal(employeeId);
+            return  Ok(result);
+        }
 
 
+        [Route("getemployeetoappraise/{employeeid}/{whoami}")]
+        public async Task<IActionResult> GetEmployeesWithSubmittedAppraisal(int employeeid, string whoami)
+        {
+            try
+            {
+                var result = await appraisalResult.GetEmployeesToAppraise(employeeid, whoami);
+                var Dto = mapper.Map<IEnumerable<AppraisalForApprovalViewDto>>(result);
+                return Ok(Dto);
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

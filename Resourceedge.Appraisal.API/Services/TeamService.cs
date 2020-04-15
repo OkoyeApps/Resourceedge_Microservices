@@ -62,9 +62,18 @@ namespace Resourceedge.Appraisal.API.Services
             return new List<OldEmployeeDto>();
         }
 
-        public async Task<IEnumerable<OldEmployeeDto>> GetEmployeesToApproveEPA(int employeeId)
+        public async Task<IEnumerable<OldEmployeeDto>> GetEmployeesToApproveEPA(int employeeId, string type)
         {
-            var EmployeesToAppraise = QueryableCollection.Where(x => x.HodDetails.EmployeeId == employeeId).Select(x => x.EmployeeId.ToString()).Distinct().ToList();
+            var EmployeesToAppraise = new List<string>();
+            if(string.IsNullOrEmpty(type) || type != "appraisal")
+            {
+                EmployeesToAppraise =  QueryableCollection.Where(x => x.HodDetails.EmployeeId == employeeId).Select(x => x.EmployeeId.ToString()).Distinct().ToList();
+            }
+            else
+            {
+                EmployeesToAppraise = QueryableCollection.Where(x => x.HodDetails.EmployeeId == employeeId || x.AppraiserDetails.EmployeeId == employeeId).Select(x => x.EmployeeId.ToString()).Distinct().ToList();
+            }
+                
 
             if (EmployeesToAppraise.Any())
             {

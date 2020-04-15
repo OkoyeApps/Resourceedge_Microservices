@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Resourceedge.Appraisal.API.Helpers;
@@ -12,6 +13,7 @@ using Resourceedge.Email.Api.SGridClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Resourceedge.Appraisal.API.Services
@@ -20,12 +22,14 @@ namespace Resourceedge.Appraisal.API.Services
     {
         public readonly IMongoCollection<AppraisalResult> Collection;
         public readonly IMongoCollection<KeyResultArea> KraCollection;
+        public readonly IMongoCollection<BsonDocument> BsonCollection;
         private readonly IDbContext context;
         private readonly IMapper mapper;
         private readonly IKeyResultArea resultAreaRepo;
         private readonly IEmailSender sender;
+        private readonly ITeamRepository teamRepository;
 
-        public AppraisalResultService(IDbContext _context, IMapper _mapper, ISGClient _client, IKeyResultArea _resultAreaRepo, IEmailSender _sender)
+        public AppraisalResultService(IDbContext _context, IMapper _mapper, ISGClient _client, IKeyResultArea _resultAreaRepo, IEmailSender _sender, ITeamRepository _teamRepository)
         {
             Collection = _context.Database.GetCollection<AppraisalResult>($"{nameof(AppraisalResult)}s");
             KraCollection = _context.Database.GetCollection<KeyResultArea>($"{nameof(KeyResultArea)}s");
@@ -34,6 +38,10 @@ namespace Resourceedge.Appraisal.API.Services
             mapper = _mapper;
             resultAreaRepo = _resultAreaRepo;
             sender = _sender;
+            teamRepository = _teamRepository;
+            BsonCollection = _context.Database.GetCollection<BsonDocument>("grades");
+
+
         }
 
         public IEnumerable<AppraisalResult> Get(ObjectId AppraisalConfigId, ObjectId CycleId, int? EmployeeId)
@@ -93,7 +101,7 @@ namespace Resourceedge.Appraisal.API.Services
                 {
                     result.CurrentSupervisor = "Appraisal";
                     result.AppraiseeFeedBack = entity.AppraiseeFeedBack;
-                    
+
                     foreach (var item in entity.KeyOutcomeScore)
                     {
                         if (result.KeyOutcomeScore.Any(a => a.KeyOutcomeId == item.KeyOutcomeId))
@@ -172,11 +180,10 @@ namespace Resourceedge.Appraisal.API.Services
                         ReceiverEmailAddress = employee.Email,
                         HtmlContent = await sender.FormatEmail(keyResultArea.HodDetails.Name, employee.FullName, msg, title, url),
                     };
-
                 }
                 await sender.SendToSingleEmployee(subject, emailDto);
             }
-                
+
         }
 
         public async Task<UpdateResult> EmployeeAcceptOrReject(ObjectId appraisalResultId, AcceptanceStatus status)
@@ -186,8 +193,8 @@ namespace Resourceedge.Appraisal.API.Services
 
             if (appraisalResult != null)
             {
-                appraisalResult.EmployeeAccept = new AcceptanceStatus() 
-                { 
+                appraisalResult.EmployeeAccept = new AcceptanceStatus()
+                {
                     IsAccepted = status.IsAccepted.Value
                 };
 
@@ -221,7 +228,6 @@ namespace Resourceedge.Appraisal.API.Services
                 var entityToUpdate = newAppraisalResult.ToBsonDocument();
                 var update = new BsonDocument("$set", entityToUpdate);
 
-
                 SingleEmailDto emailDto = new SingleEmailDto()
                 {
                     ReceiverFullName = employee.FullName,
@@ -234,12 +240,108 @@ namespace Resourceedge.Appraisal.API.Services
                 {
                     await sender.SendToSingleEmployee(subject, emailDto);
                 }
-
                 return res;
             }
             return null;
         }
 
+        public async Task<IEnumerable<AppraisalForApprovalDto>> GetEmployeesToAppraise(int employeeId, string whoAmI)
+        {
+            var year = DateTime.Now.Year;
+            whoAmI = whoAmI == "hod" ? "HodDetails" : "AppraiserDetails";
+            var match = new BsonDocument
+            {
+                {
+                    "$match" ,
+                    new BsonDocument
+                    {
+                        {$"{whoAmI}.EmployeeId", employeeId }
+                        ,
+                        {"Year", new BsonDocument{
 
+                            {"$eq",  year}
+
+                        } }
+                    }
+                }
+            };
+
+            var project = new BsonDocument
+            {
+                {
+                    "$project", new BsonDocument{
+                        { "EmployeeDetail", new BsonDocument{
+                         { "EmployeeId" , "$EmployeeId" }
+                        }
+                     }
+                    }
+
+                }
+            };
+
+            var lookup = new BsonDocument
+            {
+                {
+                    "$lookup", new BsonDocument{
+                        {"from", "AppraisalResults" },
+                        {"localField", "_id"},
+                        {"foreignField", "KeyResultArea._id" },
+                        {"as", "Kra_Details" }
+                    }
+                }
+            };
+
+
+            var pipeline = new[] { match, project, lookup };
+            var lookupResult = KraCollection.Aggregate<AppraisalForApprovalDto>(pipeline);
+
+            var result = lookupResult.ToList();
+            var finalResultToReturn = new List<AppraisalForApprovalDto>();
+            if (result.Count > 1)
+            {
+                //get Equivalent Employee Details for each one
+                IEnumerable<string> IdsToSend = result.Select(x => x.EmployeeDetail.EmployeeId.ToString()).Distinct();
+                foreach (var item in result)
+                {
+                    if(!finalResultToReturn.Any(x=>x.EmployeeDetail.EmployeeId == item.EmployeeDetail.EmployeeId))
+                    {
+                        finalResultToReturn.Add(item);
+                    }
+                    else
+                    {
+                        var oldResult = finalResultToReturn.FirstOrDefault(x => x.EmployeeDetail.EmployeeId == item.EmployeeDetail.EmployeeId);
+                        if(oldResult != null)
+                        {
+                            var oldKra = oldResult.Kra_Details.ToList();
+                            oldKra.AddRange(item.Kra_Details);
+                            oldResult.Kra_Details = oldKra;
+                        }
+                    }
+                }
+                
+
+                var returnedEmployees = await teamRepository.FetchEmployeesDetailsFromEmployeeService(IdsToSend);
+                if (returnedEmployees.Any())
+                {
+                    foreach (var employee in returnedEmployees)
+                    {
+                        var currentEmployee = finalResultToReturn.FirstOrDefault(x => x.EmployeeDetail.EmployeeId == employee.EmployeeId);
+                        currentEmployee.EmployeeDetail.Email = employee.Email;
+                        currentEmployee.EmployeeDetail.EmpStaffId = employee.StaffId;
+                        currentEmployee.EmployeeDetail.FullName = employee.FullName;
+                        currentEmployee.EmployeeDetail.Company = employee.Subgroup.Name;
+                    }
+                }
+            }
+            return finalResultToReturn;
+        }
+
+        public async Task<bool> HasPaticipatedInAppraisal(int employeeId)
+        {
+            var result = Collection.AsQueryable().Any(x => x.myId == employeeId);
+            return result;
+        }
     }
+
+
 }
