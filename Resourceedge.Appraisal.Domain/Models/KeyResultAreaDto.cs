@@ -35,6 +35,8 @@ namespace Resourceedge.Appraisal.Domain.Models
         public string whoami { get; set; }
         public ICollection<KeyOutcome> keyOutcomes { get; set; } = new List<KeyOutcome>();
         public ApprovalStatus Status { get; set; } = new ApprovalStatus();
+        public AppraisalCalculationByKRA EmployeeCalculation { get; set; } = new AppraisalCalculationByKRA();
+        public AppraisalCalculationByKRA FinalCalculation { get; set; } = new AppraisalCalculationByKRA();
     }
 
     public  class  KeyResultAreaSuperviorCliams
