@@ -66,9 +66,14 @@ namespace Resourceedge.Appraisal.API.Controllers
        }
 
         [HttpPost("Activate/{cycleId}")]
-        public IActionResult ActivateAppraisal()
+        public IActionResult ActivateAppraisal(string cycleId)
         {
-            return Ok();
+            var result = appraisalConfig.ActivateCycle(cycleId);
+            if (result)
+            {
+                return Ok(new { success = true });
+            }
+            return Ok(new { success = false });
         }
     }
 }

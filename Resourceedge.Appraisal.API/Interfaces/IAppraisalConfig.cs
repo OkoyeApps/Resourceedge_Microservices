@@ -15,5 +15,6 @@ namespace Resourceedge.Appraisal.API.Interfaces
         public bool Insert(AppraisalConfig entity);
         public Task<AppraisalConfig> Update(ObjectId Id, AppraisalCycle entity);
         public AppraisalCycleForAppraisal GetActiveCycle();
+        public bool ActivateCycle(string cycleId);
     }
 }
