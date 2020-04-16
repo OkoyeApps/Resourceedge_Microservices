@@ -5,6 +5,7 @@ using Resourceedge.Appraisal.API.Interfaces;
 using Resourceedge.Appraisal.API.ResourceParamters;
 using Resourceedge.Appraisal.Domain.DBContexts;
 using Resourceedge.Appraisal.Domain.Entities;
+using Resourceedge.Appraisal.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,7 +47,7 @@ namespace Resourceedge.Appraisal.API.Services
             try
             {
                 Collection.InsertOne(entity);
-                return true; ;
+                return true; 
             }
             catch (Exception ex)
             {
@@ -80,6 +81,16 @@ namespace Resourceedge.Appraisal.API.Services
             }
         }
 
-     
+        public AppraisalCycleForAppraisal GetActiveCycle()
+        {
+            return Collection.Find(c => c.Year == DateTime.Now.Year).ToList()
+                .Select( x => new AppraisalCycleForAppraisal { 
+                    ConfigId = x.Id,
+                    Cycle = x.Cycles
+                    .Where(y => y.isActive == true)
+                    .FirstOrDefault() 
+                }).FirstOrDefault();
+        }
+
     }
 }

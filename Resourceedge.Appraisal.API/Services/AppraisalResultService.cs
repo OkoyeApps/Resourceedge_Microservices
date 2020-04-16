@@ -57,162 +57,180 @@ namespace Resourceedge.Appraisal.API.Services
         public async Task SubmitAppraisal(IEnumerable<AppraisalResultForCreationDto> entities)
         {
             var employee = await resultAreaRepo.GetEmployee(entities.FirstOrDefault().myId);
-            string subject = $"Pending Appraisal for {employee.FullName}";
             string title = "Pending Appraisal";
+            string subject = "";
             List<SingleEmailDto> emailDto = new List<SingleEmailDto>();
-
-            foreach (var entity in entities)
+           
+            if (employee != null)
             {
-                var filter = Builders<AppraisalResult>.Filter.Where(a => a.myId == entity.myId && a.AppraisalConfigId == entity.AppraisalConfigId && a.AppraisalCycleId == entity.AppraisalCycleId && a.KeyResultArea.Id == entity.KeyResultAreaId);
-                var result = Collection.Find(a => a.myId == entity.myId && a.AppraisalConfigId == entity.AppraisalConfigId && a.AppraisalCycleId == entity.AppraisalCycleId && a.KeyResultArea.Id == entity.KeyResultAreaId).FirstOrDefault();
-                var keyResultArea = await resultAreaRepo.QuerySingle(entity.KeyResultAreaId);
+                 subject = $"Pending Appraisal for {employee.FullName}";
 
-                string msg = $"has performed his/her appraisal for these quarter, Kindly attend to it as soon as possible.";
-                string url = "https://resourceedge.herokuapp.com/";
-                
-                if (entity.whoami == null)
+                try
                 {
-                    var myAppraisal = mapper.Map<AppraisalResult>(entity);
-                    myAppraisal.EmployeeAccept = new AcceptanceStatus()
+                    foreach (var entity in entities)
                     {
-                        IsAccepted = true
-                    };
+                        var filter = Builders<AppraisalResult>.Filter.Where(a => a.myId == entity.myId && a.AppraisalConfigId == entity.AppraisalConfigId && a.AppraisalCycleId == entity.AppraisalCycleId && a.KeyResultArea.Id == entity.KeyResultAreaId);
+                        var result = Collection.Find(a => a.myId == entity.myId && a.AppraisalConfigId == entity.AppraisalConfigId && a.AppraisalCycleId == entity.AppraisalCycleId && a.KeyResultArea.Id == entity.KeyResultAreaId).FirstOrDefault();
+                        var keyResultArea = await resultAreaRepo.QuerySingle(entity.KeyResultAreaId);
 
-                    var average = myAppraisal.KeyOutcomeScore.Average(x => x.EmployeeScore.Value);
-                    myAppraisal.KeyResultArea = keyResultArea;
-                    myAppraisal.EmployeeCalculation = new AppraisalCalculationByKRA()
-                    {
-                        ScoreTotal = myAppraisal.KeyOutcomeScore.Sum(x => x.EmployeeScore).Value,
-                        Average = average,
-                        WeightContribution = (average * (Convert.ToDouble(myAppraisal.KeyResultArea.Weight) / 100) / myAppraisal.KeyOutcomeScore.Count())
-                    };
+                        string msg = $"has performed his/her appraisal for these quarter, Kindly attend to it as soon as possible.";
+                        string url = "https://resourceedge.herokuapp.com/";
 
-                    this.InsertResult(myAppraisal);
-
-
-
-                    SingleEmailDto email = new SingleEmailDto()
-                    {
-                        ReceiverFullName = keyResultArea.AppraiserDetails.Name,
-                        ReceiverEmailAddress = keyResultArea.AppraiserDetails.Email,
-                        HtmlContent = await sender.FormatEmail(employee.FullName, keyResultArea.AppraiserDetails.Name, msg, title, url),
-                    };
-
-                    if (email.HtmlContent == null)
-                    {
-                        email.HtmlContent = @$"<p>{employee.FullName} has participated in these quarter, kindly login to resourceedge and Appraise him/her.</p>";
-                    }
-                    emailDto.Add(email);
-                }
-                else if (entity.whoami == "APPRAISAL")
-                {
-                    result.CurrentSupervisor = "Appraisal";
-                    result.AppraiseeFeedBack = entity.AppraiseeFeedBack;
-                    result.IsAccepted = true;
-
-                    foreach (var item in entity.KeyOutcomeScore)
-                    {
-                        if (result.KeyOutcomeScore.Any(a => a.KeyOutcomeId == item.KeyOutcomeId))
+                        if (entity.whoami == null)
                         {
-                            foreach (var item1 in result.KeyOutcomeScore)
+                            var myAppraisal = mapper.Map<AppraisalResult>(entity);
+                            myAppraisal.EmployeeAccept = new AcceptanceStatus()
                             {
-                                if (item.KeyOutcomeId == item1.KeyOutcomeId)
+                                IsAccepted = true
+                            };
+
+                            var average = myAppraisal.KeyOutcomeScore.Average(x => x.EmployeeScore.Value);
+                            myAppraisal.KeyResultArea = keyResultArea;
+                            myAppraisal.EmployeeCalculation = new AppraisalCalculationByKRA()
+                            {
+                                ScoreTotal = myAppraisal.KeyOutcomeScore.Sum(x => x.EmployeeScore).Value,
+                                Average = average,
+                                WeightContribution = (average * (Convert.ToDouble(myAppraisal.KeyResultArea.Weight) / 100) / myAppraisal.KeyOutcomeScore.Count())
+                            };
+
+                            this.InsertResult(myAppraisal);
+
+
+
+                            SingleEmailDto email = new SingleEmailDto()
+                            {
+                                ReceiverFullName = keyResultArea.AppraiserDetails.Name,
+                                ReceiverEmailAddress = keyResultArea.AppraiserDetails.Email,
+                                HtmlContent = await sender.FormatEmail(employee.FullName, keyResultArea.AppraiserDetails.Name, msg, title, url),
+                            };
+
+                            if (email.HtmlContent == null)
+                            {
+                                email.HtmlContent = @$"<p>{employee.FullName} has participated in these quarter, kindly login to resourceedge and Appraise him/her.</p>";
+                            }
+                            emailDto.Add(email);
+                        }
+                        else if (entity.whoami == "APPRAISAL")
+                        {
+                            result.CurrentSupervisor = "Appraisal";
+                            result.AppraiseeFeedBack = entity.AppraiseeFeedBack;
+                            result.IsAccepted = true;
+
+                            foreach (var item in entity.KeyOutcomeScore)
+                            {
+                                if (result.KeyOutcomeScore.Any(a => a.KeyOutcomeId == item.KeyOutcomeId))
                                 {
-                                    result.KeyOutcomeScore.FirstOrDefault(x => x.KeyOutcomeId == item1.KeyOutcomeId).AppraisalScore = item.EmployeeScore;
+                                    foreach (var item1 in result.KeyOutcomeScore)
+                                    {
+                                        if (item.KeyOutcomeId == item1.KeyOutcomeId)
+                                        {
+                                            result.KeyOutcomeScore.FirstOrDefault(x => x.KeyOutcomeId == item1.KeyOutcomeId).AppraisalScore = item.EmployeeScore;
+                                        }
+                                    }
                                 }
                             }
+
+                            if (result.KeyResultArea.HodDetails.EmployeeId == result.KeyResultArea.AppraiserDetails.EmployeeId)
+                            {
+                                result.HodAccept = new AcceptanceStatus()
+                                {
+                                    IsAccepted = true
+                                };
+
+                                result = result.HodApproval("");
+                            }
+                            var average = result.KeyOutcomeScore.Average(x => x.AppraisalScore.Value);
+                            result.FinalCalculation = new AppraisalCalculationByKRA()
+                            {
+                                ScoreTotal = result.KeyOutcomeScore.Sum(x => x.AppraisalScore.Value),
+                                Average = average,
+                                WeightContribution = (average * (Convert.ToDouble(result.KeyResultArea.Weight) / 100) / result.KeyOutcomeScore.Count())
+                            };
+                            var entityToUpdate = result.ToBsonDocument();
+                            var update = new BsonDocument("$set", entityToUpdate);
+                            Collection.FindOneAndUpdate(filter, update, options: new FindOneAndUpdateOptions<AppraisalResult> { ReturnDocument = ReturnDocument.After });
+
+                            SingleEmailDto email = new SingleEmailDto()
+                            {
+                                ReceiverFullName = keyResultArea.HodDetails.Name,
+                                ReceiverEmailAddress = keyResultArea.HodDetails.Email,
+                                HtmlContent = await sender.FormatEmail(employee.FullName, keyResultArea.HodDetails.Name, msg, title, url),
+                            };
+
+                            if (email.HtmlContent == null)
+                            {
+                                email.HtmlContent = @$"<p>{keyResultArea.AppraiserDetails.Name} has Completed your appraisal for these quarter, kindly login to resourceedge and View your result.</p>";
+                            }
+                        }
+                        else if (entity.whoami == "HOD")
+                        {
+                            foreach (var item in entity.KeyOutcomeScore)
+                            {
+                                if (result.KeyOutcomeScore.Any(a => a.KeyOutcomeId == item.KeyOutcomeId))
+                                {
+                                    foreach (var item1 in result.KeyOutcomeScore)
+                                    {
+                                        if (item.KeyOutcomeId == item1.KeyOutcomeId)
+                                        {
+                                            result.KeyOutcomeScore.FirstOrDefault(x => x.KeyOutcomeId == item1.KeyOutcomeId).HodScore = item.EmployeeScore;
+                                        }
+                                    }
+                                }
+                            }
+
+                            result.HodAccept = new AcceptanceStatus() { IsAccepted = true };
+                            var average = result.KeyOutcomeScore.Average(x => x.HodScore.Value);
+                            result.FinalCalculation = new AppraisalCalculationByKRA()
+                            {
+                                ScoreTotal = result.KeyOutcomeScore.Sum(x => x.AppraisalScore.Value),
+                                Average = average,
+                                WeightContribution = (average * (Convert.ToDouble(result.KeyResultArea.Weight) / 100) / result.KeyOutcomeScore.Count())
+
+                            };
+
+                            var newAppraisalResult = result.HodApproval("");
+                            var entityToUpdate = newAppraisalResult.ToBsonDocument();
+                            var update = new BsonDocument("$set", entityToUpdate);
+                            Collection.FindOneAndUpdate(filter, update, options: new FindOneAndUpdateOptions<AppraisalResult> { ReturnDocument = ReturnDocument.After });
+                            msg = $"who is your HOD has completed your appraisal for the key result area {keyResultArea.Name}, You are to accept or reject it";
+                            SingleEmailDto email = new SingleEmailDto()
+                            {
+                                ReceiverFullName = employee.FullName,
+                                ReceiverEmailAddress = employee.Email,
+                                HtmlContent = await sender.FormatEmail(keyResultArea.HodDetails.Name, employee.FullName, msg, title, url),
+                            };
+
+                            if (email.HtmlContent == null)
+                            {
+                                email.HtmlContent = @$"<p>{keyResultArea.HodDetails.Name} has Completed your appraisal for these quarter, kindly login to resourceedge and View your result.</p>";
+                            }
+                        }
+
+                    }
+
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+                finally
+                {
+                    List<SingleEmailDto> emailDtos = new List<SingleEmailDto>();
+                    foreach (var item in emailDto)
+                    {
+                        if (!emailDtos.Any(x => x.ReceiverEmailAddress == item.ReceiverEmailAddress))
+                        {
+                            emailDtos.Add(item);
                         }
                     }
 
-                    if (result.KeyResultArea.HodDetails.EmployeeId == result.KeyResultArea.AppraiserDetails.EmployeeId)
+                    if (emailDtos.Any())
                     {
-                        result.HodAccept = new AcceptanceStatus()
-                        {
-                            IsAccepted = true
-                        };
-
-                        result = result.HodApproval("");
+                        emailDtos.ForEach(async e => await sender.SendToSingleEmployee(subject, e));
                     }
-                    var average = result.KeyOutcomeScore.Average(x => x.AppraisalScore.Value);
-                    result.FinalCalculation = new AppraisalCalculationByKRA()
-                    {
-                        ScoreTotal = result.KeyOutcomeScore.Sum(x => x.AppraisalScore.Value),
-                        Average = average,
-                        WeightContribution = (average * (Convert.ToDouble(result.KeyResultArea.Weight) / 100) / result.KeyOutcomeScore.Count())
-                    };
-                    var entityToUpdate = result.ToBsonDocument();
-                    var update = new BsonDocument("$set", entityToUpdate);
-                    Collection.FindOneAndUpdate(filter, update, options: new FindOneAndUpdateOptions<AppraisalResult> { ReturnDocument = ReturnDocument.After });
-
-                    SingleEmailDto email = new SingleEmailDto()
-                    {
-                        ReceiverFullName = keyResultArea.HodDetails.Name,
-                        ReceiverEmailAddress = keyResultArea.HodDetails.Email,
-                        HtmlContent = await sender.FormatEmail(employee.FullName, keyResultArea.HodDetails.Name, msg, title, url),
-                    };
-
-                    if (email.HtmlContent == null)
-                    {
-                        email.HtmlContent = @$"<p>{keyResultArea.AppraiserDetails.Name} has Completed your appraisal for these quarter, kindly login to resourceedge and View your result.</p>";
-                    }
-                }
-                else if (entity.whoami == "HOD")
-                {
-                    foreach (var item in entity.KeyOutcomeScore)
-                    {
-                        if (result.KeyOutcomeScore.Any(a => a.KeyOutcomeId == item.KeyOutcomeId))
-                        {
-                            foreach (var item1 in result.KeyOutcomeScore)
-                            {
-                                if (item.KeyOutcomeId == item1.KeyOutcomeId)
-                                {
-                                    result.KeyOutcomeScore.FirstOrDefault(x => x.KeyOutcomeId == item1.KeyOutcomeId).HodScore = item.EmployeeScore;
-                                }
-                            }
-                        }
-                    }
-
-                    result.HodAccept = new AcceptanceStatus() { IsAccepted = true };
-                    var average = result.KeyOutcomeScore.Average(x => x.HodScore.Value);
-                    result.FinalCalculation = new AppraisalCalculationByKRA()
-                    {
-                        ScoreTotal = result.KeyOutcomeScore.Sum(x => x.AppraisalScore.Value),
-                        Average = average,
-                        WeightContribution = (average * (Convert.ToDouble(result.KeyResultArea.Weight) / 100) / result.KeyOutcomeScore.Count())
-
-                    };
-
-                    var newAppraisalResult = result.HodApproval("");
-                    var entityToUpdate = newAppraisalResult.ToBsonDocument();
-                    var update = new BsonDocument("$set", entityToUpdate);
-                    Collection.FindOneAndUpdate(filter, update, options: new FindOneAndUpdateOptions<AppraisalResult> { ReturnDocument = ReturnDocument.After });
-                    msg = $"who is your HOD has completed your appraisal for the key result area {keyResultArea.Name}, You are to accept or reject it";
-                    SingleEmailDto email = new SingleEmailDto()
-                    {
-                        ReceiverFullName = employee.FullName,
-                        ReceiverEmailAddress = employee.Email,
-                        HtmlContent = await sender.FormatEmail(keyResultArea.HodDetails.Name, employee.FullName, msg, title, url),
-                    };
-
-                    if (email.HtmlContent == null)
-                    {
-                        email.HtmlContent = @$"<p>{keyResultArea.HodDetails.Name} has Completed your appraisal for these quarter, kindly login to resourceedge and View your result.</p>";
-                    }
-                }
-                              
-            }
-
-            List<SingleEmailDto> emailDtos = new List<SingleEmailDto>();
-            foreach (var item in emailDto)
-            {
-                if(!emailDtos.Any(x => x.ReceiverEmailAddress == item.ReceiverEmailAddress))
-                {
-                    emailDtos.Add(item);
                 }
             }
-
-            emailDtos.ForEach(async e => await sender.SendToSingleEmployee(subject, e));           
-
         }
 
         public async Task<UpdateResult> EmployeeAcceptOrReject(ObjectId appraisalResultId, AcceptanceStatus status)

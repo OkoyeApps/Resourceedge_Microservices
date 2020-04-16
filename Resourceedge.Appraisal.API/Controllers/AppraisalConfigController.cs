@@ -56,5 +56,19 @@ namespace Resourceedge.Appraisal.API.Controllers
             }
             return ValidationProblem(ModelState);
         }
+
+       [HttpGet("GetActive")]
+       public IActionResult GetCurrentAppraisal()
+       {
+            var result = appraisalConfig.GetActiveCycle();
+
+            return Ok(result);
+       }
+
+        [HttpPost("Activate/{cycleId}")]
+        public IActionResult ActivateAppraisal()
+        {
+            return Ok();
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Resourceedge.Appraisal.Domain.Entities;
+﻿using MongoDB.Bson;
+using Resourceedge.Appraisal.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -21,6 +22,13 @@ namespace Resourceedge.Appraisal.Domain.Models
         public DateTime Start { get; set; }
         [Required]
         public DateTime Stop { get; set; }
+        public bool? isActive { get; set; }
+    }
+
+    public class AppraisalCycleForAppraisal
+    {
+        public ObjectId ConfigId { get; set; }
+        public AppraisalCycle Cycle { get; set; }
     }
 
 }
