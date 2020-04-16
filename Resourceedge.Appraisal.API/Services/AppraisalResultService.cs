@@ -7,6 +7,7 @@ using Resourceedge.Appraisal.API.Interfaces;
 using Resourceedge.Appraisal.Domain.DBContexts;
 using Resourceedge.Appraisal.Domain.Entities;
 using Resourceedge.Appraisal.Domain.Models;
+using Resourceedge.Appraisal.Domain.Queries;
 using Resourceedge.Email.Api.Interfaces;
 using Resourceedge.Email.Api.Model;
 using Resourceedge.Email.Api.SGridClient;
@@ -22,7 +23,7 @@ namespace Resourceedge.Appraisal.API.Services
     {
         public readonly IMongoCollection<AppraisalResult> Collection;
         public readonly IMongoCollection<KeyResultArea> KraCollection;
-        public readonly IMongoCollection<BsonDocument> BsonCollection;
+        public readonly IMongoCollection<AppraisalConfig> AppraisalConfigCollection;
         private readonly IDbContext context;
         private readonly IMapper mapper;
         private readonly IKeyResultArea resultAreaRepo;
@@ -39,7 +40,7 @@ namespace Resourceedge.Appraisal.API.Services
             resultAreaRepo = _resultAreaRepo;
             sender = _sender;
             teamRepository = _teamRepository;
-            BsonCollection = _context.Database.GetCollection<BsonDocument>("grades");
+            AppraisalConfigCollection = _context.Database.GetCollection<AppraisalConfig>($"{nameof(AppraisalConfig)}s");
 
 
         }
@@ -115,9 +116,9 @@ namespace Resourceedge.Appraisal.API.Services
                                 }
                             }
                         }
-                    }                  
+                    }
 
-                    if(result.KeyResultArea.HodDetails.EmployeeId == result.KeyResultArea.AppraiserDetails.EmployeeId)
+                    if (result.KeyResultArea.HodDetails.EmployeeId == result.KeyResultArea.AppraiserDetails.EmployeeId)
                     {
                         result.HodAccept = new AcceptanceStatus()
                         {
@@ -159,7 +160,7 @@ namespace Resourceedge.Appraisal.API.Services
                             }
                         }
                     }
-                    
+
                     result.HodAccept = new AcceptanceStatus() { IsAccepted = true };
                     var average = result.KeyOutcomeScore.Average(x => x.HodScore.Value);
                     result.FinalCalculation = new AppraisalCalculationByKRA()
@@ -246,10 +247,12 @@ namespace Resourceedge.Appraisal.API.Services
             return null;
         }
 
-        public async Task<IEnumerable<AppraisalForApprovalDto>> GetEmployeesToAppraise(int employeeId, string whoAmI)
+        public async Task<IEnumerable<AppraisalForApprovalDto>> GetEmployeesToAppraise(int employeeId, string appraisalConfigurationId, string appraisalCycleId, string whoAmI)
         {
             var year = DateTime.Now.Year;
             whoAmI = whoAmI == "hod" ? "HodDetails" : "AppraiserDetails";
+
+            var aa = Builders<AppraisalForApprovalDto>.Filter.ElemMatch<AppraisalResult>(x => x.Kra_Details, y => y.AppraisalConfigId == ObjectId.Parse(appraisalConfigurationId));
             var match = new BsonDocument
             {
                 {
@@ -293,25 +296,152 @@ namespace Resourceedge.Appraisal.API.Services
             };
 
 
-            var pipeline = new[] { match, project, lookup };
+            var project2 = new BsonDocument
+            {
+                {
+                    "$project", new BsonDocument
+                    {
+                        {
+                            "Kra_Details", new BsonDocument
+                            {
+                                {
+                                    "$filter" , new BsonDocument
+                                    {
+                                        { "input", "$Kra_Details"},
+                                        {"as", "item" },
+                                        {
+                                            "cond", new BsonDocument
+                                            {
+                                                {
+                                                    "$and",new BsonArray
+                                                    {
+                                                        new BsonDocument
+                                                        {
+                                                            {"$eq",
+                                                                new BsonArray(new dynamic[] { "$$item.AppraisalConfigId", ObjectId.Parse(appraisalConfigurationId)})
+                                                            }
+                                                        },
+                                                          new BsonDocument
+                                                          {
+                                                               {"$eq",
+                                                                  new BsonArray(new dynamic[] { "$$item.AppraisalCycleId", ObjectId.Parse(appraisalCycleId)})
+                                                               }
+                                                          }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                         { "EmployeeDetail", "$EmployeeDetail"}
+                    }
+                }
+            };
+
+            var lookup2 = new BsonDocument
+            {
+                {
+                    "$lookup", new BsonDocument
+                    {
+                       {"from", "FinalAppraisalResults" },
+                        {"localField", "EmployeeDetail.EmployeeId"},
+                        {"foreignField", "EmployeeId" },
+                        {"as", "Temp_Appraisal_Result" }
+                    }
+                }
+            };
+
+            var project3 = new BsonDocument(allowDuplicateNames: true)
+            {
+                {
+                    "$project", new BsonDocument(allowDuplicateNames: true)
+                    {
+                        {
+                            "Temp_Appraisal_Result", new BsonDocument
+                            {
+                                {
+                                    "$filter" , new BsonDocument
+                                    {
+                                        { "input", "$Temp_Appraisal_Result"},
+                                        {"as", "item" },
+                                        {
+                                            "cond", new BsonDocument
+                                            {
+                                                {
+                                                    "$and",new BsonArray
+                                                    {
+                                                        new BsonDocument
+                                                        {
+                                                            {"$eq",
+                                                                new BsonArray(new dynamic[] { "$$item.AppraisalConfigId", ObjectId.Parse(appraisalConfigurationId)})
+                                                            }
+                                                        },
+                                                          new BsonDocument
+                                                          {
+                                                               {"$eq",
+                                                                  new BsonArray(new dynamic[] { "$$item.AppraisalCycleId", ObjectId.Parse(appraisalCycleId)})
+                                                               }
+                                                          }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                         { "EmployeeDetail", "$EmployeeDetail"},
+                        {"Kra_Details", "$Kra_Details" },
+                        {
+                            "Appraisal_Result", new BsonDocument
+                            {
+                                 {
+                                    "$arrayElemAt", new BsonArray(new dynamic[] {"$Temp_Appraisal_Result", 0 })
+                            }
+                        }
+                       }
+                    }
+                }
+            };
+
+            var project4 = new BsonDocument
+            {
+                {
+                    "$project", new BsonDocument{
+                       { "Appraisal_Result", new BsonDocument{
+                         { "EmployeeId" , "$EmployeeDetail.EmployeeId" },
+                           {"AppraisalConfigId",  ObjectId.Parse(appraisalConfigurationId) },
+                           {"AppraisalCycleId", ObjectId.Parse(appraisalCycleId) }
+                        } 
+                     },
+                        { "EmployeeDetail", "$EmployeeDetail"},
+                        {"Kra_Details", "$Kra_Details" },
+                    }
+
+                }
+            };
+
+            var pipeline = new[] { match, project, lookup, project2, lookup2, project3, project4 };
             var lookupResult = KraCollection.Aggregate<AppraisalForApprovalDto>(pipeline);
 
             var result = lookupResult.ToList();
             var finalResultToReturn = new List<AppraisalForApprovalDto>();
-            if (result.Count > 1)
+            if (result.Count > 0)
             {
                 //get Equivalent Employee Details for each one
                 IEnumerable<string> IdsToSend = result.Select(x => x.EmployeeDetail.EmployeeId.ToString()).Distinct();
                 foreach (var item in result)
                 {
-                    if(!finalResultToReturn.Any(x=>x.EmployeeDetail.EmployeeId == item.EmployeeDetail.EmployeeId))
+                    if (!finalResultToReturn.Any(x => x.EmployeeDetail.EmployeeId == item.EmployeeDetail.EmployeeId))
                     {
                         finalResultToReturn.Add(item);
                     }
                     else
                     {
                         var oldResult = finalResultToReturn.FirstOrDefault(x => x.EmployeeDetail.EmployeeId == item.EmployeeDetail.EmployeeId);
-                        if(oldResult != null)
+                        if (oldResult != null)
                         {
                             var oldKra = oldResult.Kra_Details.ToList();
                             oldKra.AddRange(item.Kra_Details);
@@ -319,7 +449,7 @@ namespace Resourceedge.Appraisal.API.Services
                         }
                     }
                 }
-                
+
 
                 var returnedEmployees = await teamRepository.FetchEmployeesDetailsFromEmployeeService(IdsToSend);
                 if (returnedEmployees.Any())
@@ -341,6 +471,11 @@ namespace Resourceedge.Appraisal.API.Services
         {
             var result = Collection.AsQueryable().Any(x => x.myId == employeeId);
             return result;
+        }
+
+        public async Task<bool> CheckAppraisalConfigurationDetails(AppraisalQueryParam model)
+        {
+            return await AppraisalConfigCollection.AsQueryable().AnyAsync(x => x.Id == ObjectId.Parse(model.Config) && x.Cycles.Any(x => x.Id == ObjectId.Parse(model.Cycle)));
         }
     }
 

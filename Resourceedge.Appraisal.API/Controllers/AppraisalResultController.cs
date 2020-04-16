@@ -5,6 +5,7 @@ using MongoDB.Bson;
 using Resourceedge.Appraisal.API.Interfaces;
 using Resourceedge.Appraisal.Domain.Entities;
 using Resourceedge.Appraisal.Domain.Models;
+using Resourceedge.Appraisal.Domain.Queries;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -65,7 +66,6 @@ namespace Resourceedge.Appraisal.API.Controllers
 
             return Ok(new { success = true });
 
-            //return CreatedAtRoute("MyAppraisal", new { employee = appraisalResultToSubmit.FirstOrDefault().myId, appraisalConfig = appraisalResultToSubmit.FirstOrDefault().AppraisalConfigId, appraisalCycle = appraisalResultToSubmit.FirstOrDefault().AppraisalCycleId }, appraisalResultToReturn);
         }
 
         [HttpPost]
@@ -128,11 +128,17 @@ namespace Resourceedge.Appraisal.API.Controllers
 
 
         [Route("getemployeetoappraise/{employeeid}/{whoami}")]
-        public async Task<IActionResult> GetEmployeesWithSubmittedAppraisal(int employeeid, string whoami)
+        public async Task<IActionResult> GetEmployeesWithSubmittedAppraisal(int employeeid, string whoami, [FromQuery]AppraisalQueryParam model )
         {
             try
             {
-                var result = await appraisalResult.GetEmployeesToAppraise(employeeid, whoami);
+                var configExist = await appraisalResult.CheckAppraisalConfigurationDetails(model);
+                if (!configExist)
+                {
+                    return NotFound(new { error = "Appraisal configuration details not found"});
+                }
+
+                var result = await appraisalResult.GetEmployeesToAppraise(employeeid, model.Config, model.Cycle, whoami);
                 var Dto = mapper.Map<IEnumerable<AppraisalForApprovalViewDto>>(result);
                 return Ok(Dto);
 
@@ -143,4 +149,5 @@ namespace Resourceedge.Appraisal.API.Controllers
             }
         }
     }
+   
 }
