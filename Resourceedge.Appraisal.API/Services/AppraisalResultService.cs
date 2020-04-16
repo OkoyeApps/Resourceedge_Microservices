@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Resourceedge.Appraisal.API.Helpers;
@@ -521,7 +522,7 @@ namespace Resourceedge.Appraisal.API.Services
 
         public async Task<bool> CheckAppraisalConfigurationDetails(AppraisalQueryParam model)
         {
-            return await AppraisalConfigCollection.AsQueryable().AnyAsync(x => x.Id == ObjectId.Parse(model.Config) && x.Cycles.Any(x => x.Id == ObjectId.Parse(model.Cycle)));
+            return await AppraisalConfigCollection.AsQueryable().AnyAsync(x => x.Id == ObjectId.Parse(model.Config) && x.Cycles.Any(y => y.Id == ObjectId.Parse(model.Cycle)));
         }
     }
 
