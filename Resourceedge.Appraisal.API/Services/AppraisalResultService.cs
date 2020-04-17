@@ -56,7 +56,7 @@ namespace Resourceedge.Appraisal.API.Services
             Collection.InsertOne(entity);
         }
 
-        public async Task SubmitAppraisal(IEnumerable<AppraisalResultForCreationDto> entities)
+        public async Task<bool> SubmitAppraisal(IEnumerable<AppraisalResultForCreationDto> entities)
         {
             var employee = await resultAreaRepo.GetEmployee(entities.FirstOrDefault().myId);
             string title = "Pending Appraisal";
@@ -111,10 +111,14 @@ namespace Resourceedge.Appraisal.API.Services
                                 email.HtmlContent = @$"<p>{employee.FullName} has participated in these quarter, kindly login to resourceedge and Appraise him/her.</p>";
                             }
                             emailDto.Add(email);
+
                         }
                         else if (entity.whoami == "APPRAISAL")
                         {
-
+                            if(result == null)
+                            {
+                                return false;                                
+                            }
                             result.AppraiseeFeedBack = entity.AppraiseeFeedBack;
                             result.NextAppraisee = "Hod";
                             result.IsAccepted = true;
@@ -221,8 +225,7 @@ namespace Resourceedge.Appraisal.API.Services
                 }
                 catch (Exception)
                 {
-
-                    throw;
+                    return false;                    
                 }
                 finally
                 {
@@ -241,6 +244,7 @@ namespace Resourceedge.Appraisal.API.Services
                     }
                 }
             }
+            return true;
         }
 
         public async Task<UpdateResult> EmployeeAcceptOrReject(ObjectId appraisalResultId, AcceptanceStatus status)

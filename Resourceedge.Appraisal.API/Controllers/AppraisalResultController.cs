@@ -59,22 +59,27 @@ namespace Resourceedge.Appraisal.API.Controllers
 
             var appraisalQuery = appraisalResultForCreation.Select(a => new AppraisalQueryParam() { Config = a.AppraisalConfigId, Cycle = a.AppraisalCycleId }).Distinct();
 
-            var configExist = await appraisalResult.CheckMultipleAppraisalConfigurationDetails(appraisalQuery);
+            var configExist = await appraisalResult.CheckMultipleAppraisalConfigurationDetails(appraisalQuery.Distinct());
             if (!configExist)
             {
                 return BadRequest( new { message = "Invalid Configuration details" });
             }
 
             var appraisalResultToSubmit = mapper.Map<IEnumerable<AppraisalResultForCreationDtoString>, IEnumerable<AppraisalResultForCreationDto>>(appraisalResultForCreation);
-
-            await appraisalResult.SubmitAppraisal(appraisalResultToSubmit);
-            var appraisalResultToReturn = mapper.Map<IEnumerable<AppraisalResult>>(appraisalResultToSubmit);
-            if (appraisalResultToReturn.Any())
+           
+            var result = await appraisalResult.SubmitAppraisal(appraisalResultToSubmit);
+            if (result)
             {
-                finalResultRepo.CalculateResult(appraisalResultToReturn.FirstOrDefault().myId, appraisalResultToReturn.FirstOrDefault().AppraisalCycleId);
-            }
+                var appraisalResultToReturn = mapper.Map<IEnumerable<AppraisalResult>>(appraisalResultToSubmit);
 
-            return Ok(new { success = true });
+                if (appraisalResultToReturn.Any())
+                {
+                    finalResultRepo.CalculateResult(appraisalResultToReturn.FirstOrDefault().myId, appraisalResultToReturn.FirstOrDefault().AppraisalCycleId);
+                }
+
+                return Ok(new { success = true });
+            }
+            return BadRequest(new { message = "Employee has not done appraisal" });
 
         }
 
@@ -96,15 +101,19 @@ namespace Resourceedge.Appraisal.API.Controllers
 
             var appraisalResultToSubmit = mapper.Map<IEnumerable<AppraisalResultForCreationDtoString>, IEnumerable<AppraisalResultForCreationDto>>(appraisalResultForCreation);
                        
-            await appraisalResult.SubmitAppraisal(appraisalResultToSubmit);
-            var appraisalResultToReturn = mapper.Map<IEnumerable<AppraisalResult>>(appraisalResultToSubmit);
-           
-            if(appraisalResultToReturn.Any())
+            var result = await appraisalResult.SubmitAppraisal(appraisalResultToSubmit);
+            if (result)
             {
-                finalResultRepo.CalculateResult(appraisalResultToReturn.FirstOrDefault().myId, appraisalResultToReturn.FirstOrDefault().AppraisalCycleId);
-            }
+                var appraisalResultToReturn = mapper.Map<IEnumerable<AppraisalResult>>(appraisalResultToSubmit);
 
-            return Ok(new { success = true});
+                if (appraisalResultToReturn.Any())
+                {
+                    finalResultRepo.CalculateResult(appraisalResultToReturn.FirstOrDefault().myId, appraisalResultToReturn.FirstOrDefault().AppraisalCycleId);
+                }
+
+                return Ok(new { success = true });
+            }
+            return BadRequest(new { message = "Employee has not done appraisal" });
         }
 
         [HttpPatch("{Id}/AcceptAppraisal")]
