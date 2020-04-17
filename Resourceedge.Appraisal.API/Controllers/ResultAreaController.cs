@@ -211,7 +211,12 @@ namespace Resourceedge.Appraisal.API.Controllers
             var result = resultArea.HasUploadedEpa(empId);
             return Ok(result);
         }
-
-
+        [HttpGet("kraforappraisal")]
+        public ActionResult<IEnumerable<KeyResultAreaDtoForCreation>> GetKraforAppraisal(int empId)
+        {
+            var resultFromMap = resultArea.GetAcceptedAppraisal(empId);
+            var mapInstance = mapper.Map<IEnumerable<KeyResultAreaForViewDto>>(resultFromMap);
+            return Ok(mapInstance);
+        }
     }
 }

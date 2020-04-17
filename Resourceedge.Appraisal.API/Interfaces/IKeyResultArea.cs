@@ -29,9 +29,9 @@ namespace Resourceedge.Appraisal.API.Interfaces
         bool HasUploadedEpa(int employeeId);
         Task<KeyResultArea> DeleteKeyOutcome(ObjectId id, KeyResultArea entity);
         Task<KeyResultArea> QuerySingleByKeyOutcome(ObjectId id);
+        IEnumerable<KeyResultArea> GetAcceptedAppraisal(int userId, string resultId = null);
 
         //To be deleted later
         //Task<IEnumerable<NameEmailWithType>> GetAllSupervisorsForClaims();
-
     }
 }

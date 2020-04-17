@@ -221,6 +221,8 @@ namespace Resourceedge.Appraisal.API.Services
             return QueryableCollection.Where(x => x.EmployeeId == userId).ToList();
         }
 
+     
+
         public async Task<KeyResultArea> Update(ObjectId Id, KeyResultArea entity)
         {
             var filter = Builders<KeyResultArea>.Filter.Where(r => r.Id == Id);
@@ -384,6 +386,17 @@ namespace Resourceedge.Appraisal.API.Services
         {
             var year = DateTime.Now.Year;
             return QueryableCollection.Any(x => x.EmployeeId == employeeId && x.Year == year);
+        }
+
+        public IEnumerable<KeyResultArea> GetAcceptedAppraisal(int userId, string resultId = null)
+        {
+            if (resultId != null)
+            {
+                ObjectId Id = new ObjectId(resultId);
+                return QueryableCollection.Where(x => x.EmployeeId == userId && x.Id == Id).ToList();
+            }
+
+            return QueryableCollection.Where(x => x.EmployeeId == userId && x.Approved == true && x.Status.Employee == true).ToList();
         }
 
         //public async Task<IEnumerable<NameEmailWithType>> GetAllSupervisorsForClaims()
