@@ -78,7 +78,11 @@ namespace Resourceedge.Appraisal.API.Services
 
                         string msg = $"has performed his/her appraisal for these quarter, Kindly attend to it as soon as possible.";
                         string url = "https://resourceedge.herokuapp.com/";
-
+                        if(result == null)
+                        {
+                            //break;
+                            return false;
+                        }
                         if (entity.whoami == null)
                         {
                             var myAppraisal = mapper.Map<AppraisalResult>(entity);
@@ -113,7 +117,7 @@ namespace Resourceedge.Appraisal.API.Services
                             emailDto.Add(email);
 
                         }
-                        else if (entity.whoami == "APPRAISAL")
+                        else if (entity.whoami == "APPRAISER")
                         {
                             if(result == null)
                             {
@@ -515,7 +519,8 @@ namespace Resourceedge.Appraisal.API.Services
                            {"AppraisalConfigId",  ObjectId.Parse(appraisalConfigurationId) },
                            {"AppraisalCycleId", ObjectId.Parse(appraisalCycleId) },
                            { "EmployeeResult", "$Appraisal_Result.EmployeeResult"},
-                           {"FinalResult",  "$Appraisal_Result.FinalResult" }
+                           {"FinalResult",  "$Appraisal_Result.FinalResult" },
+                           {"AppraiseeResult",  "$Appraisal_Result.AppraiseeResult" },
                         }
                      },
                         { "EmployeeDetail", "$EmployeeDetail"},
