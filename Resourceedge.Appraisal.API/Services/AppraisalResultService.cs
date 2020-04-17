@@ -81,6 +81,7 @@ namespace Resourceedge.Appraisal.API.Services
                         if (entity.whoami == null)
                         {
                             var myAppraisal = mapper.Map<AppraisalResult>(entity);
+                            myAppraisal.NextAppraisee = "Appraisal";
                             myAppraisal.EmployeeAccept = new AcceptanceStatus()
                             {
                                 IsAccepted = true
@@ -97,8 +98,6 @@ namespace Resourceedge.Appraisal.API.Services
 
                             this.InsertResult(myAppraisal);
 
-
-
                             SingleEmailDto email = new SingleEmailDto()
                             {
                                 ReceiverFullName = keyResultArea.AppraiserDetails.Name,
@@ -114,8 +113,9 @@ namespace Resourceedge.Appraisal.API.Services
                         }
                         else if (entity.whoami == "APPRAISAL")
                         {
-                            result.CurrentSupervisor = "Appraisal";
+
                             result.AppraiseeFeedBack = entity.AppraiseeFeedBack;
+                            result.NextAppraisee = "Hod";
                             result.IsAccepted = true;
 
                             foreach (var item in entity.KeyOutcomeScore)
@@ -132,6 +132,7 @@ namespace Resourceedge.Appraisal.API.Services
                                 }
                             }
 
+                            var average = result.KeyOutcomeScore.Average(x => x.AppraisalScore.Value);
                             if (result.KeyResultArea.HodDetails.EmployeeId == result.KeyResultArea.AppraiserDetails.EmployeeId)
                             {
                                 result.HodAccept = new AcceptanceStatus()
@@ -140,9 +141,16 @@ namespace Resourceedge.Appraisal.API.Services
                                 };
 
                                 result = result.HodApproval("");
+
+                                result.FinalCalculation = new AppraisalCalculationByKRA()
+                                {
+                                    ScoreTotal = result.KeyOutcomeScore.Sum(x => x.AppraisalScore.Value),
+                                    Average = average,
+                                    WeightContribution = (average * (Convert.ToDouble(result.KeyResultArea.Weight) / 100) / result.KeyOutcomeScore.Count())
+                                };
                             }
-                            var average = result.KeyOutcomeScore.Average(x => x.AppraisalScore.Value);
-                            result.FinalCalculation = new AppraisalCalculationByKRA()
+
+                            result.AppraiseeCalculation = new AppraisalCalculationByKRA()
                             {
                                 ScoreTotal = result.KeyOutcomeScore.Sum(x => x.AppraisalScore.Value),
                                 Average = average,
@@ -187,7 +195,6 @@ namespace Resourceedge.Appraisal.API.Services
                                 ScoreTotal = result.KeyOutcomeScore.Sum(x => x.AppraisalScore.Value),
                                 Average = average,
                                 WeightContribution = (average * (Convert.ToDouble(result.KeyResultArea.Weight) / 100) / result.KeyOutcomeScore.Count())
-
                             };
 
                             var newAppraisalResult = result.HodApproval("");
@@ -523,6 +530,20 @@ namespace Resourceedge.Appraisal.API.Services
         public async Task<bool> CheckAppraisalConfigurationDetails(AppraisalQueryParam model)
         {
             return await AppraisalConfigCollection.AsQueryable().AnyAsync(x => x.Id == ObjectId.Parse(model.Config) && x.Cycles.Any(y => y.Id == ObjectId.Parse(model.Cycle)));
+        }
+
+        public async Task<bool> CheckMultipleAppraisalConfigurationDetails(IEnumerable<AppraisalQueryParam> model)
+        {
+            foreach (var item in model)
+            {
+               var res = await CheckAppraisalConfigurationDetails(item);
+               if (!res)
+               {
+                    return false;
+               }
+            }
+
+            return true;
         }
     }
 

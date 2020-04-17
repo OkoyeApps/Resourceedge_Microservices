@@ -26,5 +26,7 @@ namespace Resourceedge.Appraisal.API.Interfaces
         Task<bool> HasPaticipatedInAppraisal(int employeeId);
 
         Task<bool> CheckAppraisalConfigurationDetails(AppraisalQueryParam model);
+        Task<bool> CheckMultipleAppraisalConfigurationDetails(IEnumerable<AppraisalQueryParam> model);
+
     }
 }

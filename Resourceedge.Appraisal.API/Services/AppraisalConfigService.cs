@@ -94,7 +94,7 @@ namespace Resourceedge.Appraisal.API.Services
 
         public bool ActivateCycle(string cycleId)
         {
-            var filter = Builders<AppraisalConfig>.Filter.Where(c => c.Year == DateTime.Now.Year));
+            var filter = Builders<AppraisalConfig>.Filter.Where(c => c.Year == DateTime.Now.Year);
             var appraisalConfig = Collection.Find(filter).First();
 
             appraisalConfig.Cycles.ForEach(c => { 

@@ -42,7 +42,8 @@ namespace Resourceedge.Appraisal.API.Services
                         AppraisalCycleId = appraisalResult.FirstOrDefault().AppraisalCycleId,
                         EmployeeId = appraisalResult.FirstOrDefault().myId,
                         EmployeeResult = appraisalResult.Sum(x => x.EmployeeCalculation.WeightContribution),
-                        FinalResult = (appraisalResult.FirstOrDefault().IsAccepted != null) ? appraisalResult.Sum(x => x.FinalCalculation.WeightContribution) : 0,
+                        AppraiseeResult = (appraisalResult.FirstOrDefault().IsAccepted != null) ? appraisalResult.Sum(x => x.AppraiseeCalculation.WeightContribution) : 0,
+                        FinalResult = (appraisalResult.FirstOrDefault().IsCompleted != null) ? appraisalResult.Sum(x => x.FinalCalculation.WeightContribution) : 0,
                         Year = DateTime.Now.Year.ToString()
                     };
 
@@ -50,8 +51,9 @@ namespace Resourceedge.Appraisal.API.Services
                 }
                 else
                 {
-                    oldFinalResult.EmployeeResult = appraisalResult.Sum(x => x.EmployeeCalculation.WeightContribution);
-                    oldFinalResult.FinalResult = appraisalResult.Sum(x => x.FinalCalculation.WeightContribution);
+                    oldFinalResult.EmployeeResult = (oldFinalResult.EmployeeResult != 0) ? oldFinalResult.EmployeeResult : appraisalResult.Sum(x => x.EmployeeCalculation.WeightContribution);
+                    oldFinalResult.AppraiseeResult = (oldFinalResult.AppraiseeResult != 0) ? oldFinalResult.AppraiseeResult : appraisalResult.Sum(x => x.AppraiseeCalculation.WeightContribution);
+                    oldFinalResult.FinalResult = (appraisalResult.FirstOrDefault().IsCompleted != null) ?  appraisalResult.Sum(x => x.FinalCalculation.WeightContribution) : 0;
 
                     var finalResult = oldFinalResult.ToBsonDocument();
                     var update = new BsonDocument("$set", finalResult);

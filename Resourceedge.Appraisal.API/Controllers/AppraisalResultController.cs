@@ -57,6 +57,8 @@ namespace Resourceedge.Appraisal.API.Controllers
 
             var appraisalResultToSubmit = mapper.Map<IEnumerable<AppraisalResultForCreationDtoString>, IEnumerable<AppraisalResultForCreationDto>>(appraisalResultForCreation);
 
+            
+
             await appraisalResult.SubmitAppraisal(appraisalResultToSubmit);
             var appraisalResultToReturn = mapper.Map<IEnumerable<AppraisalResult>>(appraisalResultToSubmit);
             if (appraisalResultToReturn.Any())
@@ -76,10 +78,18 @@ namespace Resourceedge.Appraisal.API.Controllers
                 return BadRequest();
             }
 
+            var appraisalQuery = appraisalResultForCreation.Select(a => new AppraisalQueryParam() { Config = a.AppraisalConfigId, Cycle = a.AppraisalCycleId }).Distinct();
             var appraisalResultToSubmit = mapper.Map<IEnumerable<AppraisalResultForCreationDtoString>, IEnumerable<AppraisalResultForCreationDto>>(appraisalResultForCreation);
-
+            
+            var configExist = await appraisalResult.CheckMultipleAppraisalConfigurationDetails(appraisalQuery);
+            if (!configExist)
+            {
+                return BadRequest();
+            }
+                       
             await appraisalResult.SubmitAppraisal(appraisalResultToSubmit);
             var appraisalResultToReturn = mapper.Map<IEnumerable<AppraisalResult>>(appraisalResultToSubmit);
+           
             if(appraisalResultToReturn.Any())
             {
                 finalResultRepo.CalculateResult(appraisalResultToReturn.FirstOrDefault().myId, appraisalResultToReturn.FirstOrDefault().AppraisalCycleId);
