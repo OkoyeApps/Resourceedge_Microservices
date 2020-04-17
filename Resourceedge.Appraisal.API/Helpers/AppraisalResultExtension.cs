@@ -25,7 +25,7 @@ namespace Resourceedge.Appraisal.API.Helpers
 
         public static AppraisalResult HodApproval(this AppraisalResult result, string reason)
         {
-            result.CurrentSupervisor = "HOD";
+            result.NextAppraisee = "Done";
             bool hodApproval = result.HodAccept.IsAccepted.Value;
             if (hodApproval)
             {
