@@ -62,17 +62,18 @@ namespace Resourceedge.Appraisal.API.Services
             string title = "Pending Appraisal";
             string subject = "";
             List<SingleEmailDto> emailDto = new List<SingleEmailDto>();
-           
+
             if (employee != null)
             {
-                 subject = $"Pending Appraisal for {employee.FullName}";
+                subject = $"Pending Appraisal for {employee.FullName}";
 
                 try
                 {
                     foreach (var entity in entities)
                     {
                         var filter = Builders<AppraisalResult>.Filter.Where(a => a.myId == entity.myId && a.AppraisalConfigId == entity.AppraisalConfigId && a.AppraisalCycleId == entity.AppraisalCycleId && a.KeyResultArea.Id == entity.KeyResultAreaId);
-                        var result = Collection.Find(a => a.myId == entity.myId && a.AppraisalConfigId == entity.AppraisalConfigId && a.AppraisalCycleId == entity.AppraisalCycleId && a.KeyResultArea.Id == entity.KeyResultAreaId).FirstOrDefault();
+                        var result = Collection.Find(a => a.myId == entity.myId && a.AppraisalConfigId == entity.AppraisalConfigId && a.AppraisalCycleId == entity.AppraisalCycleId
+                        && a.KeyResultArea.Id == entity.KeyResultAreaId).FirstOrDefault();
                         var keyResultArea = await resultAreaRepo.QuerySingle(entity.KeyResultAreaId);
 
                         string msg = $"has performed his/her appraisal for these quarter, Kindly attend to it as soon as possible.";
@@ -299,21 +300,62 @@ namespace Resourceedge.Appraisal.API.Services
             var year = DateTime.Now.Year;
             whoAmI = whoAmI == "hod" ? "HodDetails" : "AppraiserDetails";
 
-            var aa = Builders<AppraisalForApprovalDto>.Filter.ElemMatch<AppraisalResult>(x => x.Kra_Details, y => y.AppraisalConfigId == ObjectId.Parse(appraisalConfigurationId));
-            var match = new BsonDocument
+
+            var firstMatch = new BsonDocument
             {
                 {
-                    "$match" ,
-                    new BsonDocument
+                    "$match", new BsonDocument
                     {
-                        {$"{whoAmI}.EmployeeId", employeeId }
-                        ,
-                        {"Year", new BsonDocument{
+                        {
+                            "$and", new BsonArray
+                            {
+                                new BsonDocument
+                                {
+                                    {
+                                        "$or", new BsonArray
+                                        {
+                                            new BsonDocument
+                                            {
+                                                {"HodDetails.EmployeeId", employeeId }
+                                            },
+                                            new BsonDocument
+                                            {
+                                                {"AppraiserDetails.EmployeeId", employeeId }
+                                            }
+                                        }
+                                    },
+                                },
+                                new BsonDocument
+                                {
+                                    {
+                                        "Year", new BsonDocument
+                                        {
+                                            {"$eq",  year}
 
-                            {"$eq",  year}
+                                    }  }
+                                }
+                            }
 
-                        } }
+                            }
+
+
+
                     }
+
+                },
+            };
+
+
+            var projectinit =  new BsonDocument
+            {
+                {
+                    "$project", new BsonDocument{
+                        { "EmployeeDetail", new BsonDocument{
+                         { "EmployeeId" , "$EmployeeId" }
+                        }
+                     }
+                    }
+
                 }
             };
 
@@ -460,8 +502,10 @@ namespace Resourceedge.Appraisal.API.Services
                        { "Appraisal_Result", new BsonDocument{
                          { "EmployeeId" , "$EmployeeDetail.EmployeeId" },
                            {"AppraisalConfigId",  ObjectId.Parse(appraisalConfigurationId) },
-                           {"AppraisalCycleId", ObjectId.Parse(appraisalCycleId) }
-                        } 
+                           {"AppraisalCycleId", ObjectId.Parse(appraisalCycleId) },
+                           { "EmployeeResult", "$Appraisal_Result.EmployeeResult"},
+                           {"FinalResult",  "$Appraisal_Result.FinalResult" }
+                        }
                      },
                         { "EmployeeDetail", "$EmployeeDetail"},
                         {"Kra_Details", "$Kra_Details" },
@@ -470,7 +514,7 @@ namespace Resourceedge.Appraisal.API.Services
                 }
             };
 
-            var pipeline = new[] { match, project, lookup, project2, lookup2, project3, project4 };
+            var pipeline = new[] { firstMatch, project, lookup, project2, lookup2, project3, project4 };
             var lookupResult = KraCollection.Aggregate<AppraisalForApprovalDto>(pipeline);
 
             var result = lookupResult.ToList();
@@ -497,7 +541,6 @@ namespace Resourceedge.Appraisal.API.Services
                     }
                 }
 
-
                 var returnedEmployees = await teamRepository.FetchEmployeesDetailsFromEmployeeService(IdsToSend);
                 if (returnedEmployees.Any())
                 {
@@ -522,7 +565,7 @@ namespace Resourceedge.Appraisal.API.Services
 
         public async Task<bool> CheckAppraisalConfigurationDetails(AppraisalQueryParam model)
         {
-            return await AppraisalConfigCollection.AsQueryable().AnyAsync(x => x.Id == ObjectId.Parse(model.Config) && x.Cycles.Any(y => y.Id == ObjectId.Parse(model.Cycle)));
+            return AppraisalConfigCollection.AsQueryable().Any(x => x.Id == ObjectId.Parse(model.Config) && x.Cycles.Any(y => y.Id == ObjectId.Parse(model.Cycle)));
         }
     }
 

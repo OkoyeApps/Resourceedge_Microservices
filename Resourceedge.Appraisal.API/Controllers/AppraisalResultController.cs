@@ -140,6 +140,15 @@ namespace Resourceedge.Appraisal.API.Controllers
 
                 var result = await appraisalResult.GetEmployeesToAppraise(employeeid, model.Config, model.Cycle, whoami);
                 var Dto = mapper.Map<IEnumerable<AppraisalForApprovalViewDto>>(result);
+                //THIS COULD BE FIXED LATER WITH MONGO QUERY
+                //rearrange object
+                Dto.ToList().ForEach(x =>
+                {
+                    x.Kra_Details.ToList().ForEach(y =>
+                    {
+                        y.KeyResultArea.whoami = y.KeyResultArea.HeadOfDepartment.EmployeeId == employeeid ? "hod" : "appraiser";
+                    });
+                });
                 return Ok(Dto);
 
             }

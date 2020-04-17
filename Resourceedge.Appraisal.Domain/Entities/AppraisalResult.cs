@@ -1,4 +1,5 @@
 ﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
 
@@ -16,6 +17,7 @@ namespace Resourceedge.Appraisal.Domain.Entities
         public bool? IsAccepted { get; set; }
         public bool? IsCompleted { get; set; }
         public string CurrentSupervisor { get; set; }
+       
         public AcceptanceStatus EmployeeAccept { get; set; }
         public AcceptanceStatus HodAccept { get; set; }
         public AppraisalCalculationByKRA EmployeeCalculation { get; set; }
