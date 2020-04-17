@@ -143,8 +143,19 @@ namespace Resourceedge.Appraisal.API.Services
             }
 
             return null;
-
-
         }
+
+        public async Task<bool> GetEmployee(int empId)
+        {
+            HttpClient.SetBearerToken(tokenAccessor.TokenResponse.AccessToken);
+            var response = await HttpClient.GetAsync($"api/employee/employeeId/{empId}");
+            if (response.IsSuccessStatusCode && response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+
+                return true;
+            }
+            return false;
+        }
+
     }
 }
