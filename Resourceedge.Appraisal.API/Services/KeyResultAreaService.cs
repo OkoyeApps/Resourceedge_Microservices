@@ -393,11 +393,11 @@ namespace Resourceedge.Appraisal.API.Services
             if (resultId != null)
             {
                 ObjectId Id = new ObjectId(resultId);
-                return QueryableCollection.Where(x => x.EmployeeId == userId && x.Id == Id).ToList();
+                return QueryableCollection.Where(x => x.EmployeeId == userId && x.Id == Id && x.Approved == true && x.Status.Employee == true && x.Year == DateTime.Now.Year).ToList();
             }
 
-            return QueryableCollection.Where(x => x.EmployeeId == userId && x.Approved == true && x.Status.Employee == true).ToList();
-        }
+            return QueryableCollection.Where(x => x.EmployeeId == userId && x.Approved == true && x.Status.Employee == true && x.Year == DateTime.Now.Year).ToList();
+        }        
 
         //public async Task<IEnumerable<NameEmailWithType>> GetAllSupervisorsForClaims()
         //{
