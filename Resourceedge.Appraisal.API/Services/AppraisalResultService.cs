@@ -98,7 +98,7 @@ namespace Resourceedge.Appraisal.API.Services
                             {
                                 ScoreTotal = myAppraisal.KeyOutcomeScore.Sum(x => x.EmployeeScore).Value,
                                 Average = average,
-                                WeightContribution = (average * (Convert.ToDouble(myAppraisal.KeyResultArea.Weight) / 100) / myAppraisal.KeyOutcomeScore.Count())
+                                WeightContribution = (average * (Convert.ToDouble(myAppraisal.KeyResultArea.Weight) / 100))
                             };
 
                             this.InsertResult(myAppraisal);
@@ -155,7 +155,7 @@ namespace Resourceedge.Appraisal.API.Services
                                 {
                                     ScoreTotal = result.KeyOutcomeScore.Sum(x => x.AppraisalScore.Value),
                                     Average = average,
-                                    WeightContribution = (average * (Convert.ToDouble(result.KeyResultArea.Weight) / 100) / result.KeyOutcomeScore.Count())
+                                    WeightContribution = (average * (Convert.ToDouble(result.KeyResultArea.Weight) / 100))
                                 };
                             }
 
@@ -163,7 +163,7 @@ namespace Resourceedge.Appraisal.API.Services
                             {
                                 ScoreTotal = result.KeyOutcomeScore.Sum(x => x.AppraisalScore.Value),
                                 Average = average,
-                                WeightContribution = (average * (Convert.ToDouble(result.KeyResultArea.Weight) / 100) / result.KeyOutcomeScore.Count())
+                                WeightContribution = (average * (Convert.ToDouble(result.KeyResultArea.Weight) / 100))
                             };
                             var entityToUpdate = result.ToBsonDocument();
                             var update = new BsonDocument("$set", entityToUpdate);
@@ -203,7 +203,7 @@ namespace Resourceedge.Appraisal.API.Services
                             {
                                 ScoreTotal = result.KeyOutcomeScore.Sum(x => x.AppraisalScore.Value),
                                 Average = average,
-                                WeightContribution = (average * (Convert.ToDouble(result.KeyResultArea.Weight) / 100) / result.KeyOutcomeScore.Count())
+                                WeightContribution = (average * (Convert.ToDouble(result.KeyResultArea.Weight) / 100))
                             };
 
                             var newAppraisalResult = result.HodApproval("");
