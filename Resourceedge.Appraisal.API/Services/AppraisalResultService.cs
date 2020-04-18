@@ -60,6 +60,8 @@ namespace Resourceedge.Appraisal.API.Services
         {
             var employee = await resultAreaRepo.GetEmployee(entities.FirstOrDefault().myId);
             string title = "Pending Appraisal";
+            string msg = $"has performed his/her appraisal for these quarter, Kindly attend to it as soon as possible.";
+            string url = "https://resourceedge.herokuapp.com/";
             string subject = "";
             List<SingleEmailDto> emailDto = new List<SingleEmailDto>();
 
@@ -72,13 +74,8 @@ namespace Resourceedge.Appraisal.API.Services
                     foreach (var entity in entities)
                     {
                         var filter = Builders<AppraisalResult>.Filter.Where(a => a.myId == entity.myId && a.AppraisalConfigId == entity.AppraisalConfigId && a.AppraisalCycleId == entity.AppraisalCycleId && a.KeyResultArea.Id == entity.KeyResultAreaId);
-                        var result = Collection.Find(a => a.myId == entity.myId && a.AppraisalConfigId == entity.AppraisalConfigId && a.AppraisalCycleId == entity.AppraisalCycleId
-                        && a.KeyResultArea.Id == entity.KeyResultAreaId).FirstOrDefault();
                         var keyResultArea = await resultAreaRepo.QuerySingle(entity.KeyResultAreaId);
-
-                        string msg = $"has performed his/her appraisal for these quarter, Kindly attend to it as soon as possible.";
-                        string url = "https://resourceedge.herokuapp.com/";
-
+                    
                         if (entity.whoami == null)
                         {
                             var myAppraisal = mapper.Map<AppraisalResult>(entity);
@@ -111,13 +108,59 @@ namespace Resourceedge.Appraisal.API.Services
                                 email.HtmlContent = @$"<p>{employee.FullName} has participated in these quarter, kindly login to resourceedge and Appraise him/her.</p>";
                             }
                             emailDto.Add(email);
+                        }                    
+                    }
 
-                        }
-                        else if (entity.whoami == "APPRAISAL")
+                }
+                catch (Exception)
+                {
+                    return false;                    
+                }
+                finally
+                {
+                    List<SingleEmailDto> emailDtos = new List<SingleEmailDto>();
+                    foreach (var item in emailDto)
+                    {
+                        if (!emailDtos.Any(x => x.ReceiverEmailAddress == item.ReceiverEmailAddress))
                         {
-                            if(result == null)
+                            emailDtos.Add(item);
+                        }
+                    }
+
+                    if (emailDtos.Any())
+                    {
+                        emailDtos.ForEach(async e => await sender.SendToSingleEmployee(subject, e));
+                    }
+                }
+            }
+            return true;
+        }
+
+        public async Task<bool> AppraiseEmployee(IEnumerable<AppraisalResultForCreationDto> entities)
+        {
+            var employee = await resultAreaRepo.GetEmployee(entities.FirstOrDefault().myId);
+            string title = "Pending Appraisal";
+            string subject = "";
+            string msg = $"has performed his/her appraisal for these quarter, Kindly attend to it as soon as possible.";
+            string url = "https://resourceedge.herokuapp.com/";
+            List<SingleEmailDto> emailDto = new List<SingleEmailDto>();
+
+            if(employee != null)
+            {
+                try
+                {
+                    foreach (var entity in entities)
+                    {
+                        var filter = Builders<AppraisalResult>.Filter.Where(a => a.myId == entity.myId && a.AppraisalConfigId == entity.AppraisalConfigId && a.AppraisalCycleId == entity.AppraisalCycleId && a.KeyResultArea.Id == entity.KeyResultAreaId);
+                        var result = Collection.Find(a => a.myId == entity.myId && a.AppraisalConfigId == entity.AppraisalConfigId && a.AppraisalCycleId == entity.AppraisalCycleId
+                        && a.KeyResultArea.Id == entity.KeyResultAreaId).FirstOrDefault();
+                        var keyResultArea = await resultAreaRepo.QuerySingle(entity.KeyResultAreaId);
+
+                        if (entity.whoami == "APPRAISAL")
+                        {
+                            if (result == null)
                             {
-                                return false;                                
+                                return false;
                             }
                             result.AppraiseeFeedBack = entity.AppraiseeFeedBack;
                             result.NextAppraisee = "Hod";
@@ -221,30 +264,13 @@ namespace Resourceedge.Appraisal.API.Services
                         }
 
                     }
-
-                }
                 catch (Exception)
                 {
-                    return false;                    
-                }
-                finally
-                {
-                    List<SingleEmailDto> emailDtos = new List<SingleEmailDto>();
-                    foreach (var item in emailDto)
-                    {
-                        if (!emailDtos.Any(x => x.ReceiverEmailAddress == item.ReceiverEmailAddress))
-                        {
-                            emailDtos.Add(item);
-                        }
-                    }
 
-                    if (emailDtos.Any())
-                    {
-                        emailDtos.ForEach(async e => await sender.SendToSingleEmployee(subject, e));
-                    }
+                    throw;
                 }
             }
-            return true;
+
         }
 
         public async Task<UpdateResult> EmployeeAcceptOrReject(ObjectId appraisalResultId, AcceptanceStatus status)

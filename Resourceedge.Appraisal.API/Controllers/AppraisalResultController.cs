@@ -99,6 +99,12 @@ namespace Resourceedge.Appraisal.API.Controllers
                 return BadRequest(new { message = "Invalid Configuration details" });
             }
 
+            var hasDoneAppraisal = await appraisalResult.HasPaticipatedInAppraisal(1);
+            if (hasDoneAppraisal)
+            {
+                return BadRequest(new { message = "You have already participated in this appraisal" });
+            }
+
             var appraisalResultToSubmit = mapper.Map<IEnumerable<AppraisalResultForCreationDtoString>, IEnumerable<AppraisalResultForCreationDto>>(appraisalResultForCreation);
                        
             var result = await appraisalResult.SubmitAppraisal(appraisalResultToSubmit);
@@ -113,6 +119,7 @@ namespace Resourceedge.Appraisal.API.Controllers
 
                 return Ok(new { success = true });
             }
+
             return BadRequest(new { message = "Employee has not done appraisal" });
         }
 
