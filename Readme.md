@@ -20,3 +20,6 @@ mongodb+srv://chocksy:ewZg5URqMNyal7Xs@lawyerpp-cluster-5faak.mongodb.net/EdgeAp
 
 ##Employee Database
 mongodb+srv://chocksy:ewZg5URqMNyal7Xs@lawyerpp-cluster-5faak.mongodb.net/EdgeEmployee?retryWrites=true
+
+##Local connection string
+mongodb://127.0.0.1:27017/EdgeAppraisal
