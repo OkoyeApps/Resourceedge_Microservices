@@ -78,15 +78,11 @@ namespace Resourceedge.Appraisal.API.Services
 
                         string msg = $"has performed his/her appraisal for these quarter, Kindly attend to it as soon as possible.";
                         string url = "https://resourceedge.herokuapp.com/";
-                        if(result == null)
-                        {
-                            //break;
-                            return false;
-                        }
+              
                         if (entity.whoami == null)
                         {
                             var myAppraisal = mapper.Map<AppraisalResult>(entity);
-                            myAppraisal.NextAppraisee = "Appraisal";
+                            myAppraisal.NextAppraisee = "Appraiser";
                             myAppraisal.EmployeeAccept = new AcceptanceStatus()
                             {
                                 IsAccepted = true
