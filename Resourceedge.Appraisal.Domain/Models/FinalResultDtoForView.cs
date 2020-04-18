@@ -11,7 +11,9 @@ namespace Resourceedge.Appraisal.Domain.Models
     {
         public int EmployeeId { get; set; }
         public double EmployeeResult { get; set; }
+        public double AppraiseeResult { get; set; }
         public double? FinalResult { get; set; }
+
     }
     [BsonIgnoreExtraElements]
 

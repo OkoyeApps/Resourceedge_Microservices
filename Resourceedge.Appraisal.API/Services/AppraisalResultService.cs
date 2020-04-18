@@ -79,7 +79,7 @@ namespace Resourceedge.Appraisal.API.Services
                         if (entity.whoami == null)
                         {
                             var myAppraisal = mapper.Map<AppraisalResult>(entity);
-                            myAppraisal.NextAppraisee = "Appraisal";
+                            myAppraisal.NextAppraisee = "Appraiser";
                             myAppraisal.EmployeeAccept = new AcceptanceStatus()
                             {
                                 IsAccepted = true
@@ -156,7 +156,7 @@ namespace Resourceedge.Appraisal.API.Services
                         && a.KeyResultArea.Id == entity.KeyResultAreaId).FirstOrDefault();
                         var keyResultArea = await resultAreaRepo.QuerySingle(entity.KeyResultAreaId);
 
-                        if (entity.whoami == "APPRAISAL")
+                        if (entity.whoami == "APPRAISER")
                         {
                             if (result == null)
                             {
@@ -541,7 +541,8 @@ namespace Resourceedge.Appraisal.API.Services
                            {"AppraisalConfigId",  ObjectId.Parse(appraisalConfigurationId) },
                            {"AppraisalCycleId", ObjectId.Parse(appraisalCycleId) },
                            { "EmployeeResult", "$Appraisal_Result.EmployeeResult"},
-                           {"FinalResult",  "$Appraisal_Result.FinalResult" }
+                           {"FinalResult",  "$Appraisal_Result.FinalResult" },
+                           {"AppraiseeResult",  "$Appraisal_Result.AppraiseeResult" },
                         }
                      },
                         { "EmployeeDetail", "$EmployeeDetail"},

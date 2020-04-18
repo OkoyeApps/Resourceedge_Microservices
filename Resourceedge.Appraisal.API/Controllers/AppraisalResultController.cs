@@ -83,8 +83,8 @@ namespace Resourceedge.Appraisal.API.Controllers
 
         }
 
-        [HttpPost]
-        public async Task<IActionResult> SumbitApprisal(IEnumerable<AppraisalResultForCreationDtoString> appraisalResultForCreation)
+        [HttpPost, Route("self/{employeeId}")]
+        public async Task<IActionResult> SumbitApprisal(int employeeId, IEnumerable<AppraisalResultForCreationDtoString> appraisalResultForCreation)
         {
             if (!appraisalResultForCreation.Any())
             {
