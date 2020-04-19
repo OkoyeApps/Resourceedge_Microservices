@@ -83,7 +83,7 @@ namespace Resourceedge.Appraisal.API.Controllers
 
                 return Ok(new { success = true });
             }
-            return BadRequest(new { message = "Employee has not done appraisal" });
+            return BadRequest(new { message = "You have already appraised these Employee or an error occured" });
 
         }
 

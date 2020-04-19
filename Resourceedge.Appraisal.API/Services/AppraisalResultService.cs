@@ -146,8 +146,15 @@ namespace Resourceedge.Appraisal.API.Services
                         var result = Collection.Find(a => a.myId == entity.myId && a.AppraisalConfigId == entity.AppraisalConfigId && a.AppraisalCycleId == entity.AppraisalCycleId
                         && a.KeyResultArea.Id == entity.KeyResultAreaId).FirstOrDefault();
 
+
+
                         if (entity.whoami == "APPRAISER")
                         {
+                            if (result.NextAppraisee == "Hod")
+                            {
+                                return false;
+                            }
+
                             if (result == null)
                             {
                                 return false;
@@ -201,6 +208,12 @@ namespace Resourceedge.Appraisal.API.Services
                         }
                         else if (entity.whoami == "HOD")
                         {
+
+                            if (result.NextAppraisee == "Done")
+                            {
+                                return false;
+                            }
+
                             foreach (var item in entity.KeyOutcomeScore)
                             {
                                 if (result.KeyOutcomeScore.Any(a => a.KeyOutcomeId == item.KeyOutcomeId))
@@ -215,6 +228,7 @@ namespace Resourceedge.Appraisal.API.Services
                                 }
                             }
 
+                            result.AppraiseeFeedBack = entity.AppraiseeFeedBack;
                             result.HodAccept.IsAccepted = true;
                             var average = result.KeyOutcomeScore.Average(x => x.HodScore.Value);
                             result.FinalCalculation.ScoreTotal = result.KeyOutcomeScore.Sum(x => x.HodScore.Value);

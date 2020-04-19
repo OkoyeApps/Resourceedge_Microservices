@@ -31,7 +31,7 @@ namespace Resourceedge.Appraisal.API.Helpers
             bool hodApproval = result.HodAccept.IsAccepted.Value;
             if (hodApproval)
             {
-                result.KeyOutcomeScore.ToList().ForEach(x => x.HodScore = x.AppraisalScore);
+                //result.KeyOutcomeScore.ToList().ForEach(x => x.HodScore = x.AppraisalScore);
                 result.IsCompleted = true;
             }
             else
