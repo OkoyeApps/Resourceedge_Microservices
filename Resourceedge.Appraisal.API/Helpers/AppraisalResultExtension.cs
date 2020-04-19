@@ -1,4 +1,6 @@
 ﻿using Resourceedge.Appraisal.Domain.Entities;
+using Resourceedge.Email.Api.Model;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Resourceedge.Appraisal.API.Helpers
@@ -37,6 +39,19 @@ namespace Resourceedge.Appraisal.API.Helpers
                 result.HodAccept.Reason = reason;
             }
             return result;
+        }
+
+        public static List<SingleEmailDto> FormatEmailForAppraisal(List<SingleEmailDto> emailDto)
+        {
+            List<SingleEmailDto> emailDtos = new List<SingleEmailDto>();
+            foreach (var item in emailDto)
+            {
+                if (!emailDtos.Any(x => x.ReceiverEmailAddress == item.ReceiverEmailAddress))
+                {
+                    emailDtos.Add(item);
+                }
+            }
+            return emailDtos;
         }
     }
 }

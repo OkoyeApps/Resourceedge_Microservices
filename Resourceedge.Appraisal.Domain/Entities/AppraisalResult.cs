@@ -17,11 +17,11 @@ namespace Resourceedge.Appraisal.Domain.Entities
         public bool? IsAccepted { get; set; }
         public bool? IsCompleted { get; set; }
         public string NextAppraisee { get; set; }
-        public AcceptanceStatus EmployeeAccept { get; set; }
-        public AcceptanceStatus HodAccept { get; set; }
-        public AppraisalCalculationByKRA EmployeeCalculation { get; set; }
-        public AppraisalCalculationByKRA AppraiseeCalculation { get; set; }
-        public AppraisalCalculationByKRA FinalCalculation { get; set; }
+        public AcceptanceStatus EmployeeAccept { get; set; } = new AcceptanceStatus();
+        public AcceptanceStatus HodAccept { get; set; } = new AcceptanceStatus();
+        public AppraisalCalculationByKRA EmployeeCalculation { get; set; } = new AppraisalCalculationByKRA();
+        public AppraisalCalculationByKRA AppraiseeCalculation { get; set; } = new AppraisalCalculationByKRA();
+        public AppraisalCalculationByKRA FinalCalculation { get; set; } = new AppraisalCalculationByKRA();
         public string Year { get; set; } = DateTime.Now.Year.ToString();
     }
 

@@ -17,7 +17,7 @@ namespace Resourceedge.Appraisal.Domain.Models
         public FeedBack AppraiseeFeedBack { get; set; }
         public bool? IsAccepted { get; set; }
         public bool? IsCompleted { get; set; }
-        public string CurrentSupervisor { get; set; }
+        public string NextSupervisor { get; set; }
         public string NextAppraisee { get; set; }
         public AcceptanceStatus EmployeeAccept { get; set; }
         public AcceptanceStatus HodAccept { get; set; }

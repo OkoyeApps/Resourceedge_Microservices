@@ -16,8 +16,7 @@ namespace Resourceedge.Appraisal.API.Interfaces
 
         void InsertResult(AppraisalResult entity);
 
-        Task<bool> SubmitAppraisal(IEnumerable<AppraisalResultForCreationDto> entity);
-
+        Task<bool> SubmitAppraisal(int empId, IEnumerable<AppraisalResultForCreationDto> entity);
         Task<UpdateResult> EmployeeAcceptOrReject(ObjectId appraisalResultId, AcceptanceStatus status);
 
         Task<UpdateResult> HodApprovalOrReject(ObjectId appraisalResultId, AcceptanceStatus status);
@@ -27,6 +26,7 @@ namespace Resourceedge.Appraisal.API.Interfaces
 
         Task<bool> CheckAppraisalConfigurationDetails(AppraisalQueryParam model);
         Task<bool> CheckMultipleAppraisalConfigurationDetails(IEnumerable<AppraisalQueryParam> model);
+        Task<bool> AppraiseEmployee(int empId, IEnumerable<AppraisalResultForCreationDto> entities);
 
     }
 }

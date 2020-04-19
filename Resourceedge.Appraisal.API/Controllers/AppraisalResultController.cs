@@ -49,32 +49,36 @@ namespace Resourceedge.Appraisal.API.Controllers
             return Ok(result);
         }
 
-        [HttpPost("{whoami}")]
-        public async Task<IActionResult> SumbitApprisal(string whoami, IEnumerable<AppraisalResultForCreationDtoString> appraisalResultForCreation)
+        [HttpPost("Appraiser/{employeeId}")]
+        public async Task<IActionResult> AppraiseEmployee(int employeeId, [FromQuery]AppraisalQueryParam configParam, [FromBody]IEnumerable<AppraisalResultForCreationDtoString> appraisalResultForCreation)
         {
             if (appraisalResultForCreation == null)
             {
                 return BadRequest(new {message = "No Result Sent" });
             }
 
-            var appraisalQuery = appraisalResultForCreation.Select(a => new AppraisalQueryParam() { Config = a.AppraisalConfigId, Cycle = a.AppraisalCycleId }).Distinct();
+            var hasDoneAppraisal = await appraisalResult.HasPaticipatedInAppraisal(employeeId);
+            if (!hasDoneAppraisal)
+            {
+                return BadRequest(new { message = "Employee has not participated in this appraisal!" });
+            }
 
-            var configExist = await appraisalResult.CheckMultipleAppraisalConfigurationDetails(appraisalQuery.Distinct());
+            var configExist = await appraisalResult.CheckAppraisalConfigurationDetails(configParam);
             if (!configExist)
             {
                 return BadRequest( new { message = "Invalid Configuration details" });
             }
 
             var appraisalResultToSubmit = mapper.Map<IEnumerable<AppraisalResultForCreationDtoString>, IEnumerable<AppraisalResultForCreationDto>>(appraisalResultForCreation);
-           
-            var result = await appraisalResult.SubmitAppraisal(appraisalResultToSubmit);
+
+            var result = await appraisalResult.AppraiseEmployee(employeeId, appraisalResultToSubmit) ;
             if (result)
             {
                 var appraisalResultToReturn = mapper.Map<IEnumerable<AppraisalResult>>(appraisalResultToSubmit);
 
                 if (appraisalResultToReturn.Any())
                 {
-                    finalResultRepo.CalculateResult(appraisalResultToReturn.FirstOrDefault().myId, appraisalResultToReturn.FirstOrDefault().AppraisalCycleId);
+                    finalResultRepo.CalculateResult(employeeId, ObjectId.Parse(configParam.Cycle));
                 }
 
                 return Ok(new { success = true });
@@ -84,37 +88,35 @@ namespace Resourceedge.Appraisal.API.Controllers
         }
 
         [HttpPost, Route("self/{employeeId}")]
-        public async Task<IActionResult> SumbitApprisal(int employeeId, IEnumerable<AppraisalResultForCreationDtoString> appraisalResultForCreation)
+        public async Task<IActionResult> SumbitApprisal(int employeeId, [FromQuery]AppraisalQueryParam configParam, [FromBody]IEnumerable<AppraisalResultForCreationDtoString> appraisalResultForCreation)
         {
             if (!appraisalResultForCreation.Any())
             {
                 return BadRequest(new { message = "No Result Sent" });
             }
 
-            var appraisalQuery = appraisalResultForCreation.Select(a => new AppraisalQueryParam() { Config = a.AppraisalConfigId, Cycle = a.AppraisalCycleId }).Distinct();
-            
-            var configExist = await appraisalResult.CheckMultipleAppraisalConfigurationDetails(appraisalQuery);
-            if (!configExist)
-            {
-                return BadRequest(new { message = "Invalid Configuration details" });
-            }
-
-            var hasDoneAppraisal = await appraisalResult.HasPaticipatedInAppraisal(1);
+            var hasDoneAppraisal = await appraisalResult.HasPaticipatedInAppraisal(employeeId);
             if (hasDoneAppraisal)
             {
                 return BadRequest(new { message = "You have already participated in this appraisal" });
             }
 
+            var configExist = await appraisalResult.CheckAppraisalConfigurationDetails(configParam);
+            if (!configExist)
+            {
+                return BadRequest(new { message = "Invalid Configuration details" });
+            }                
+
             var appraisalResultToSubmit = mapper.Map<IEnumerable<AppraisalResultForCreationDtoString>, IEnumerable<AppraisalResultForCreationDto>>(appraisalResultForCreation);
                        
-            var result = await appraisalResult.SubmitAppraisal(appraisalResultToSubmit);
+            var result = await appraisalResult.SubmitAppraisal(employeeId, appraisalResultToSubmit);
             if (result)
             {
                 var appraisalResultToReturn = mapper.Map<IEnumerable<AppraisalResult>>(appraisalResultToSubmit);
 
                 if (appraisalResultToReturn.Any())
                 {
-                    finalResultRepo.CalculateResult(appraisalResultToReturn.FirstOrDefault().myId, appraisalResultToReturn.FirstOrDefault().AppraisalCycleId);
+                    finalResultRepo.CalculateResult(employeeId, ObjectId.Parse(configParam.Cycle));
                 }
 
                 return Ok(new { success = true });
