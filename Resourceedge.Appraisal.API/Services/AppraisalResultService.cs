@@ -78,7 +78,7 @@ namespace Resourceedge.Appraisal.API.Services
                 {
                     foreach (var entity in entities)
                     {
-                        var filter = Builders<AppraisalResult>.Filter.Where(a => a.myId == entity.myId
+                        var filter = Builders<AppraisalResult>.Filter.Where(a => a.myId == empId
                                                                             && a.AppraisalConfigId == entity.AppraisalConfigId
                                                                             && a.AppraisalCycleId == entity.AppraisalCycleId
                                                                             && a.KeyResultArea.Id == entity.KeyResultAreaId);
@@ -91,8 +91,8 @@ namespace Resourceedge.Appraisal.API.Services
                             myAppraisal.NextAppraisee = "Appraiser";
                             myAppraisal.EmployeeAccept.IsAccepted = true;
 
-                            var average = myAppraisal.KeyOutcomeScore.Average(x => x.EmployeeScore.Value);
                             myAppraisal.KeyResultArea = keyResultArea;
+                            var average = myAppraisal.KeyOutcomeScore.Average(x => x.EmployeeScore.Value);
                             myAppraisal.EmployeeCalculation.ScoreTotal = myAppraisal.KeyOutcomeScore.Sum(x => x.EmployeeScore).Value;
                             myAppraisal.EmployeeCalculation.Average = average;
                             myAppraisal.EmployeeCalculation.WeightContribution = (average * (Convert.ToDouble(myAppraisal.KeyResultArea.Weight)) / 100);
@@ -102,8 +102,7 @@ namespace Resourceedge.Appraisal.API.Services
                             email.ReceiverFullName = keyResultArea.AppraiserDetails.Name;
                             email.ReceiverEmailAddress = keyResultArea.AppraiserDetails.Email;
                             email.HtmlContent = await sender.FormatEmail(employee.FullName, keyResultArea.AppraiserDetails.Name, msg, title, url);
-
-
+                            
                             if (email.HtmlContent == null)
                             {
                                 email.HtmlContent = @$"<p>{employee.FullName} has participated in these quarter, kindly login to resourceedge and Appraise him/her.</p>";
@@ -132,7 +131,7 @@ namespace Resourceedge.Appraisal.API.Services
 
         public async Task<bool> AppraiseEmployee(int empId, IEnumerable<AppraisalResultForCreationDto> entities)
         {
-            var employee = await resultAreaRepo.GetEmployee(entities.FirstOrDefault().myId);
+            var employee = await resultAreaRepo.GetEmployee(empId);
             string title = "Pending Appraisal";
             string subject = "";
             string msg = $"has performed his/her appraisal for these quarter, Kindly attend to it as soon as possible.";
@@ -146,11 +145,9 @@ namespace Resourceedge.Appraisal.API.Services
                 {
                     foreach (var entity in entities)
                     {
-                        var filter = Builders<AppraisalResult>.Filter.Where(a => a.myId == entity.myId && a.AppraisalConfigId == entity.AppraisalConfigId && a.AppraisalCycleId == entity.AppraisalCycleId && a.KeyResultArea.Id == entity.KeyResultAreaId);
-                        var result = Collection.Find(a => a.myId == entity.myId && a.AppraisalConfigId == entity.AppraisalConfigId && a.AppraisalCycleId == entity.AppraisalCycleId
+                        var filter = Builders<AppraisalResult>.Filter.Where(a => a.myId == empId && a.AppraisalConfigId == entity.AppraisalConfigId && a.AppraisalCycleId == entity.AppraisalCycleId && a.KeyResultArea.Id == entity.KeyResultAreaId);
+                        var result = Collection.Find(a => a.myId == empId && a.AppraisalConfigId == entity.AppraisalConfigId && a.AppraisalCycleId == entity.AppraisalCycleId
                         && a.KeyResultArea.Id == entity.KeyResultAreaId).FirstOrDefault();
-
-
 
                         if (entity.whoami == "APPRAISER")
                         {
@@ -163,6 +160,7 @@ namespace Resourceedge.Appraisal.API.Services
                             {
                                 return false;
                             }
+
                             result.AppraiseeFeedBack = entity.AppraiseeFeedBack;
                             result.NextAppraisee = "Hod";
                             result.IsAccepted = true;
