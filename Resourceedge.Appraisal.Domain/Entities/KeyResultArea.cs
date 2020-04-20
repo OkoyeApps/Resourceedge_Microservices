@@ -23,7 +23,7 @@ namespace Resourceedge.Appraisal.Domain.Entities
         public bool? Approved { get; set; }
         public int Year { get; set; } = DateTime.Now.Year;
         public bool IsActive { get; set; }
-        public ICollection<KeyOutcome> keyOutcomes { get; set; } = new List<KeyOutcome>();
+        public IEnumerable<KeyOutcome> keyOutcomes { get; set; } = new List<KeyOutcome>();
         public ApprovalStatus Status { get; set; } = new ApprovalStatus();
         public BsonDateTime CreatedAt { get; set; }
         public BsonDateTime UpdatedAt { get; set; }

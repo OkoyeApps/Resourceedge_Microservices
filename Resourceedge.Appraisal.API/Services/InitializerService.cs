@@ -13,54 +13,54 @@ namespace Resourceedge.Appraisal.API.Services
 {
     public class InitializerService
     {
-        public static void Seed(IApplicationBuilder service)
+        public static void Seed(IDbContext IdbContext)
         {
-            var dbContext = service.ApplicationServices.GetRequiredService(typeof(IDbContext)) as IDbContext;
+            var dbContext = IdbContext;
             if (dbContext != null)
             {
                 var collection = dbContext.Database.GetCollection<KeyResultArea>($"{nameof(KeyResultArea)}s");
                 if (!collection.AsQueryable().Any())
                 {
 
-                    //var dataToAdd = new List<KeyResultArea>()
-                    //{
-                    //    new KeyResultArea
-                    //    {
-                    //        UserId = Guid.NewGuid().ToString(),
-                    //         EmployeeId = 1,
-                    //        AppraiserDetails = new NameEmail { Name = "Emmanuel", EmployeeId = 1, Email = "appraisal@test.com" },
-                    //        HodDetails = new NameEmail { Name = "EmmanuelHod", EmployeeId = 4, Email = "Hod@test.com" },
-                    //        keyOutcomes =
-                    //        {
-                    //            new KeyOutcome{ Question = "Test question 1", TimeLimit = BsonDateTime.Create(DateTime.Now).ToString() },
-                    //            new KeyOutcome{ Question = "Test question 2", TimeLimit = BsonDateTime.Create(DateTime.Now).ToString()},
-                    //            new KeyOutcome{ Question = "Test question 3", TimeLimit = BsonDateTime.Create(DateTime.Now).ToString()},
-                    //        },
-                    //        Weight = 50,
-                    //        Approved = true,
-                    //        Name = "School Manager",
-                    //        Status = new ApprovalStatus  { Employee =true, Hod = true, IsAccepted = true }
-                    //    },
-                    //    new KeyResultArea
-                    //    {
-                    //        UserId = Guid.NewGuid().ToString(),
-                    //        EmployeeId = 1,
-                    //        AppraiserDetails = new NameEmail { Name = "Test", EmployeeId = 1, Email = "test@test.com" },
-                    //        HodDetails = new NameEmail { Name = "TestlHod", EmployeeId = 1, Email = "test@test.com" },
-                    //        keyOutcomes =
-                    //        {
-                    //            new KeyOutcome{ Question = "Test question 4", TimeLimit = BsonDateTime.Create(DateTime.Now).ToString()},
-                    //            new KeyOutcome{ Question = "Test question 5", TimeLimit = BsonDateTime.Create(DateTime.Now).ToString()},
-                    //            new KeyOutcome{ Question = "Test question 6", TimeLimit = BsonDateTime.Create(DateTime.Now).ToString()},
-                    //        },
-                    //        Weight = 50,
-                    //        Approved = true,
-                    //        Name = "School Manager",
-                    //        Status = new ApprovalStatus { Employee =true, Hod = false, IsAccepted = true }
-                    //    }
-                    //};
+                    var dataToAdd = new List<KeyResultArea>()
+                    {
+                        new KeyResultArea
+                        {
+                            UserId = Guid.NewGuid().ToString(),
+                             EmployeeId = 1,
+                            AppraiserDetails = new NameEmail { Name = "Emmanuel", EmployeeId = 1, Email = "appraisal@test.com" },
+                            HodDetails = new NameEmail { Name = "EmmanuelHod", EmployeeId = 4, Email = "Hod@test.com" },
+                            keyOutcomes = new List<KeyOutcome>()
+                            {
+                                new KeyOutcome{ Question = "Test question 1", TimeLimit = BsonDateTime.Create(DateTime.Now.AddDays(-20)).ToString()},
+                                new KeyOutcome{ Question = "Test question 2", TimeLimit = BsonDateTime.Create(DateTime.Now.AddDays(-20)).ToString()},
+                                new KeyOutcome{ Question = "Test question 3", TimeLimit = BsonDateTime.Create(DateTime.Now).ToString()},
+                            },
+                            Weight = 50,
+                            Approved = true,
+                            Name = "School Manager",
+                            Status = new ApprovalStatus  { Employee =true, Hod = true, IsAccepted = true }
+                        },
+                        new KeyResultArea
+                        {
+                            UserId = Guid.NewGuid().ToString(),
+                            EmployeeId = 1,
+                            AppraiserDetails = new NameEmail { Name = "Test", EmployeeId = 1, Email = "test@test.com" },
+                            HodDetails = new NameEmail { Name = "TestlHod", EmployeeId = 1, Email = "test@test.com" },
+                            keyOutcomes =new List<KeyOutcome>()
+                            {
+                                new KeyOutcome{ Question = "Test question 4", TimeLimit = "Continous"},
+                                new KeyOutcome{ Question = "Test question 5", TimeLimit = "Continous"},
+                                new KeyOutcome{ Question = "Test question 6", TimeLimit = "Continous"},
+                            },
+                            Weight = 50,
+                            Approved = true,
+                            Name = "School Manager",
+                            Status = new ApprovalStatus { Employee =true, Hod = true, IsAccepted = true }
+                        }
+                    };
 
-                    //collection.InsertMany(dataToAdd);
+                    collection.InsertMany(dataToAdd);
 
                 }
 
@@ -90,7 +90,7 @@ namespace Resourceedge.Appraisal.API.Services
                             },
                             Approved = true,
                             IsActive = true
-                            
+
                         },
                         new CoreValuesKRA()
                         {
@@ -113,7 +113,7 @@ namespace Resourceedge.Appraisal.API.Services
                     coreValueCollection.InsertMany(data);
                 }
 
-               // SeedAppraisalConfig(dbContext);
+                SeedAppraisalConfig(dbContext);
 
             }
         }
@@ -121,7 +121,7 @@ namespace Resourceedge.Appraisal.API.Services
         private static void SeedAppraisalConfig(IDbContext dbContext)
         {
             var collection = dbContext.Database.GetCollection<AppraisalConfig>($"{nameof(AppraisalConfig)}s");
-            if (collection.AsQueryable().Any())
+            if (!collection.AsQueryable().Any())
             {
                 var data = new AppraisalConfig()
                 {

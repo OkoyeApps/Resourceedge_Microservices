@@ -26,6 +26,8 @@ using System.Threading.Tasks;
 using System.Collections;
 using Resourceedge.Common.Util;
 using Resourceedge.Common.Models;
+using System.Text.RegularExpressions;
+using Resourceedge.Appraisal.Domain.Queries;
 
 namespace Resourceedge.Appraisal.API.Services
 {
@@ -388,16 +390,7 @@ namespace Resourceedge.Appraisal.API.Services
             return QueryableCollection.Any(x => x.EmployeeId == employeeId && x.Year == year);
         }
 
-        public IEnumerable<KeyResultArea> GetAcceptedAppraisal(int userId, string resultId = null)
-        {
-            if (resultId != null)
-            {
-                ObjectId Id = new ObjectId(resultId);
-                return QueryableCollection.Where(x => x.EmployeeId == userId && x.Id == Id && x.Approved == true && x.Status.Employee == true && x.Year == DateTime.Now.Year).ToList();
-            }
 
-            return QueryableCollection.Where(x => x.EmployeeId == userId && x.Approved == true && x.Status.Employee == true && x.Year == DateTime.Now.Year).ToList();
-        }        
 
         //public async Task<IEnumerable<NameEmailWithType>> GetAllSupervisorsForClaims()
         //{

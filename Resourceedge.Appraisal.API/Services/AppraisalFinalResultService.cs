@@ -36,14 +36,19 @@ namespace Resourceedge.Appraisal.API.Services
                 var oldFinalResult = Collection.Find(filter).FirstOrDefault();
                 if(oldFinalResult == null)
                 {
+                    
+                    var decimalEmployeeResult = (decimal)appraisalResult.Sum(x => x.EmployeeCalculation.WeightContribution);
+                    var decimalAppraisalResult = (decimal)((appraisalResult.FirstOrDefault().IsAccepted != null) ? appraisalResult.Sum(x => x.AppraiseeCalculation.WeightContribution) : 0);
+                    var decimalFinalResult = (decimal)((appraisalResult.FirstOrDefault().IsCompleted != null) ? appraisalResult.Sum(x => x.FinalCalculation.WeightContribution) : 0);
+
                     var finalResult = new FinalAppraisalResult()
                     {
                         AppraisalConfigId = appraisalResult.FirstOrDefault().AppraisalConfigId,
                         AppraisalCycleId = appraisalResult.FirstOrDefault().AppraisalCycleId,
                         EmployeeId = appraisalResult.FirstOrDefault().myId,
-                        EmployeeResult = appraisalResult.Sum(x => x.EmployeeCalculation.WeightContribution),
-                        AppraiseeResult = (appraisalResult.FirstOrDefault().IsAccepted != null) ? appraisalResult.Sum(x => x.AppraiseeCalculation.WeightContribution) : 0,
-                        FinalResult = (appraisalResult.FirstOrDefault().IsCompleted != null) ? appraisalResult.Sum(x => x.FinalCalculation.WeightContribution) : 0,
+                        EmployeeResult =(double) decimal.Round(decimalEmployeeResult, 2, MidpointRounding.AwayFromZero),
+                        AppraiseeResult = (double)decimal.Round(decimalAppraisalResult, 2, MidpointRounding.AwayFromZero),
+                        FinalResult = (double)decimal.Round(decimalFinalResult, 2, MidpointRounding.AwayFromZero),
                         Year = DateTime.Now.Year.ToString()
                     };
 

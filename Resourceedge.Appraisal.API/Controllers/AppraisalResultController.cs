@@ -194,6 +194,26 @@ namespace Resourceedge.Appraisal.API.Controllers
                 throw ex;
             }
         }
+
+        [HttpGet, Route("{employeeId}/kraforappraisal")]
+        public async Task<IActionResult> GetKraforAppraisal(int employeeId, [FromQuery]AppraisalQueryParam configParam)
+        {
+            var configDetails = await appraisalResult.GetAppraisalConfiguration(configParam.Config);
+            if(configDetails == null)
+            {
+                return NotFound(new { message = "Appraisal configuration not found" });
+            }
+
+            var currentCycle = configDetails.Cycles.FirstOrDefault(x => x.Id ==ObjectId.Parse(configParam.Cycle));
+            if(currentCycle == null)
+            {
+                return NotFound(new { message = "Appraisal cycle not found" });
+            }
+
+            var resultFromMap = appraisalResult.GetAcceptedKRAForAppraisal(employeeId, currentCycle);
+            var mapInstance = mapper.Map<IEnumerable<KeyResultAreaForViewDto>>(resultFromMap);
+            return Ok(mapInstance);
+        }
     }
    
 }

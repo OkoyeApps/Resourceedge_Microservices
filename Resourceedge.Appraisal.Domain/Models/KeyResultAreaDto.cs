@@ -33,7 +33,7 @@ namespace Resourceedge.Appraisal.Domain.Models
         public NameEmail Appraiser { get; set; } = new NameEmail();
         public bool? Approved { get; set; }
         public string whoami { get; set; }
-        public ICollection<KeyOutcome> keyOutcomes { get; set; } = new List<KeyOutcome>();
+        public IEnumerable<KeyOutcome> keyOutcomes { get; set; } = new List<KeyOutcome>();
         public ApprovalStatus Status { get; set; } = new ApprovalStatus();
         public AppraisalCalculationByKRA EmployeeCalculation { get; set; } = new AppraisalCalculationByKRA();
         public AppraisalCalculationByKRA FinalCalculation { get; set; } = new AppraisalCalculationByKRA();

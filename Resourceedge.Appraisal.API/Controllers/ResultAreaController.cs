@@ -13,6 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System;
 using System.IO;
+using Resourceedge.Appraisal.Domain.Queries;
 
 namespace Resourceedge.Appraisal.API.Controllers
 {
@@ -212,12 +213,12 @@ namespace Resourceedge.Appraisal.API.Controllers
             return Ok(result);
         }
 
-        [HttpGet("kraforappraisal")]
-        public ActionResult<IEnumerable<KeyResultAreaDtoForCreation>> GetKraforAppraisal(int empId)
-        {
-            var resultFromMap = resultArea.GetAcceptedAppraisal(empId);
-            var mapInstance = mapper.Map<IEnumerable<KeyResultAreaForViewDto>>(resultFromMap);
-            return Ok(mapInstance);
-        }        
+        //[HttpGet("kraforappraisal")]
+        //public ActionResult<IEnumerable<KeyResultAreaDtoForCreation>> GetKraforAppraisal(int empId,[FromQuery]AppraisalQueryParam configParam)
+        //{
+        //    var resultFromMap = resultArea.GetAcceptedAppraisal(empId, configParam);
+        //    var mapInstance = mapper.Map<IEnumerable<KeyResultAreaForViewDto>>(resultFromMap);
+        //    return Ok(mapInstance);
+        //}        
     }
 }

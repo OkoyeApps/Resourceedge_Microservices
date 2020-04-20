@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson;
 using Resourceedge.Appraisal.Domain.Entities;
 using Resourceedge.Appraisal.Domain.Models;
+using Resourceedge.Appraisal.Domain.Queries;
 using Resourceedge.Common.Archive;
 using Resourceedge.Common.Models;
 using Resourceedge.Common.Util;
@@ -29,7 +30,7 @@ namespace Resourceedge.Appraisal.API.Interfaces
         bool HasUploadedEpa(int employeeId);
         Task<KeyResultArea> DeleteKeyOutcome(ObjectId id, KeyResultArea entity);
         Task<KeyResultArea> QuerySingleByKeyOutcome(ObjectId id);
-        IEnumerable<KeyResultArea> GetAcceptedAppraisal(int userId, string resultId = null);
+        //IEnumerable<KeyResultArea> GetAcceptedAppraisal(int userId, AppraisalQueryParam configParam, string resultId = null);
 
         //To be deleted later
         //Task<IEnumerable<NameEmailWithType>> GetAllSupervisorsForClaims();

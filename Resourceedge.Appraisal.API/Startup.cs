@@ -147,7 +147,7 @@ namespace Resourceedge.Appraisal.API
             {
                 endpoints.MapControllers();
             });
-           InitializerService.Seed(app);
+           //InitializerService.Seed(app);
         }
     }
 }
