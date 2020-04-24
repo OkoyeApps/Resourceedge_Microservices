@@ -34,5 +34,6 @@ namespace Resourceedge.Appraisal.API.Interfaces
 
         //To be deleted later
         //Task<IEnumerable<NameEmailWithType>> GetAllSupervisorsForClaims();
+
     }
 }

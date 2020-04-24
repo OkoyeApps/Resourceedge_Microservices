@@ -28,9 +28,7 @@ namespace Resourceedge.Appraisal.API.Interfaces
         Task<bool> CheckMultipleAppraisalConfigurationDetails(IEnumerable<AppraisalQueryParam> model);
         Task<bool> AppraiseEmployee(int empId, IEnumerable<AppraisalResultForCreationDto> entities);
         IEnumerable<KeyResultArea> GetAcceptedKRAForAppraisal(int userId, AppraisalCycle configParam, string resultId = null);
-
         Task<AppraisalConfig> GetAppraisalConfiguration(string configid);
-
-
+        IEnumerable<KeyResultArea> GetOnlyApplicableKeyoutcomesForAppraisal(ObjectId kraId, int EmployeeId, IList<string> keyoutcomeIds);
     }
 }

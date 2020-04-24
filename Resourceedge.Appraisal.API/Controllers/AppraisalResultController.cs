@@ -211,7 +211,9 @@ namespace Resourceedge.Appraisal.API.Controllers
             }
 
             var resultFromMap = appraisalResult.GetAcceptedKRAForAppraisal(employeeId, currentCycle);
-            var mapInstance = mapper.Map<IEnumerable<KeyResultAreaForViewDto>>(resultFromMap);
+            var mapInstance = mapper.Map<IEnumerable<KeyResultAreaForViewDto>>(resultFromMap).ToList();
+
+            mapInstance.RemoveAll(x => !x.keyOutcomes.Any());
             return Ok(mapInstance);
         }
     }

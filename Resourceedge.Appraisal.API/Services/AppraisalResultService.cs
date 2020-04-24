@@ -17,6 +17,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Resourceedge.Appraisal.API.DBQueries;
+using System.Linq.Expressions;
+using System.Globalization;
+using System.Diagnostics;
 
 namespace Resourceedge.Appraisal.API.Services
 {
@@ -341,7 +345,6 @@ namespace Resourceedge.Appraisal.API.Services
             var lookupResult = KraCollection.Aggregate<AppraisalForApprovalDto>(pipeline);
 
             var finalResultToReturn = await GenerateDistinctArrayForEmployeeKRA(lookupResult);
-            //var result = lookupResult.ToList();
             if (finalResultToReturn.Count > 0)
             {
                 //get Equivalent Employee Details for each one
@@ -441,27 +444,31 @@ namespace Resourceedge.Appraisal.API.Services
         private bool GetApplicableKeyOutcomes(KeyOutcome keyOutcome, AppraisalCycle cycle)
         {
             DateTime parsedDate;
-            var valid = DateTime.TryParse(keyOutcome.TimeLimit, out parsedDate);
-            if (!valid)
+            var regex = new Regex("(continuously)|(yearly)|(annually)|(weekly)|(quaterly)|(continuous)|(ongoing)");
+            var passedRegex = regex.IsMatch(keyOutcome.TimeLimit.ToLower());
+            if (passedRegex) // not a date object
             {
-                //check if the values are 
-                var regex = new Regex("(continously)|(yearly)|(annually)|(weekly)|(quaterly)|(continous)|(ongoing)");
-                var passedRegex = regex.IsMatch(keyOutcome.TimeLimit.ToLower());
-                if (passedRegex)
-                {
-                    return true;
-                }
+                return true;
+            }
+            var splitedTimelimit = keyOutcome.TimeLimit.Split('/');
+            if(splitedTimelimit.Length < 3)
+            {
                 return false;
             }
-            else
+            var dateString = $"{splitedTimelimit[1]}/{splitedTimelimit[0]}/{splitedTimelimit[2]}";
+            var isvalid = DateTime.TryParseExact(dateString, "MM/dd/yyyy", CultureInfo.CurrentCulture, DateTimeStyles.AdjustToUniversal, out parsedDate);
+
+            if (isvalid)
             {
                 if (parsedDate <= cycle.StopDate)
                 {
                     return true;
                 }
-                return false;
             }
+            //unknown timelimit supplied so we return false
+            return false;
         }
+
 
         public async Task<AppraisalConfig> GetAppraisalConfiguration(string configid)
         {
@@ -469,47 +476,11 @@ namespace Resourceedge.Appraisal.API.Services
             return await Task.FromResult(result);
         }
 
-        public KeyResultArea GetKraAppraised(ObjectId kraId, IEnumerable<ObjectId> koIds)
+        public IEnumerable<KeyResultArea> GetOnlyApplicableKeyoutcomesForAppraisal(ObjectId kraId, int EmployeeId, IList<string> keyoutcomeIds)
         {
-            var array = koIds.ToArray();
-            var firstMatch = new BsonDocument
-            {
-                {
-                    "$match", new BsonDocument
-                    {
-                        {
-                            "_id", kraId
-                        },
-                        {"$expr" , new BsonDocument{
-                            {
-                                "keyOutcomes", new BsonDocument
-                                {
-                                    {"$in", new BsonArray(array) }
-                                }
-                        }
-                        }
-                        }
-                        
-                    }
-                }
-            };
-
-            //var filter = new BsonDocument
-            //{
-            //    {
-            //        "$in", new BsonDocument
-            //        {
-            //            {
-            //                "$keyOutcomes", new BsonArray(array)
-
-            //            }
-            //        }                   
-            //    }
-            //};
-
-            var pipeline = new[] { firstMatch };
-            return KraCollection.Aggregate<KeyResultArea>(pipeline).FirstOrDefault();
-
+            var pipelineObj = AppraisalQueries.GetApplicableKeyOutcomes(kraId, EmployeeId, keyoutcomeIds);
+            var result = KraCollection.Aggregate<KeyResultArea>(pipelineObj).ToList();
+            return result;
         }
     }
 

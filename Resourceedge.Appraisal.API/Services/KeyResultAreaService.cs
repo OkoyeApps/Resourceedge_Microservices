@@ -28,6 +28,8 @@ using Resourceedge.Common.Util;
 using Resourceedge.Common.Models;
 using System.Text.RegularExpressions;
 using Resourceedge.Appraisal.Domain.Queries;
+using MongoDB.Bson.Serialization;
+using Resourceedge.Appraisal.API.DBQueries;
 
 namespace Resourceedge.Appraisal.API.Services
 {
@@ -57,7 +59,6 @@ namespace Resourceedge.Appraisal.API.Services
             //HttpClient.SetBearerToken(tokenAccesor.TokenResponse.AccessToken);
             //AuthHttpClient.SetBearerToken(tokenAccesor.TokenResponse.AccessToken);
         }
-
 
         public async Task<IEnumerable<KeyResultArea>> Get(int? PageSize, int? PageNumber)
         {
@@ -95,7 +96,6 @@ namespace Resourceedge.Appraisal.API.Services
             var aa = entity.ToBsonDocument();
             var update = new BsonDocument("$set", aa);
             Collection.UpdateOne(filter, update, new UpdateOptions { IsUpsert = true });
-
             return null;
         }
 
@@ -223,7 +223,7 @@ namespace Resourceedge.Appraisal.API.Services
             return QueryableCollection.Where(x => x.EmployeeId == userId).ToList();
         }
 
-     
+
 
         public async Task<KeyResultArea> Update(ObjectId Id, KeyResultArea entity)
         {
@@ -389,7 +389,6 @@ namespace Resourceedge.Appraisal.API.Services
             var year = DateTime.Now.Year;
             return QueryableCollection.Any(x => x.EmployeeId == employeeId && x.Year == year);
         }
-
 
 
         //public async Task<IEnumerable<NameEmailWithType>> GetAllSupervisorsForClaims()

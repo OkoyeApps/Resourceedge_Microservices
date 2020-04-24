@@ -63,7 +63,7 @@ namespace Resourceedge.Authentication.API
                 config.Cookie.Name = "IdentityServer.Cookie";
                 config.LogoutPath = "/Auth/signout";
             });
-            var assembly = typeof(Startup).Assembly.GetName().Name;
+            var assembly = typeof(Startup).Assembly.GetName().Name; 
 
             //var certificate = new X509Certificate2()
 
