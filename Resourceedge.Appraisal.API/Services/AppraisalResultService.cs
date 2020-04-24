@@ -2,12 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using Resourceedge.Appraisal.API.DBQueries;
 using Resourceedge.Appraisal.API.Helpers;
 using Resourceedge.Appraisal.API.Interfaces;
 using Resourceedge.Appraisal.Domain.DBContexts;
 using Resourceedge.Appraisal.Domain.Entities;
 using Resourceedge.Appraisal.Domain.Models;
-using Resourceedge.Common.Util;
 using Resourceedge.Appraisal.Domain.Queries;
 using Resourceedge.Email.Api.Interfaces;
 using Resourceedge.Email.Api.Model;
@@ -15,10 +15,8 @@ using Resourceedge.Email.Api.SGridClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Text.RegularExpressions;
-using Resourceedge.Appraisal.API.DBQueries;
-using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace Resourceedge.Appraisal.API.Services
 {
@@ -63,8 +61,8 @@ namespace Resourceedge.Appraisal.API.Services
         public async Task<bool> SubmitAppraisal(int empId, IEnumerable<AppraisalResultForCreationDto> entities)
         {
             var employee = await resultAreaRepo.GetEmployee(entities.FirstOrDefault().myId);
-            string title = "Pending Appraisal";
-            string msg = $"has performed his/her appraisal for these quarter, Kindly attend to it as soon as possible.";
+            string title = "Appraise";
+            string msg = $"has successfully appraised self. Kindly login to the portal and appraise him/her. <br /> Thank you.</p>";
             string url = "https://resourceedge.herokuapp.com/";
             string subject = "";
             List<SingleEmailDto> emailDto = new List<SingleEmailDto>();
@@ -72,18 +70,15 @@ namespace Resourceedge.Appraisal.API.Services
 
             if (employee != null)
             {
-                subject = $"Pending Appraisal for {employee.FullName}";
+                subject = $"Appraise {employee.FullName}";
 
                 try
                 {
                     foreach (var entity in entities)
                     {
-                        var filter = Builders<AppraisalResult>.Filter.Where(a => a.myId == empId
-                                                                            && a.AppraisalConfigId == entity.AppraisalConfigId
-                                                                            && a.AppraisalCycleId == entity.AppraisalCycleId
-                                                                            && a.KeyResultArea.Id == entity.KeyResultAreaId);
 
                         var keyResultArea = await resultAreaRepo.QuerySingle(entity.KeyResultAreaId);
+                        //var keyResultArea = GetKraAppraised(entity.KeyResultAreaId, entity.KeyOutcomeScore.Select(x => x.KeyOutcomeId).ToArray());
 
                         if (entity.whoami == null)
                         {
@@ -102,17 +97,18 @@ namespace Resourceedge.Appraisal.API.Services
                             email.ReceiverFullName = keyResultArea.AppraiserDetails.Name;
                             email.ReceiverEmailAddress = keyResultArea.AppraiserDetails.Email;
                             email.HtmlContent = await sender.FormatEmail(employee.FullName, keyResultArea.AppraiserDetails.Name, msg, title, url);
-                            
+
                             if (email.HtmlContent == null)
                             {
-                                email.HtmlContent = @$"<p>{employee.FullName} has participated in these quarter, kindly login to resourceedge and Appraise him/her.</p>";
+                                email.HtmlContent = @$"<b>Dear {myAppraisal.KeyResultArea.AppraiserDetails.Name},</b> <br /> <p>{employee.FullName} has successfully appraised self. Kindly login to the portal and appraise him/her.<br /><br /> Thank you.</p>";
+
                             }
                             emailDto.Add(email);
                         }
                     }
 
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     return false;
                 }
@@ -132,9 +128,9 @@ namespace Resourceedge.Appraisal.API.Services
         public async Task<bool> AppraiseEmployee(int empId, IEnumerable<AppraisalResultForCreationDto> entities)
         {
             var employee = await resultAreaRepo.GetEmployee(empId);
-            string title = "Pending Appraisal";
+            string title = "Appraised Done";
             string subject = "";
-            string msg = $"has performed his/her appraisal for these quarter, Kindly attend to it as soon as possible.";
+            string msg = $"has successfully appraised self. Kindly login to the portal and appraise him/her. <br /> Thank you.</p>";
             string url = "https://resourceedge.herokuapp.com/";
             List<SingleEmailDto> emailDto = new List<SingleEmailDto>();
             SingleEmailDto email = new SingleEmailDto();
@@ -145,9 +141,11 @@ namespace Resourceedge.Appraisal.API.Services
                 {
                     foreach (var entity in entities)
                     {
-                        var filter = Builders<AppraisalResult>.Filter.Where(a => a.myId == empId && a.AppraisalConfigId == entity.AppraisalConfigId && a.AppraisalCycleId == entity.AppraisalCycleId && a.KeyResultArea.Id == entity.KeyResultAreaId);
-                        var result = Collection.Find(a => a.myId == empId && a.AppraisalConfigId == entity.AppraisalConfigId && a.AppraisalCycleId == entity.AppraisalCycleId
-                        && a.KeyResultArea.Id == entity.KeyResultAreaId).FirstOrDefault();
+                        var filter = Builders<AppraisalResult>.Filter.Where(a => a.myId == empId
+                                                                                                    && a.AppraisalConfigId == entity.AppraisalConfigId
+                                                                                                    && a.AppraisalCycleId == entity.AppraisalCycleId
+                                                                                                    && a.KeyResultArea.Id == entity.KeyResultAreaId);
+                        var result = Collection.Find(filter).FirstOrDefault();
 
                         if (entity.whoami == "APPRAISER")
                         {
@@ -198,13 +196,14 @@ namespace Resourceedge.Appraisal.API.Services
                             var update = new BsonDocument("$set", entityToUpdate);
                             Collection.FindOneAndUpdate(filter, update, options: new FindOneAndUpdateOptions<AppraisalResult> { ReturnDocument = ReturnDocument.After });
 
-                            email.ReceiverFullName = result.KeyResultArea.HodDetails.Name;
+                            email.ReceiverFullName = result.KeyResultArea.Name;
                             email.ReceiverEmailAddress = result.KeyResultArea.HodDetails.Email;
                             email.HtmlContent = await sender.FormatEmail(employee.FullName, result.KeyResultArea.HodDetails.Name, msg, title, url);
 
                             if (email.HtmlContent == null)
                             {
-                                email.HtmlContent = @$"<p>{result.KeyResultArea.AppraiserDetails.Name} has Completed your appraisal for these quarter, kindly login to resourceedge and View your result.</p>";
+                                email.HtmlContent = @$"<b>Dear {result.KeyResultArea.HodDetails.Name},</b> <br /> <br /> <p>{result.KeyResultArea.AppraiserDetails.Name} has successfully appraised {employee.FullName}. Kindly login to the portal and review. <br /><br /> Thank you.</p>";
+
                             }
                             emailDto.Add(email);
                         }
@@ -249,7 +248,7 @@ namespace Resourceedge.Appraisal.API.Services
 
                             if (email.HtmlContent == null)
                             {
-                                email.HtmlContent = @$"<p>{result.KeyResultArea.HodDetails.Name} has Completed your appraisal for these quarter, kindly login to resourceedge and View your result.</p>";
+                                email.HtmlContent = @$"<b>Dear {employee.FullName},</b> <br /> <br /> <p>{result.KeyResultArea.AppraiserDetails.Name} has successfully appraised you. Kindly login to the portal and View. <br /> Thank you.</p>";
                             }
                             emailDto.Add(email);
                         }
@@ -419,7 +418,7 @@ namespace Resourceedge.Appraisal.API.Services
                 return KraCollection.AsQueryable().Where(x => x.EmployeeId == userId && x.Id == Id && x.Approved == true && x.Status.Employee == true && x.Year == DateTime.Now.Year).ToList();
             }
 
-             Func<KeyOutcome,  bool> function  = (x) => GetApplicableKeyOutcomes(x, configParam);
+            Func<KeyOutcome, bool> function = (x) => GetApplicableKeyOutcomes(x, configParam);
             var year = DateTime.Now.Year;
             return KraCollection.AsQueryable().Where(x => x.EmployeeId == userId && x.Approved == true && x.Status.Employee == true && x.Year == year).ToList()
                 .Select(x => new KeyResultArea
@@ -442,7 +441,7 @@ namespace Resourceedge.Appraisal.API.Services
         private bool GetApplicableKeyOutcomes(KeyOutcome keyOutcome, AppraisalCycle cycle)
         {
             DateTime parsedDate;
-            var valid = DateTime.TryParse(keyOutcome.TimeLimit, out  parsedDate);
+            var valid = DateTime.TryParse(keyOutcome.TimeLimit, out parsedDate);
             if (!valid)
             {
                 //check if the values are 
@@ -468,6 +467,49 @@ namespace Resourceedge.Appraisal.API.Services
         {
             var result = AppraisalConfigCollection.AsQueryable().FirstOrDefault(x => x.Id == ObjectId.Parse(configid));
             return await Task.FromResult(result);
+        }
+
+        public KeyResultArea GetKraAppraised(ObjectId kraId, IEnumerable<ObjectId> koIds)
+        {
+            var array = koIds.ToArray();
+            var firstMatch = new BsonDocument
+            {
+                {
+                    "$match", new BsonDocument
+                    {
+                        {
+                            "_id", kraId
+                        },
+                        {"$expr" , new BsonDocument{
+                            {
+                                "keyOutcomes", new BsonDocument
+                                {
+                                    {"$in", new BsonArray(array) }
+                                }
+                        }
+                        }
+                        }
+                        
+                    }
+                }
+            };
+
+            //var filter = new BsonDocument
+            //{
+            //    {
+            //        "$in", new BsonDocument
+            //        {
+            //            {
+            //                "$keyOutcomes", new BsonArray(array)
+
+            //            }
+            //        }                   
+            //    }
+            //};
+
+            var pipeline = new[] { firstMatch };
+            return KraCollection.Aggregate<KeyResultArea>(pipeline).FirstOrDefault();
+
         }
     }
 

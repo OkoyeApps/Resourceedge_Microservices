@@ -86,7 +86,7 @@ namespace Resourceedge.Appraisal.API.Services
                     {
                         {$"AppraisalCycleId", cycleId },                       
                         {$"Year",  year}
-                        
+                        //{$"IsCompleted", true }
                     }
                 }
             };
@@ -97,7 +97,7 @@ namespace Resourceedge.Appraisal.API.Services
                     "$project", new BsonDocument{
                         { "EmployeeDetail", new BsonDocument
                             {
-                                { "EmployeeId" , "$EmployeeId" }
+                                { "$EmployeeId" , "$EmployeeId" }
                              }
                         },
                         {
