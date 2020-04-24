@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Resourceedge.Appraisal.API.Interfaces;
 using Resourceedge.Appraisal.API.Services;
 using Resourceedge.Appraisal.Domain.DBContexts;
 
@@ -21,9 +22,11 @@ namespace Resourceedge.Appraisal.API
             using (var scope = host.Services.CreateScope())
             {
                 var Dbcontext = scope.ServiceProvider.GetRequiredService(typeof(IDbContext)) as IDbContext;
-                //InitializerService.Seed(Dbcontext);
+                var resultAreaService = scope.ServiceProvider.GetRequiredService(typeof(IKeyResultArea)) as IKeyResultArea;
+                //InitializerService.Seed(Dbcontext); 
             }
             host.Run();
+
 
 
         }

@@ -17,4 +17,8 @@
     <ProjectReference Include="..\Resourceedge.Common\Resourceedge.Common.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Queries\DbQueryModels\" />
+  </ItemGroup>
+
 </Project>
