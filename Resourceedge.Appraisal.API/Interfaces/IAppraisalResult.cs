@@ -13,22 +13,19 @@ namespace Resourceedge.Appraisal.API.Interfaces
     public interface IAppraisalResult
     {
         IEnumerable<AppraisalResult> Get(ObjectId AppraisalConfigId, ObjectId CycleId, int? EmployeeId);
-
         void InsertResult(AppraisalResult entity);
-
-        Task<bool> SubmitAppraisal(int empId, IEnumerable<AppraisalResultForCreationDto> entity);
+        Task<(bool, string)> SubmitAppraisal(int empId, IEnumerable<AppraisalResultForCreationDto> entity);
         Task<UpdateResult> EmployeeAcceptOrReject(ObjectId appraisalResultId, AcceptanceStatus status);
-
         Task<UpdateResult> HodApprovalOrReject(ObjectId appraisalResultId, AcceptanceStatus status);
         Task<IEnumerable<AppraisalForApprovalDto>> GetEmployeesToAppraise(int employeeId, string appraisalConfigurationId, string appraisalCycleId, string whoami);
-
         Task<bool> HasPaticipatedInAppraisal(int employeeId);
-
         Task<bool> CheckAppraisalConfigurationDetails(AppraisalQueryParam model);
         Task<bool> CheckMultipleAppraisalConfigurationDetails(IEnumerable<AppraisalQueryParam> model);
         Task<bool> AppraiseEmployee(int empId, IEnumerable<AppraisalResultForCreationDto> entities);
         IEnumerable<KeyResultArea> GetAcceptedKRAForAppraisal(int userId, AppraisalCycle configParam, string resultId = null);
         Task<AppraisalConfig> GetAppraisalConfiguration(string configid);
         IEnumerable<KeyResultArea> GetOnlyApplicableKeyoutcomesForAppraisal(ObjectId kraId, int EmployeeId, IList<string> keyoutcomeIds);
+        Task<bool> UpdateKeyResultAreaForExistingResult(string cycleId);
+        Task UpdateAppraisalResult(AppraisalResult appraisalResult);
     }
 }

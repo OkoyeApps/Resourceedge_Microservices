@@ -62,7 +62,7 @@ namespace Resourceedge.Appraisal.API.Services
             Collection.InsertOne(entity);
         }
 
-        public async Task<bool> SubmitAppraisal(int empId, IEnumerable<AppraisalResultForCreationDto> entities)
+        public async Task<(bool,string)> SubmitAppraisal(int empId, IEnumerable<AppraisalResultForCreationDto> entities)
         {
             var employee = await resultAreaRepo.GetEmployee(entities.FirstOrDefault().myId);
             string title = "Appraise";
@@ -81,8 +81,12 @@ namespace Resourceedge.Appraisal.API.Services
                     foreach (var entity in entities)
                     {
 
-                        var keyResultArea = await resultAreaRepo.QuerySingle(entity.KeyResultAreaId);
-                        //var keyResultArea = GetKraAppraised(entity.KeyResultAreaId, entity.KeyOutcomeScore.Select(x => x.KeyOutcomeId).ToArray());
+                        var keyResultArea = GetOnlyApplicableKeyoutcomesForAppraisal(entity.KeyResultAreaId, empId, entity.KeyOutcomeScore.Select(x => x.KeyOutcomeId.ToString()).ToList()).FirstOrDefault();
+                        if(keyResultArea == null)
+                        {
+                            return (false, "No Key Result Area Found, Invalid Key result area Id");
+                        }
+                        //var keyResultArea = await resultAreaRepo.QuerySingle(entity.KeyResultAreaId);
 
                         if (entity.whoami == null)
                         {
@@ -114,7 +118,7 @@ namespace Resourceedge.Appraisal.API.Services
                 }
                 catch (Exception ex)
                 {
-                    return false;
+                    return (false, "Oops something went wrong");
                 }
                 finally
                 {
@@ -126,7 +130,7 @@ namespace Resourceedge.Appraisal.API.Services
                     }
                 }
             }
-            return true;
+            return (true, "Appraisal Submitted Successfull");
         }
 
         public async Task<bool> AppraiseEmployee(int empId, IEnumerable<AppraisalResultForCreationDto> entities)
@@ -146,9 +150,9 @@ namespace Resourceedge.Appraisal.API.Services
                     foreach (var entity in entities)
                     {
                         var filter = Builders<AppraisalResult>.Filter.Where(a => a.myId == empId
-                                                                                                    && a.AppraisalConfigId == entity.AppraisalConfigId
-                                                                                                    && a.AppraisalCycleId == entity.AppraisalCycleId
-                                                                                                    && a.KeyResultArea.Id == entity.KeyResultAreaId);
+                                                                            && a.AppraisalConfigId == entity.AppraisalConfigId
+                                                                            && a.AppraisalCycleId == entity.AppraisalCycleId
+                                                                            && a.KeyResultArea.Id == entity.KeyResultAreaId);
                         var result = Collection.Find(filter).FirstOrDefault();
 
                         if (entity.whoami == "APPRAISER")
@@ -482,7 +486,31 @@ namespace Resourceedge.Appraisal.API.Services
             var result = KraCollection.Aggregate<KeyResultArea>(pipelineObj).ToList();
             return result;
         }
+
+        public async Task<bool> UpdateKeyResultAreaForExistingResult(string cycleId)
+        {
+            try
+            {
+                var result = Collection.AsQueryable().Where(x => x.AppraisalCycleId == ObjectId.Parse(cycleId)).ToList();
+                result.ForEach(async x => await UpdateAppraisalResult(x));
+
+                return await Task.FromResult(true);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }         
+        }
+
+        public async Task UpdateAppraisalResult(AppraisalResult appraisalResult)
+        {
+            appraisalResult.KeyResultArea = GetOnlyApplicableKeyoutcomesForAppraisal(appraisalResult.KeyResultArea.Id,
+                           appraisalResult.myId, appraisalResult.KeyResultArea.keyOutcomes.Select(x => x.Id.ToString()).ToList()).FirstOrDefault();
+            
+            var modifiedResult = appraisalResult.ToBsonDocument();
+            var filter = Builders<AppraisalResult>.Filter.Where(x => x.Id == appraisalResult.Id);
+           await Collection.UpdateOneAsync( filter,modifiedResult);
+
+        }
     }
-
-
 }

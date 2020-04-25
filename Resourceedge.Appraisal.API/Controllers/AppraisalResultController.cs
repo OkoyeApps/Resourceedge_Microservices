@@ -110,7 +110,7 @@ namespace Resourceedge.Appraisal.API.Controllers
             var appraisalResultToSubmit = mapper.Map<IEnumerable<AppraisalResultForCreationDtoString>, IEnumerable<AppraisalResultForCreationDto>>(appraisalResultForCreation);
                        
             var result = await appraisalResult.SubmitAppraisal(employeeId, appraisalResultToSubmit);
-            if (result)
+            if (result.Item1)
             {
                 var appraisalResultToReturn = mapper.Map<IEnumerable<AppraisalResult>>(appraisalResultToSubmit);
 
@@ -122,7 +122,7 @@ namespace Resourceedge.Appraisal.API.Controllers
                 return Ok(new { success = true });
             }
 
-            return BadRequest(new { message = "Something went wrong" });
+            return BadRequest(new { message = result.Item2 });
         }
 
         [HttpPatch("{Id}/AcceptAppraisal")]
@@ -215,6 +215,22 @@ namespace Resourceedge.Appraisal.API.Controllers
 
             mapInstance.RemoveAll(x => !x.keyOutcomes.Any());
             return Ok(mapInstance);
+        }
+
+        public async Task<IActionResult> UpdateExistingAppraisalResult([FromQuery]AppraisalQueryParam configParam)
+        {
+            var configDetails = await appraisalResult.GetAppraisalConfiguration(configParam.Config);
+            if (configDetails == null)
+            {
+                return NotFound(new { message = "Appraisal configuration not found" });
+            }
+            var result = await appraisalResult.UpdateKeyResultAreaForExistingResult(configParam.Cycle);
+            if (result)
+            {
+                return Ok(new {success = "Update completed" });
+            }
+
+            return BadRequest(new { message = "something went wrong" });
         }
     }
    

@@ -12,13 +12,12 @@ namespace Resourceedge.Appraisal.API.DBQueries
         public static BsonDocument[] GetApplicableKeyOutcomes(ObjectId kraId, int EmployeeId, IList<string> KeyoutcomeIds)
         {
             var arrayOfIds =new List<ObjectId>();
-            var inputArray = new BsonArray(arrayOfIds);
-
             foreach (var item in KeyoutcomeIds)
             {
                 arrayOfIds.Add(ObjectId.Parse(item));
             }
              
+            var inputArray = new BsonArray(arrayOfIds);
             var match = new BsonDocument
             {
                 {
