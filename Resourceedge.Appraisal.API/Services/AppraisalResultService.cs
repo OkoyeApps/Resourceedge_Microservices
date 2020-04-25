@@ -504,13 +504,15 @@ namespace Resourceedge.Appraisal.API.Services
 
         public async Task UpdateAppraisalResult(AppraisalResult appraisalResult)
         {
-            appraisalResult.KeyResultArea = GetOnlyApplicableKeyoutcomesForAppraisal(appraisalResult.KeyResultArea.Id,
-                           appraisalResult.myId, appraisalResult.KeyResultArea.keyOutcomes.Select(x => x.Id.ToString()).ToList()).FirstOrDefault();
-            
-            var modifiedResult = appraisalResult.ToBsonDocument();
-            var filter = Builders<AppraisalResult>.Filter.Where(x => x.Id == appraisalResult.Id);
-           await Collection.UpdateOneAsync( filter,modifiedResult);
+            if(appraisalResult.KeyOutcomeScore.Count != appraisalResult.KeyResultArea.keyOutcomes.Count())
+            {
+                appraisalResult.KeyResultArea = GetOnlyApplicableKeyoutcomesForAppraisal(appraisalResult.KeyResultArea.Id,
+                      appraisalResult.myId, appraisalResult.KeyOutcomeScore.Select(x => x.KeyOutcomeId.ToString()).ToList()).FirstOrDefault();
 
+                var modifiedResult = appraisalResult.ToBsonDocument();
+                var filter = Builders<AppraisalResult>.Filter.Where(x => x.Id == appraisalResult.Id);
+                await Collection.ReplaceOneAsync(filter, appraisalResult);
+            }
         }
     }
 }

@@ -217,6 +217,7 @@ namespace Resourceedge.Appraisal.API.Controllers
             return Ok(mapInstance);
         }
 
+        [HttpGet("Updatekeyresultarea")]
         public async Task<IActionResult> UpdateExistingAppraisalResult([FromQuery]AppraisalQueryParam configParam)
         {
             var configDetails = await appraisalResult.GetAppraisalConfiguration(configParam.Config);
