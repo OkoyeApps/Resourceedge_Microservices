@@ -52,7 +52,7 @@ namespace Resourceedge.Appraisal.API.Services
         }
         public async Task<IEnumerable<OldEmployeeDto>> GetEmployeesToAppraise(int employeeId)
         {
-            var EmployeesToAppraise = QueryableCollection.Where(x => x.AppraiserDetails.EmployeeId == employeeId || x.HodDetails.EmployeeId == employeeId).Select(x => x.EmployeeId.ToString()).Distinct().ToList();
+            var EmployeesToAppraise = QueryableCollection.Where(x => x.HodDetails.EmployeeId == employeeId).Select(x => x.EmployeeId.ToString()).Distinct().ToList();
 
             if (EmployeesToAppraise.Any())
             {
