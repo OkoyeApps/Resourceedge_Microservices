@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using Resourceedge.Appraisal.API.Interfaces;
 using Resourceedge.Appraisal.Domain.Models;
+using Resourceedge.Appraisal.Domain.Queries;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -20,11 +21,13 @@ namespace Resourceedge.Appraisal.API.Controllers
     {
         private readonly IAppraisalFinalResult finalResultRepo;
         private readonly IMapper mapper;
+        private readonly IAppraisalResult appraisalResult;
 
-        public FinalResultController(IAppraisalFinalResult _finalResult, IMapper _mapper)
+        public FinalResultController(IAppraisalFinalResult _finalResult, IMapper _mapper, IAppraisalResult _appraisalResult)
         {
             finalResultRepo = _finalResult;
             mapper = _mapper;
+            appraisalResult = _appraisalResult;
         }
         [HttpGet("{cycleId}/{empId}")]
         public IActionResult GetEmployeeResult(string cycleId, int empId)
@@ -43,11 +46,15 @@ namespace Resourceedge.Appraisal.API.Controllers
         }
 
         [HttpGet("{cycleId}")]
-        public async Task<IActionResult> AllAppraisalResult(string cycleId)
+        public async Task<IActionResult> AllAppraisalResult([FromQuery]AppraisalQueryParam configParam)
         {
-            ObjectId CycleId = new ObjectId(cycleId);
+            var configDetails = await appraisalResult.GetAppraisalConfiguration(configParam.Config);
+            if (configDetails == null)
+            {
+                return NotFound(new { message = "Appraisal configuration not found" });
+            }
 
-            var result = await finalResultRepo.GetAllResultByCycle(CycleId);
+            var result = await finalResultRepo.GetAllResultByCycle(ObjectId.Parse(configParam.Cycle));
             if(result != null)
             {
                 return Ok(result);
@@ -56,6 +63,40 @@ namespace Resourceedge.Appraisal.API.Controllers
             return NoContent();
         }
 
+        [HttpGet("~/api/Report")]
+        public async Task<IActionResult> AllAppraisalResultByLocation([FromQuery]AppraisalQueryParam configParam)
+        {
+            var configDetails = await appraisalResult.GetAppraisalConfiguration(configParam.Config);
+            if (configDetails == null)
+            {
+                return NotFound(new { message = "Appraisal configuration not found" });
+            }
+
+            var result = await finalResultRepo.GetAllResultByCycle(ObjectId.Parse(configParam.Cycle));
+            if (result != null)
+            {
+                return Ok(result);
+            }
+
+            return NoContent();
+        }
+
+        [HttpGet("~/api/Report/{group}")]
+        public async Task<IActionResult> AppraisalResultByGroup(string group, [FromQuery]AppraisalQueryParam configParam)
+        {
+            var configDetails = await appraisalResult.GetAppraisalConfiguration(configParam.Config);
+            if (configDetails == null)
+            {
+                return NotFound(new { message = "Appraisal configuration not found" });
+            }
+
+            var result = await finalResultRepo.GetAppraisalResultByGroup(group, ObjectId.Parse(configParam.Cycle));
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            return NoContent();
+        }
 
     }
 }

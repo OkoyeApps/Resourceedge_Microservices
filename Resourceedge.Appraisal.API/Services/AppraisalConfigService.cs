@@ -110,23 +110,6 @@ namespace Resourceedge.Appraisal.API.Services
                 
             });
             return true;
-
-            //var activeAppraisal = GetActiveCycle();
-            //if(activeAppraisal.Cycle != null)
-            //{
-            //    DeactivateCycle(activeAppraisal.ConfigId, activeAppraisal.Cycle);
-            //}
-
-            //var appraisalConfig = Collection.Find(c => c.Year == DateTime.Now.Year).First();
-            //var res = ActivateCycle(appraisalConfig, ObjectId.Parse(cycleId));
-            //if (res)
-            //{
-
-            //    return true;
-            //}
-
-            //return false;
-
         }
 
         public bool DeactivateCycle(ObjectId configId, AppraisalCycle cycle)

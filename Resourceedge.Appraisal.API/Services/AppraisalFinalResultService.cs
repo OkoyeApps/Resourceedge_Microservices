@@ -141,16 +141,19 @@ namespace Resourceedge.Appraisal.API.Services
                     }
                 }
             }
-            return finalResultToReturn;
-
-            //var result = Collection.AsQueryable().Where(x => x.AppraisalCycleId == cycleId);
-
-            //return result;
+            return finalResultToReturn;;
         }
 
         public FinalAppraisalResult GetEmployeeResult(int empId, ObjectId cycleId)
         {
             return Collection.Find(x => x.AppraisalCycleId == cycleId && x.EmployeeId == empId).FirstOrDefault();
+        }
+
+        public async Task<IEnumerable<FinalAppraisalResultForViewDto>> GetAppraisalResultByGroup(string group, ObjectId cycleId)
+        {
+            var allResult = await GetAllResultByCycle(cycleId);
+
+            return allResult.Where(r => r.EmployeeDetail.Company == group);
         }
 
 
