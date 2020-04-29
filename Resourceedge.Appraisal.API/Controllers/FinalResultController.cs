@@ -98,5 +98,22 @@ namespace Resourceedge.Appraisal.API.Controllers
             return NoContent();
         }
 
+        [HttpGet("~/api/Report/Organisation/Count")]
+        public async Task<IActionResult> GetOrganisation([FromQuery]AppraisalQueryParam configParam)
+        {
+            var configDetails = await appraisalResult.GetAppraisalConfiguration(configParam.Config);
+            if (configDetails == null)
+            {
+                return NotFound(new { message = "Appraisal configuration not found" });
+            }
+
+            var result = await finalResultRepo.GetOrgaization(ObjectId.Parse(configParam.Cycle));
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            return NoContent();
+        }
+
     }
 }

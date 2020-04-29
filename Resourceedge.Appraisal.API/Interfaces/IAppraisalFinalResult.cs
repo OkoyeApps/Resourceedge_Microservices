@@ -14,5 +14,6 @@ namespace Resourceedge.Appraisal.API.Interfaces
         Task<IEnumerable<FinalAppraisalResultForViewDto>> GetAllResultByCycle(ObjectId cycleId);
         FinalAppraisalResult GetEmployeeResult(int empId, ObjectId cycleId);
         Task<IEnumerable<FinalAppraisalResultForViewDto>> GetAppraisalResultByGroup(string group, ObjectId cycleId);
+        Task<IEnumerable<OrgaizationandCount>> GetOrgaization(ObjectId CycleId);
     }
 }

@@ -22,4 +22,10 @@ namespace Resourceedge.Appraisal.Domain.Models
         public BasicEmployee EmployeeDetail { get; set; } = new BasicEmployee();
         public FinalResultDtoForView Result { get; set; } = new FinalResultDtoForView();
     }
+
+    public class OrgaizationandCount
+    {
+        public string Group { get; set; }
+        public int Count { get; set; }
+    }
 }

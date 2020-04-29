@@ -97,7 +97,7 @@ namespace Resourceedge.Appraisal.API.Services
                     "$project", new BsonDocument{
                         { "EmployeeDetail", new BsonDocument
                             {
-                                { "$EmployeeId" , "$EmployeeId" }
+                                { "EmployeeId" , "$EmployeeId" }
                              }
                         },
                         {
@@ -110,7 +110,6 @@ namespace Resourceedge.Appraisal.API.Services
                     }
                 }
             };
-
 
             var pipeline = new[] { match, project };
             var lookupResult = Collection.Aggregate<FinalAppraisalResultForViewDto>(pipeline);
@@ -156,6 +155,11 @@ namespace Resourceedge.Appraisal.API.Services
             return allResult.Where(r => r.EmployeeDetail.Company == group);
         }
 
+        public async Task<IEnumerable<OrgaizationandCount>> GetOrgaization(ObjectId  CycleId)
+        {
+            var allResult = await GetAllResultByCycle(CycleId);
 
+            return allResult.GroupBy(c => c.EmployeeDetail.Company).Select(x => new OrgaizationandCount { Group = x.Key, Count = x.Count() });
+        }
     }
 }
