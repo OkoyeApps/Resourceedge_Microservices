@@ -81,8 +81,8 @@ namespace Resourceedge.Appraisal.API.Controllers
             return NoContent();
         }
 
-        [HttpGet("~/api/Report/{group}")]
-        public async Task<IActionResult> AppraisalResultByGroup(string group, [FromQuery]AppraisalQueryParam configParam)
+        [HttpGet("~/api/Report/{group}/{pageNumber}/{pageSize}")]
+        public async Task<IActionResult> AppraisalResultByGroup(string group, int pageNumber, int pageSize, [FromQuery]AppraisalQueryParam configParam)
         {
             var configDetails = await appraisalResult.GetAppraisalConfiguration(configParam.Config);
             if (configDetails == null)
@@ -90,7 +90,7 @@ namespace Resourceedge.Appraisal.API.Controllers
                 return NotFound(new { message = "Appraisal configuration not found" });
             }
 
-            var result = await finalResultRepo.GetAppraisalResultByGroup(group, ObjectId.Parse(configParam.Cycle));
+            var result = await finalResultRepo.GetAppraisalResultByGroup(group, pageNumber, pageSize, ObjectId.Parse(configParam.Cycle));
             if (result != null)
             {
                 return Ok(result);

@@ -4,6 +4,7 @@ using Resourceedge.Appraisal.API.Interfaces;
 using Resourceedge.Appraisal.Domain.DBContexts;
 using Resourceedge.Appraisal.Domain.Entities;
 using Resourceedge.Appraisal.Domain.Models;
+using Resourceedge.Common.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -153,11 +154,12 @@ namespace Resourceedge.Appraisal.API.Services
             return Collection.Find(x => x.AppraisalCycleId == cycleId && x.EmployeeId == empId).FirstOrDefault();
         }
 
-        public async Task<IEnumerable<FinalAppraisalResultForViewDto>> GetAppraisalResultByGroup(string group, ObjectId cycleId)
+        public async Task<IEnumerable<FinalAppraisalResultForViewDto>> GetAppraisalResultByGroup(string group, int pageNumber, int pageSize, ObjectId cycleId)
         {
             var allResult = await GetAllResultByCycle(cycleId);
 
-            return allResult.Where(r => r.EmployeeDetail.Company == group);
+            var groupResult = allResult.Where(r => r.EmployeeDetail.Company == group).AsQueryable();
+           return  PagedList<FinalAppraisalResultForViewDto>.Create(groupResult, pageNumber, pageSize);
         }
 
         public async Task<IEnumerable<OrgaizationandCount>> GetOrgaization(ObjectId  CycleId)
