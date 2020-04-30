@@ -57,8 +57,13 @@ namespace Resourceedge.Appraisal.API.Services
                 else
                 {
                     oldFinalResult.EmployeeResult = (oldFinalResult.EmployeeResult != 0) ? oldFinalResult.EmployeeResult : appraisalResult.Sum(x => x.EmployeeCalculation.WeightContribution);
-                    oldFinalResult.AppraiseeResult = (oldFinalResult.AppraiseeResult != 0) ? oldFinalResult.AppraiseeResult : appraisalResult.Sum(x => x.AppraiseeCalculation.WeightContribution);
+                    if (appraisalResult.Any(x => x.AppraiseeCalculation.WeightContribution == 0)){
+                         oldFinalResult.AppraiseeResult = (oldFinalResult.AppraiseeResult != 0) ? appraisalResult.Sum(x => x.AppraiseeCalculation.WeightContribution) : appraisalResult.Sum(x => x.AppraiseeCalculation.WeightContribution);
+                    }
+                    if (appraisalResult.Any(s => s.FinalCalculation.WeightContribution == 0)){ 
                     oldFinalResult.FinalResult = (appraisalResult.FirstOrDefault().IsCompleted != null && oldFinalResult.FinalResult == 0) ?  appraisalResult.Sum(x => x.FinalCalculation.WeightContribution) : 0;
+
+                    }
 
                     var finalResult = oldFinalResult.ToBsonDocument();
                     var update = new BsonDocument("$set", finalResult);

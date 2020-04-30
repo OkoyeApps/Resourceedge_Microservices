@@ -155,17 +155,18 @@ namespace Resourceedge.Appraisal.API.Services
                                                                             && a.KeyResultArea.Id == entity.KeyResultAreaId);
                         var result = Collection.Find(filter).FirstOrDefault();
 
+                        if (result == null)
+                        {
+                            return false;
+                        }
+
                         if (entity.whoami == "APPRAISER")
                         {
                             if (result.NextAppraisee == "Hod")
                             {
-                                return false;
+                                continue;
                             }
 
-                            if (result == null)
-                            {
-                                return false;
-                            }
 
                             result.AppraiseeFeedBack = entity.AppraiseeFeedBack;
                             result.NextAppraisee = "Hod";
@@ -220,7 +221,7 @@ namespace Resourceedge.Appraisal.API.Services
 
                             if (result.NextAppraisee == "Done")
                             {
-                                return false;
+                                continue;
                             }
 
                             foreach (var item in entity.KeyOutcomeScore)
