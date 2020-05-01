@@ -4,6 +4,7 @@ using Resourceedge.Appraisal.API.Interfaces;
 using Resourceedge.Appraisal.Domain.DBContexts;
 using Resourceedge.Appraisal.Domain.Entities;
 using Resourceedge.Appraisal.Domain.Models;
+using Resourceedge.Common.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,8 +58,13 @@ namespace Resourceedge.Appraisal.API.Services
                 else
                 {
                     oldFinalResult.EmployeeResult = (oldFinalResult.EmployeeResult != 0) ? oldFinalResult.EmployeeResult : appraisalResult.Sum(x => x.EmployeeCalculation.WeightContribution);
-                    oldFinalResult.AppraiseeResult = (oldFinalResult.AppraiseeResult != 0) ? oldFinalResult.AppraiseeResult : appraisalResult.Sum(x => x.AppraiseeCalculation.WeightContribution);
+                    if (appraisalResult.Any(x => x.AppraiseeCalculation.WeightContribution == 0)){
+                         oldFinalResult.AppraiseeResult = (oldFinalResult.AppraiseeResult != 0) ? appraisalResult.Sum(x => x.AppraiseeCalculation.WeightContribution) : appraisalResult.Sum(x => x.AppraiseeCalculation.WeightContribution);
+                    }
+                    if (appraisalResult.Any(s => s.FinalCalculation.WeightContribution == 0)){ 
                     oldFinalResult.FinalResult = (appraisalResult.FirstOrDefault().IsCompleted != null && oldFinalResult.FinalResult == 0) ?  appraisalResult.Sum(x => x.FinalCalculation.WeightContribution) : 0;
+
+                    }
 
                     var finalResult = oldFinalResult.ToBsonDocument();
                     var update = new BsonDocument("$set", finalResult);
@@ -148,11 +154,12 @@ namespace Resourceedge.Appraisal.API.Services
             return Collection.Find(x => x.AppraisalCycleId == cycleId && x.EmployeeId == empId).FirstOrDefault();
         }
 
-        public async Task<IEnumerable<FinalAppraisalResultForViewDto>> GetAppraisalResultByGroup(string group, ObjectId cycleId)
+        public async Task<IEnumerable<FinalAppraisalResultForViewDto>> GetAppraisalResultByGroup(string group, int pageNumber, int pageSize, ObjectId cycleId)
         {
             var allResult = await GetAllResultByCycle(cycleId);
 
-            return allResult.Where(r => r.EmployeeDetail.Company == group);
+            var groupResult = allResult.Where(r => r.EmployeeDetail.Company == group).AsQueryable();
+           return  PagedList<FinalAppraisalResultForViewDto>.Create(groupResult, pageNumber, pageSize);
         }
 
         public async Task<IEnumerable<OrgaizationandCount>> GetOrgaization(ObjectId  CycleId)
