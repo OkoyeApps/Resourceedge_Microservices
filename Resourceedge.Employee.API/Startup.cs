@@ -20,31 +20,46 @@ namespace Resourceedge.Employee.API
     public class Startup
     {
         private readonly IConfiguration Configuration;
+        private static readonly string[] Headers = new[] { "X-Operation", "X-Resource", "X-Total-Count", "X-Pagination" };
 
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(config =>
+                {
+                    config.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().WithExposedHeaders(Headers);
+                });
+            });
+
+            services.AddAuthentication("Bearer").AddJwtBearer("Bearer", config =>
+            {
+                config.Authority = Configuration["Services:Authority"];
+                config.Audience = "Employee";
+                config.RequireHttpsMetadata = false;
+            });
+
             services.AddHttpClient("OldEdge", config =>
             {
                 config.BaseAddress = new Uri(Configuration["Services:oldResourceedge"]);
             });
 
             services.AddTransient<IDbContext, EmployeeDbContext>(ctx => EmployeeDbContext.Create(
-               Configuration.GetSection("DefualtConnection:ConnectionString").Value,
-               Configuration.GetSection("DefualtConnection:DataBaseName").Value));
+               Configuration.GetSection("DefaultConnection:ConnectionString").Value,
+               Configuration.GetSection("DefaultConnection:DataBaseName").Value));
             services.AddTransient<IEmployee, ArchiveServices>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddControllers(setupAction =>
             {
                 setupAction.ReturnHttpNotAcceptable = true;
 
-            }).AddXmlDataContractSerializerFormatters()
-            .AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
+            })
+            .AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver())
+            .AddXmlDataContractSerializerFormatters();
 
 
             services.Configure<MvcOptions>(config =>
@@ -64,8 +79,14 @@ namespace Resourceedge.Employee.API
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseCors();
+            app.UseCookiePolicy(new CookiePolicyOptions { MinimumSameSitePolicy = SameSiteMode.Lax });
 
             app.UseRouting();
+
+            app.UseAuthentication();
+
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

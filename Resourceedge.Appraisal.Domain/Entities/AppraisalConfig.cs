@@ -21,6 +21,7 @@ namespace Resourceedge.Appraisal.Domain.Entities
         public ObjectId Id { get; set; } = ObjectId.GenerateNewId();
         public DateTime StartDate { get; set; } 
         public DateTime StopDate { get; set; }
+        public bool? isActive { get; set; }
 
     }
 }

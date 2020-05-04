@@ -13,6 +13,10 @@ namespace Resourceedge.Common.Util
         public int TotalCount { get; set; }
         public bool HasPrevious => (CurrentPage > 1);
         public bool HasNext => (CurrentPage < TotalPages);
+        public PagedList()
+        {
+
+        }
         public PagedList(List<T> items, int count, int pageNumber, int pageSize)
         {
             TotalCount = count;

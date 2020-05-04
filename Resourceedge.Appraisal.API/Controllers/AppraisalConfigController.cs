@@ -36,7 +36,7 @@ namespace Resourceedge.Appraisal.API.Controllers
         [HttpPost(Name = "AddAppraisalConfig")]
         public IActionResult AddAppraisalConfig(AppraisalConfigForCreationDto param)
         {
-            var entity = mapper.Map<AppraisalConfigForCreationDto, AppraisalConfig>(param);
+            var entity = mapper.Map<AppraisalConfig>(param);
             var result = appraisalConfig.Insert(entity);
 
             return result ? CreatedAtRoute("GetAppraisalConfigurations", new { }, mapper.Map<AppraisalConfigForCreationDto>(entity)) : ValidationProblem(ModelState);
@@ -49,12 +49,31 @@ namespace Resourceedge.Appraisal.API.Controllers
             param.ApplyTo(appraisalClass);
             if (TryValidateModel(appraisalClass))
             {
-                var entity = mapper.Map<AppraisalCycleClass, AppraisalCycle>(appraisalClass);
+                var entity = mapper.Map<AppraisalCycle>(appraisalClass);
                 var result = appraisalConfig.Update(new ObjectId(Id), entity);
                 return NoContent();
 
             }
             return ValidationProblem(ModelState);
+        }
+
+       [HttpGet("GetActive")]
+       public IActionResult GetCurrentAppraisal()
+       {
+            var result = appraisalConfig.GetActiveCycle();
+
+            return Ok(result);
+       }
+
+        [HttpPost("Activate/{cycleId}")]
+        public IActionResult ActivateAppraisal(string cycleId)
+        {
+            var result = appraisalConfig.ActivateCycle(cycleId);
+            if (result)
+            {
+                return Ok(new { success = true });
+            }
+            return Ok(new { success = false });
         }
     }
 }

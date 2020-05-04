@@ -40,12 +40,17 @@ namespace Resourceedge.Appraisal.API.Interfaces
             throw new NotImplementedException();
         }
 
-        public TEntity QuerySingle(Func<TEntity, bool> func)
+        public Task<TEntity> QuerySingle(ObjectId Id)
         {
             throw new NotImplementedException();
         }
 
         public IEnumerable<TEntity> QuerySingle(Func<IEnumerable<TEntity>, bool> func)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Delete(TEntity entity)
         {
             throw new NotImplementedException();
         }

@@ -5,12 +5,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DBContexts\Seed.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="MongoDB.Driver" Version="2.10.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Resourceedge.Common\Resourceedge.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Queries\DbQueryModels\" />
   </ItemGroup>
 
 </Project>

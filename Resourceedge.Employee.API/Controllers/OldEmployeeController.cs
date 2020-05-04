@@ -1,19 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
+using Resourceedge.Common.Archive;
 using Resourceedge.Common.Util;
 using Resourceedge.Employee.API.Helpers;
 using Resourceedge.Employee.Domain.Dtos;
 using Resourceedge.Employee.Domain.Interfaces;
-using Resourceedge.Common.Archive;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Resourceedge.Employee.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/employee")]
     public class OldEmployeeController : ControllerBase
@@ -27,21 +27,6 @@ namespace Resourceedge.Employee.API.Controllers
             mapper = _mapper;
         }
 
-        [HttpGet(Name = "GetAllEmployees")]
-        public IActionResult GetEmployees([FromRoute] PaginationResourceParameter param)
-        {
-            var pagedEmployees = EmployeeRepo.GetEmployees(param);
-            var paginationMetadata = new
-            {
-                totalCount = pagedEmployees.TotalCount,
-                pageSize = pagedEmployees.PageSize,
-                currentPage = pagedEmployees.CurrentPage,
-                totalPages = pagedEmployees.TotalPages,
-            };
-
-            Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
-            return Ok(mapper.Map<IEnumerable<OldEmployeeDto>>(pagedEmployees));
-        }
 
         [HttpGet("{email}", Name = "GetEmployeeByEmail")]
         public IActionResult GetEmployeeByEmail(string email)
@@ -63,13 +48,12 @@ namespace Resourceedge.Employee.API.Controllers
             return Ok(mapper.Map<OldEmployeeDto>(EmployeeRepo.GetEmployeeByEmployeeId(Id)));
         }
 
-        [HttpGet("({Ids})")]
-        public IActionResult GetMultipleEmployees ([FromRoute][ModelBinder(BinderType = typeof(ArrayModelBinder))] string Ids)
+        [HttpGet("userid/{Id}", Name = "GetEmployeeByUserId")]
+        public IActionResult GetEmployeeByUserId(string Id)
         {
-            return Ok();
+            return Ok(mapper.Map<OldEmployeeDto>(EmployeeRepo.GetEmployeeByUserId(Id)));
         }
-
-
+        
         private IEnumerable<LinkDto> CreateLinksForEmployees(EmployeeResourceParameter employeeResourceParameters, bool hasNext, bool hasPrevious)
         {
             var links = new List<LinkDto>();
@@ -87,6 +71,56 @@ namespace Resourceedge.Employee.API.Controllers
 
 
             return links;
+        }
+
+        [HttpGet("SearchEmployee/{empId:int}")]
+        public IActionResult GetEmployeeBySearch(int empId, [FromQuery]PaginationResourceParameter resourceParameters)
+        {
+            var result = EmployeeRepo.GetEmployeesWithSeachQuery(empId, resourceParameters);
+            return Ok(result);
+        }
+
+        [HttpPost("AddEmployee")]
+        public async Task<IActionResult> AddNewEmployee(string Email)
+        {
+            if (string.IsNullOrEmpty(Email))
+            {
+                return BadRequest();
+            }
+
+            var res = await EmployeeRepo.AddNewEmployeeByEmail(Email);
+            if (!res)
+            {
+                return BadRequest();
+            }
+
+            return Ok();
+
+            //return CreatedAtRoute("GetEmployeeByEmail", new { email = Email });
+        }
+
+        [HttpPost("AddEmployees")]
+        public async Task<IActionResult> AddNewEmployees(IList<string> Emails)
+        {
+            if (!Emails.Any())
+            {
+                return BadRequest();
+            }
+
+            var res = await EmployeeRepo.AddMultipleEmployeeByEmail(Emails);
+            if (!res)
+            {
+                return BadRequest();
+            }
+
+            return Ok();
+        }
+        [HttpGet]
+        public IActionResult AllEmployee()
+        {
+            var result = EmployeeRepo.GetEmployees();
+
+            return Ok(result);
         }
     }
 }

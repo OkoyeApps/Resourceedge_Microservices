@@ -18,14 +18,17 @@ using Resourceedge.Appraisal.API.Interfaces;
 using Resourceedge.Appraisal.API.Services;
 using Resourceedge.Appraisal.Domain.DBContexts;
 using Resourceedge.Appraisal.Domain.Entities;
+using Resourceedge.Email.Api.Interfaces;
+using Resourceedge.Email.Api.Services;
+using Resourceedge.Email.Api.SGridClient;
+using Resourceedge.Worker.Auth.Services;
 
 namespace Resourceedge.Appraisal.API
 {
     public class Startup
     {
         public IConfiguration Configuration { get; set; }
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+        private static readonly string[] Headers = new[] { "X-Operation", "X-Resource", "X-Total-Count", "X-Pagination" };
 
         public Startup(IConfiguration _config)
         {
@@ -34,29 +37,61 @@ namespace Resourceedge.Appraisal.API
         public void ConfigureServices(IServiceCollection services)
         {
 
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(config =>
+                {
+                    config.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().WithExposedHeaders(Headers);
+                });
+            });
+
+            services.AddAuthentication("Bearer").AddJwtBearer("Bearer", config =>
+            {
+                config.Authority = Configuration["Services:Authority"];
+                config.Audience = "Appraisal";
+                config.RequireHttpsMetadata = false;
+            });
             services.AddHttpClient("EmployeeService", config =>
             {
                 config.BaseAddress = new Uri(Configuration["Services:employee"]);
                 config.DefaultRequestHeaders.Clear();
                 config.DefaultRequestHeaders.Add("Accept", "application/json");
-            }).AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(5, _ => TimeSpan.FromMilliseconds(500))); ;
+            }).AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(5, _ => TimeSpan.FromMilliseconds(500))); 
+            
+            services.AddHttpClient("discoveryEndpoint", config =>
+            {
+                config.BaseAddress = new Uri(Configuration["Services:Authority"]);
+                config.DefaultRequestHeaders.Clear();
+                config.DefaultRequestHeaders.Add("Accept", "application/json");
+            });
+            services.AddHttpClient("Auth", config =>
+            {
+                config.BaseAddress = new Uri(Configuration["Services:Auth"]);
+                config.DefaultRequestHeaders.Clear();
+                config.DefaultRequestHeaders.Add("Accept", "application/json");
+            });
 
+            //services.AddHttpContextAccessor();
 
             services.AddTransient<IDbContext, EdgeAppraisalContext>(ctx => EdgeAppraisalContext.Create(
-                Configuration.GetSection("DefualtConnection:ConnectionString").Value,
-                Configuration.GetSection("DefualtConnection:DataBaseName").Value));
-            
+                Configuration.GetSection("DefaultConnection:ConnectionString").Value,
+                Configuration.GetSection("DefaultConnection:DataBaseName").Value));
+
+            services.AddTransient<ISGClient, SGClient>(ctx => SGClient.Create(
+                Configuration.GetSection("SendGrid:SENDGRID_API_KEY").Value));
+
+            services.AddTransient(typeof(EmailDispatcher));
+            services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<IKeyResultArea, KeyResultAreaService>();
             services.AddTransient<IAppraisalConfig, AppraisalConfigService>();
+            services.AddTransient<IAppraisalResult, AppraisalResultService>();
             services.AddTransient<ITeamRepository, TeamService>();
+            services.AddTransient<IAppraisalFinalResult, AppraisalFinalResultService>();
+            services.AddTransient<ICoreValue, CoreValueService>();
+            services.AddScoped<ITokenAccesor, TokenAccessorService>();
+            services.AddTransient(typeof(AuthService));
+
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
-            services.AddControllers(setupAction =>
-            {
-                setupAction.ReturnHttpNotAcceptable = true;
-
-            }).AddXmlDataContractSerializerFormatters().AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
-
 
             services.Configure<MvcOptions>(config =>
             {
@@ -66,26 +101,53 @@ namespace Resourceedge.Appraisal.API
                     newtonsoftJsonOutputFormatter.SupportedMediaTypes.Add("application/vnd.marvin.hateoas+json");
                 }
             });
+            services.AddControllers(setupAction =>
+            {
+                setupAction.ReturnHttpNotAcceptable = true;
+            })
+            .AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver())
+            .AddXmlDataContractSerializerFormatters();
+
+
+
+
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseExceptionHandler(appBuilder =>
+                {
+                    appBuilder.Run(async context =>
+                    {
+                        context.Response.StatusCode = 500;
+                        await context.Response.WriteAsync("An unexpected fault happened. Try again later");
+                    });
+                });
+
+                //app.UseDeveloperExceptionPage();
+            }
+
+            app.UseCors();
+            app.UseCookiePolicy(new CookiePolicyOptions { MinimumSameSitePolicy = SameSiteMode.Lax });
 
             app.UseRouting();
+
+            app.UseAuthentication();
+
+            app.UseAuthorization();
+
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
-
-
-
-            InitializerService.Seed(app);
+           //InitializerService.Seed(app);
         }
     }
 }

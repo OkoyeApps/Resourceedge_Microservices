@@ -8,6 +8,8 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
 COPY ["Resourceedge.Employee.API/Resourceedge.Employee.API.csproj", "Resourceedge.Employee.API/"]
+COPY ["Resourceedge.Employee.Domain/Resourceedge.Employee.Domain.csproj", "Resourceedge.Employee.Domain/"]
+COPY ["Resourceedge.Common/Resourceedge.Common.csproj", "Resourceedge.Common/"]
 RUN dotnet restore "Resourceedge.Employee.API/Resourceedge.Employee.API.csproj"
 COPY . .
 WORKDIR "/src/Resourceedge.Employee.API"

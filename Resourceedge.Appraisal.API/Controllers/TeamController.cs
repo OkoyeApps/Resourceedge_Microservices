@@ -1,15 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Resourceedge.Appraisal.API.Interfaces;
 using Resourceedge.Appraisal.Domain.Entities;
+using Resourceedge.Appraisal.Domain.Models;
 using Resourceedge.Common.Archive;
+using Resourceedge.Common.Util;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Resourceedge.Appraisal.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/team/{Id}")]
     public class TeamController : Controller
@@ -23,10 +26,10 @@ namespace Resourceedge.Appraisal.API.Controllers
             mapper = _mapper;
         }
 
-        [HttpGet(Name ="GetEmployeesToAppraise")]
-        public async Task<IActionResult> GetEmployeesToAppraise(int Id)
+        [Route("{type?}"), HttpGet(Name = "GetEmployeesToAppraise")]
+        public async Task<IActionResult> GetEmployeesToAppraise(int Id, string type = null)
         {
-            var resultFromRepo = await teamRepo.GetEmployeesToAppraise(Id);
+            var resultFromRepo = await teamRepo.GetEmployeesToApproveEPA(Id, type);
             var resultForView = mapper.Map<IEnumerable<OldEmployeeDto>>(resultFromRepo);
             return Ok(resultForView);
         }
@@ -39,6 +42,27 @@ namespace Resourceedge.Appraisal.API.Controllers
 
         }
 
-        
+        [Route("~/api/Supervisors/{empId:Int}")]
+        [HttpGet]
+        public async Task<IActionResult> GetAppraisee(int empId, string SearchQuery, string  OrderBy )
+        {
+            var result = await teamRepo.GetSupervisors(empId, SearchQuery, OrderBy);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+
+            return Ok(result);
+        }
+        [HttpGet("teamMemberCount")]
+        public async Task<IActionResult> GetEmployeesToAppraiseCount(int Id)
+        {
+            var resultFromRepo = await teamRepo.GetEmployeesToAppraise(Id);
+            var empCount = resultFromRepo.Count();
+
+            return Ok(empCount);
+        }
+
+
     }
 }

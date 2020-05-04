@@ -1,13 +1,20 @@
-﻿{
+{
   "iisSettings": {
-    "windowsAuthentication": false, 
-    "anonymousAuthentication": true, 
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
     "iisExpress": {
       "applicationUrl": "http://localhost:19819",
-      "sslPort": 0
+      "sslPort": 44309
     }
   },
   "profiles": {
+    "Resourceedge.Authentication.API": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:7000;http://localhost:7001"
+    },
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
@@ -15,13 +22,11 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Resourceedge.Authentication.API": {
-      "commandName": "Project",
+    "Docker": {
+      "commandName": "Docker",
       "launchBrowser": true,
-      "applicationUrl": "http://localhost:5000",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "publishAllPorts": true
     }
   }
 }
