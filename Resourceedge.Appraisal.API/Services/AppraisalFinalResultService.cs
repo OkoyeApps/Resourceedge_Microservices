@@ -37,6 +37,11 @@ namespace Resourceedge.Appraisal.API.Services
                 var oldFinalResult = Collection.Find(filter).FirstOrDefault();
                 if(oldFinalResult == null)
                 {
+                    return;
+                }
+
+                if(oldFinalResult == null)
+                {
                     
                     var decimalEmployeeResult = (decimal)appraisalResult.Sum(x => x.EmployeeCalculation.WeightContribution);
                     var decimalAppraisalResult = (decimal)((appraisalResult.FirstOrDefault().IsAccepted != null) ? appraisalResult.Sum(x => x.AppraiseeCalculation.WeightContribution) : 0);
@@ -57,12 +62,12 @@ namespace Resourceedge.Appraisal.API.Services
                 }
                 else
                 {
-                    oldFinalResult.EmployeeResult = (oldFinalResult.EmployeeResult != 0) ? oldFinalResult.EmployeeResult : appraisalResult.Sum(x => x.EmployeeCalculation.WeightContribution);
+                    oldFinalResult.EmployeeResult = (oldFinalResult.EmployeeResult != 0) ? oldFinalResult.EmployeeResult : (double)(decimal.Round((decimal)appraisalResult.Sum(x => x.EmployeeCalculation.WeightContribution), 2, MidpointRounding.AwayFromZero));
                     if (!appraisalResult.Any(x => x.AppraiseeCalculation.WeightContribution == 0)){
-                         oldFinalResult.AppraiseeResult = (oldFinalResult.AppraiseeResult != 0) ? appraisalResult.Sum(x => x.AppraiseeCalculation.WeightContribution) : appraisalResult.Sum(x => x.AppraiseeCalculation.WeightContribution);
+                         oldFinalResult.AppraiseeResult = (oldFinalResult.AppraiseeResult != 0) ? (double)(decimal.Round((decimal)appraisalResult.Sum(x => x.AppraiseeCalculation.WeightContribution), 2, MidpointRounding.AwayFromZero)) : (double)(decimal.Round((decimal)appraisalResult.Sum(x => x.AppraiseeCalculation.WeightContribution), 2, MidpointRounding.AwayFromZero));
                     }
                     if (!appraisalResult.Any(s => s.FinalCalculation.WeightContribution == 0)){ 
-                    oldFinalResult.FinalResult = (appraisalResult.FirstOrDefault().IsCompleted != null && oldFinalResult.FinalResult == 0) ?  appraisalResult.Sum(x => x.FinalCalculation.WeightContribution) : 0;
+                    oldFinalResult.FinalResult = (appraisalResult.FirstOrDefault().IsCompleted != null && oldFinalResult.FinalResult == 0) ? (double)(decimal.Round((decimal)appraisalResult.Sum(x => x.FinalCalculation.WeightContribution),2,MidpointRounding.AwayFromZero)) : (double)(decimal.Round((decimal)appraisalResult.Sum(x => x.FinalCalculation.WeightContribution), 2, MidpointRounding.AwayFromZero));
 
                     }
 
@@ -77,8 +82,7 @@ namespace Resourceedge.Appraisal.API.Services
             {
 
                 throw ex;
-            }
-        
+            }        
         }
 
         public async Task<IEnumerable<FinalAppraisalResultForViewDto>> GetAllResultByCycle(ObjectId cycleId)
@@ -169,6 +173,24 @@ namespace Resourceedge.Appraisal.API.Services
             var allResult = await GetAllResultByCycle(CycleId);
 
             return allResult.GroupBy(c => c.EmployeeDetail.Company).Select(x => new OrgaizationandCount { Group = x.Key, Count = x.Count() });
+        }
+
+        public async Task<bool> ReCalculateFinalAppraisalResult(ObjectId cycleId)
+        {
+            try
+            {
+                var employeeIds = await teamRepository.GetEmployeeIDs();
+
+                employeeIds.ForEach(x => CalculateResult(x, cycleId));
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+
+                return false;
+            }
+
         }
     }
 }

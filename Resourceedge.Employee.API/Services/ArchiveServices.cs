@@ -70,6 +70,10 @@ namespace Resourceedge.Employee.API.Services
             var paginatedList = PagedList<OldEmployee>.Create(QueryableCollection, param.PageNumber, param.PageSize);
             return paginatedList;
         }
+        public IQueryable<OldEmployee> GetEmployees()
+        {
+           return QueryableCollection;
+        }
 
         public async Task<IEnumerable<OldEmployee>> GetMultipleEmployeesById(IEnumerable<int> Ids)
         {

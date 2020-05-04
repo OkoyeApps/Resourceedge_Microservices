@@ -114,6 +114,22 @@ namespace Resourceedge.Appraisal.API.Controllers
             }
             return NoContent();
         }
+        [HttpGet("recalculate")]
+        public async Task<IActionResult> ReCalculateAppraisal([FromQuery]AppraisalQueryParam configParam)
+        {
+            var configDetails = await appraisalResult.GetAppraisalConfiguration(configParam.Config);
+            if (configDetails == null)
+            {
+                return NotFound(new { message = "Appraisal configuration not found" });
+            }
+
+            var result = await finalResultRepo.ReCalculateFinalAppraisalResult(ObjectId.Parse(configParam.Cycle));
+            if (result)
+            {
+                return Ok(result);
+            }
+            return NoContent();
+        }
 
     }
 }
