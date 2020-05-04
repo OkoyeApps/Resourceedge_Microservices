@@ -109,8 +109,10 @@ namespace Resourceedge.Appraisal.API.Services
                         {
                             "Result",new BsonDocument
                             {
+                                { "EmployeeId" , "$EmployeeId" },
                                 {"FinalResult" , "$FinalResult" },
-                                {"EmployeeResult", "$EmployeeResult" }
+                                {"EmployeeResult", "$EmployeeResult" },
+                                {"AppraiseeResult","$AppraiseeResult" }
                             }
                         }
                     }
