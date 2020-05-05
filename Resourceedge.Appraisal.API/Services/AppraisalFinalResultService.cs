@@ -186,7 +186,25 @@ namespace Resourceedge.Appraisal.API.Services
 
                 return false;
             }
-
         }
+
+        public async Task<IDictionary<string, IEnumerable<FinalAppraisalResultForViewDto>>> GetResultForDownload(ObjectId cycleId)
+        {
+            var organization = await GetOrgaization(cycleId);
+            var allResult = await GetAllResultByCycle(cycleId);
+
+            IDictionary<string, IEnumerable<FinalAppraisalResultForViewDto>> resultForView = new Dictionary<string, IEnumerable<FinalAppraisalResultForViewDto>>();
+            foreach (var item in organization)
+            {
+                var groupResult = allResult.Where(r => r.EmployeeDetail.Company == item.Group);
+
+                resultForView.Add(item.Group, groupResult);
+            }
+
+            return resultForView;
+        }
+
+        
+
     }
 }
