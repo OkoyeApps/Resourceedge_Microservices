@@ -145,16 +145,19 @@ namespace Resourceedge.Appraisal.API.Services
             return null;
         }
 
-        public async Task<bool> GetEmployee(int empId)
+        public async Task<List<int>> GetEmployeeIDs()
         {
             HttpClient.SetBearerToken(tokenAccessor.TokenResponse.AccessToken);
-            var response = await HttpClient.GetAsync($"api/employee/employeeId/{empId}");
+            var response = await HttpClient.GetAsync($"api/employee");
             if (response.IsSuccessStatusCode && response.StatusCode == System.Net.HttpStatusCode.OK)
             {
+                var content = await response.Content.ReadAsByteArrayAsync();
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                var result = JsonSerializer.Deserialize<IEnumerable<OldEmployeeForViewDto>>(content, options);
 
-                return true;
+                return result.Select(x => x.EmployeeId).ToList();
             }
-            return false;
+            return null;
         }
 
     }

@@ -115,5 +115,12 @@ namespace Resourceedge.Employee.API.Controllers
 
             return Ok();
         }
+        [HttpGet]
+        public IActionResult AllEmployee()
+        {
+            var result = EmployeeRepo.GetEmployees();
+
+            return Ok(result);
+        }
     }
 }

@@ -35,6 +35,7 @@ namespace Resourceedge.Appraisal.API.Services
                 var appraisalResult = AppraisalResultCollection.AsQueryable().Where(x => x.myId == empId && x.AppraisalCycleId == cycleId);
                 var filter = Builders<FinalAppraisalResult>.Filter.Where(x => x.EmployeeId == empId && x.AppraisalCycleId == cycleId);
                 var oldFinalResult = Collection.Find(filter).FirstOrDefault();
+
                 if(oldFinalResult == null)
                 {
                     
@@ -57,12 +58,12 @@ namespace Resourceedge.Appraisal.API.Services
                 }
                 else
                 {
-                    oldFinalResult.EmployeeResult = (oldFinalResult.EmployeeResult != 0) ? oldFinalResult.EmployeeResult : appraisalResult.Sum(x => x.EmployeeCalculation.WeightContribution);
-                    if (appraisalResult.Any(x => x.AppraiseeCalculation.WeightContribution == 0)){
-                         oldFinalResult.AppraiseeResult = (oldFinalResult.AppraiseeResult != 0) ? appraisalResult.Sum(x => x.AppraiseeCalculation.WeightContribution) : appraisalResult.Sum(x => x.AppraiseeCalculation.WeightContribution);
+                    oldFinalResult.EmployeeResult = (oldFinalResult.EmployeeResult != 0) ? oldFinalResult.EmployeeResult : (double)(decimal.Round((decimal)appraisalResult.Sum(x => x.EmployeeCalculation.WeightContribution), 2, MidpointRounding.AwayFromZero));
+                    if (!appraisalResult.Any(x => x.AppraiseeCalculation.WeightContribution == 0)){
+                         oldFinalResult.AppraiseeResult = (oldFinalResult.AppraiseeResult != 0) ? (double)(decimal.Round((decimal)appraisalResult.Sum(x => x.AppraiseeCalculation.WeightContribution), 2, MidpointRounding.AwayFromZero)) : (double)(decimal.Round((decimal)appraisalResult.Sum(x => x.AppraiseeCalculation.WeightContribution), 2, MidpointRounding.AwayFromZero));
                     }
-                    if (appraisalResult.Any(s => s.FinalCalculation.WeightContribution == 0)){ 
-                    oldFinalResult.FinalResult = (appraisalResult.FirstOrDefault().IsCompleted != null && oldFinalResult.FinalResult == 0) ?  appraisalResult.Sum(x => x.FinalCalculation.WeightContribution) : 0;
+                    if (!appraisalResult.Any(s => s.FinalCalculation.WeightContribution == 0)){ 
+                    oldFinalResult.FinalResult = (appraisalResult.FirstOrDefault().IsCompleted != null && oldFinalResult.FinalResult == 0) ? (double)(decimal.Round((decimal)appraisalResult.Sum(x => x.FinalCalculation.WeightContribution),2,MidpointRounding.AwayFromZero)) : (double)(decimal.Round((decimal)appraisalResult.Sum(x => x.FinalCalculation.WeightContribution), 2, MidpointRounding.AwayFromZero));
 
                     }
 
@@ -77,8 +78,7 @@ namespace Resourceedge.Appraisal.API.Services
             {
 
                 throw ex;
-            }
-        
+            }        
         }
 
         public async Task<IEnumerable<FinalAppraisalResultForViewDto>> GetAllResultByCycle(ObjectId cycleId)
@@ -109,8 +109,10 @@ namespace Resourceedge.Appraisal.API.Services
                         {
                             "Result",new BsonDocument
                             {
+                                { "EmployeeId" , "$EmployeeId" },
                                 {"FinalResult" , "$FinalResult" },
-                                {"EmployeeResult", "$EmployeeResult" }
+                                {"EmployeeResult", "$EmployeeResult" },
+                                {"AppraiseeResult","$AppraiseeResult" }
                             }
                         }
                     }
@@ -168,5 +170,41 @@ namespace Resourceedge.Appraisal.API.Services
 
             return allResult.GroupBy(c => c.EmployeeDetail.Company).Select(x => new OrgaizationandCount { Group = x.Key, Count = x.Count() });
         }
+
+        public async Task<bool> ReCalculateFinalAppraisalResult(ObjectId cycleId)
+        {
+            try
+            {
+                var employeeIds = await teamRepository.GetEmployeeIDs();
+
+                employeeIds.ForEach(x => CalculateResult(x, cycleId));
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+
+                return false;
+            }
+        }
+
+        public async Task<IDictionary<string, IEnumerable<FinalAppraisalResultForViewDto>>> GetResultForDownload(ObjectId cycleId)
+        {
+            var organization = await GetOrgaization(cycleId);
+            var allResult = await GetAllResultByCycle(cycleId);
+
+            IDictionary<string, IEnumerable<FinalAppraisalResultForViewDto>> resultForView = new Dictionary<string, IEnumerable<FinalAppraisalResultForViewDto>>();
+            foreach (var item in organization)
+            {
+                var groupResult = allResult.Where(r => r.EmployeeDetail.Company == item.Group);
+
+                resultForView.Add(item.Group, groupResult);
+            }
+
+            return resultForView;
+        }
+
+        
+
     }
 }
