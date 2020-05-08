@@ -204,7 +204,21 @@ namespace Resourceedge.Appraisal.API.Services
             return resultForView;
         }
 
-        
+        public async Task<bool> ResetEmployeeFinalAppraisal(int empId, ObjectId cycleId)
+        {
+            try
+            {
+                var filter = Builders<FinalAppraisalResult>.Filter.Where(a => a.EmployeeId == empId && a.AppraisalCycleId == cycleId);
+
+                var result = await Collection.DeleteOneAsync(filter);
+              
+                return result.IsAcknowledged;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
 
     }
 }

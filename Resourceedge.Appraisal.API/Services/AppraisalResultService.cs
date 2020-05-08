@@ -21,6 +21,7 @@ using Resourceedge.Appraisal.API.DBQueries;
 using System.Linq.Expressions;
 using System.Globalization;
 using System.Diagnostics;
+using Resourceedge.Common.Archive;
 
 namespace Resourceedge.Appraisal.API.Services
 {
@@ -34,8 +35,9 @@ namespace Resourceedge.Appraisal.API.Services
         private readonly IKeyResultArea resultAreaRepo;
         private readonly IEmailSender sender;
         private readonly ITeamRepository teamRepository;
+        private readonly IAppraisalFinalResult finalResultRepo;
 
-        public AppraisalResultService(IDbContext _context, IMapper _mapper, ISGClient _client, IKeyResultArea _resultAreaRepo, IEmailSender _sender, ITeamRepository _teamRepository)
+        public AppraisalResultService(IDbContext _context, IMapper _mapper, ISGClient _client, IKeyResultArea _resultAreaRepo, IEmailSender _sender, ITeamRepository _teamRepository, IAppraisalFinalResult _finalResultRepo)
         {
             Collection = _context.Database.GetCollection<AppraisalResult>($"{nameof(AppraisalResult)}s");
             KraCollection = _context.Database.GetCollection<KeyResultArea>($"{nameof(KeyResultArea)}s");
@@ -45,6 +47,7 @@ namespace Resourceedge.Appraisal.API.Services
             resultAreaRepo = _resultAreaRepo;
             sender = _sender;
             teamRepository = _teamRepository;
+            finalResultRepo = _finalResultRepo;
             AppraisalConfigCollection = _context.Database.GetCollection<AppraisalConfig>($"{nameof(AppraisalConfig)}s");
 
 
@@ -305,42 +308,66 @@ namespace Resourceedge.Appraisal.API.Services
             return null;
         }
 
-        public async Task<UpdateResult> HodApprovalOrReject(ObjectId appraisalResultId, AcceptanceStatus status)
+        public async Task<bool> HodApprovalOrReject(OldEmployeeForViewDto Hod, OldEmployeeForViewDto employee, IEnumerable<HodApprovalDto> approvalDtos, ObjectId Cycle)
         {
-            var filter = Builders<AppraisalResult>.Filter.Eq("Id", appraisalResultId);
-            var appraisalResult = Collection.Find(filter).FirstOrDefault();
-            var employee = await resultAreaRepo.GetEmployee(appraisalResult.KeyResultArea.EmployeeId);
-
             string subject = $"Pending Approval";
-            string msg = $"who is your HOD has completed your appraisal for the key result area {appraisalResult.KeyResultArea.Name}, You are to accept or reject it";
             string title = "Approval For Approval";
             string url = "https://resourceedge.herokuapp.com/";
-            if (appraisalResult != null)
-            {
-                appraisalResult.HodAccept = new AcceptanceStatus()
-                {
-                    IsAccepted = status.IsAccepted.Value
-                };
+            string msg = $"who is your HOD has completed your appraisal, You are to accept or reject it";
 
-                var newAppraisalResult = appraisalResult.HodApproval(status.Reason);
-                var entityToUpdate = newAppraisalResult.ToBsonDocument();
-                var update = new BsonDocument("$set", entityToUpdate);
+            try
+            {                
+                foreach (var approvalDto in approvalDtos)
+                {
+                    var filter = Builders<AppraisalResult>.Filter.Where(a => a.Id == ObjectId.Parse(approvalDto.AppraisalResultId));
+                    var appraisalResult = Collection.Find(filter).FirstOrDefault();
+
+             
+
+                    if (appraisalResult != null)
+                    {
+                        if (appraisalResult.KeyResultArea.HodDetails.EmployeeId != Hod.EmployeeId)
+                        {
+                            continue;
+                        }
+
+                        appraisalResult.HodAccept = new AcceptanceStatus()
+                        {
+                            IsAccepted = approvalDto.Status
+                        };
+
+                        appraisalResult.KeyOutcomeScore.ToList().ForEach(x => x.HodScore = x.AppraisalScore);
+
+                        var newAppraisalResult = appraisalResult.HodApproval("");
+                        var entityToUpdate = newAppraisalResult.ToBsonDocument();
+                        var update = new BsonDocument("$set", entityToUpdate);
+                       
+                        var res = await Collection.UpdateOneAsync(filter, update);
+                    }
+
+                }
 
                 SingleEmailDto emailDto = new SingleEmailDto()
                 {
                     ReceiverFullName = employee.FullName,
                     ReceiverEmailAddress = employee.Email,
-                    HtmlContent = await sender.FormatEmail(appraisalResult.KeyResultArea.HodDetails.Name, employee.FullName, msg, title, url),
+                    HtmlContent = await sender.FormatEmail(Hod.FullName, employee.FullName, msg, title, url),
                 };
-
-                var res = await Collection.UpdateOneAsync(filter, update);
-                if (res.MatchedCount > 0)
+                if (emailDto.HtmlContent == null)
                 {
-                    await sender.SendToSingleEmployee(subject, emailDto);
+                    emailDto.HtmlContent = @$"<b>Dear {employee.FullName},</b> <br /> <br /> <p>{Hod.FullName} has successfully appraised you. Kindly login to the portal and View. <br /> Thank you.</p>";
                 }
-                return res;
+
+                await sender.SendToSingleEmployee(subject, emailDto);
+
+                return true;
             }
-            return null;
+            catch (Exception)
+            {
+
+                return false;
+            }
+        
         }
 
         public async Task<IEnumerable<AppraisalForApprovalDto>> GetEmployeesToAppraise(int employeeId, string appraisalConfigurationId, string appraisalCycleId, string whoAmI)
@@ -515,5 +542,58 @@ namespace Resourceedge.Appraisal.API.Services
                 await Collection.ReplaceOneAsync(filter, appraisalResult);
             }
         }
+
+        public async Task<bool> RestAppraisal(int empId, int appraiserId, ObjectId cycleId )
+        {
+            try
+            {
+                //var pipelineObj = AppraisalQueries.GetAppraisalResultForReset(empId, appraiserId, cycleId);
+                //var result = Collection.Aggregate<AppraisalResult>(pipelineObj).ToList();
+
+                var filter = Builders<AppraisalResult>.Filter.Where(x => x.myId == empId &&
+                                                            x.KeyResultArea.HodDetails.EmployeeId == appraiserId
+                                                            && x.AppraisalCycleId == cycleId);
+
+                var appraisalResult = Collection.Find(filter).ToList();
+                if (appraisalResult.Any())
+                {
+                    appraisalResult.ForEach(x => x.ResetForHod(Collection));
+                }
+                else
+                {
+                     filter = Builders<AppraisalResult>.Filter.Where(x => x.myId == empId &&
+                                                            x.KeyResultArea.AppraiserDetails.EmployeeId == appraiserId
+                                                            && x.AppraisalCycleId == cycleId);
+                    appraisalResult = Collection.Find(filter).ToList();
+                    appraisalResult.ForEach(x => x.ResetForAppraiser(Collection));
+                }
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> ResetEmployeeAppraisal(int empId, ObjectId cycleId)
+        {
+            try
+            {
+                var filter = Builders<AppraisalResult>.Filter.Where(a => a.myId == empId && a.AppraisalCycleId == cycleId);
+
+                var result = await Collection.DeleteManyAsync(filter);
+                if (result.IsAcknowledged)
+                {
+                    await finalResultRepo.ResetEmployeeFinalAppraisal(empId, cycleId);
+                }
+                return result.IsAcknowledged;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+        
     }
 }

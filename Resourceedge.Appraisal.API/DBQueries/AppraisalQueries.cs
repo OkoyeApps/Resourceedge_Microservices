@@ -11,12 +11,12 @@ namespace Resourceedge.Appraisal.API.DBQueries
     {
         public static BsonDocument[] GetApplicableKeyOutcomes(ObjectId kraId, int EmployeeId, IList<string> KeyoutcomeIds)
         {
-            var arrayOfIds =new List<ObjectId>();
+            var arrayOfIds = new List<ObjectId>();
             foreach (var item in KeyoutcomeIds)
             {
                 arrayOfIds.Add(ObjectId.Parse(item));
             }
-             
+
             var inputArray = new BsonArray(arrayOfIds);
             var match = new BsonDocument
             {
@@ -32,7 +32,7 @@ namespace Resourceedge.Appraisal.API.DBQueries
                             "_id", new BsonDocument
                             {
                                 {"$eq",  kraId}
-                            } 
+                            }
                         }
                     }
                 }
@@ -71,7 +71,7 @@ namespace Resourceedge.Appraisal.API.DBQueries
                     }
                 }
             };
-            return new[] { match , filter};
+            return new[] { match, filter };
         }
-    }
+    }  
 }
