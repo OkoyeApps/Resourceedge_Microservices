@@ -22,4 +22,10 @@ namespace Resourceedge.Appraisal.Domain.Models
         public AcceptanceStatus EmployeeAccept { get; set; }
         public AcceptanceStatus HodAccept { get; set; }
     }
+
+    public class HodApprovalDto
+    {
+        public string AppraisalResultId { get; set; }
+        public bool Status { get; set; }
+    }
 }

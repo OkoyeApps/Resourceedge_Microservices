@@ -17,5 +17,6 @@ namespace Resourceedge.Appraisal.API.Interfaces
         Task<IEnumerable<OrgaizationandCount>> GetOrgaization(ObjectId CycleId);
         Task<bool> ReCalculateFinalAppraisalResult(ObjectId cycleId);
         Task<IDictionary<string, IEnumerable<FinalAppraisalResultForViewDto>>> GetResultForDownload(ObjectId cycleId);
+        Task<bool> ResetEmployeeFinalAppraisal(int empId, ObjectId cycleId);
     }
 }

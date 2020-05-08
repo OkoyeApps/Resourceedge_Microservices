@@ -6,6 +6,7 @@ using Resourceedge.Appraisal.API.Interfaces;
 using Resourceedge.Appraisal.Domain.Entities;
 using Resourceedge.Appraisal.Domain.Models;
 using Resourceedge.Appraisal.Domain.Queries;
+using Resourceedge.Common.Archive;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -22,13 +23,15 @@ namespace Resourceedge.Appraisal.API.Controllers
         private readonly IMapper mapper;
         private readonly IAppraisalFinalResult finalResultRepo;
         private readonly ITeamRepository teamRepo;
+        private readonly IKeyResultArea resultAreaRepo;
 
-        public AppraisalResultController(IAppraisalResult _appraisalResult, IMapper _mapper, IAppraisalFinalResult _finalResultRepo, ITeamRepository _teamRepo)
+        public AppraisalResultController(IAppraisalResult _appraisalResult, IMapper _mapper, IAppraisalFinalResult _finalResultRepo, ITeamRepository _teamRepo, IKeyResultArea _resultAreaRepo)
         {
             appraisalResult = _appraisalResult;
             mapper = _mapper;
             finalResultRepo = _finalResultRepo;
             teamRepo = _teamRepo;
+            resultAreaRepo = _resultAreaRepo;
         }
 
         [HttpGet(Name = "MyAppraisal")]
@@ -141,16 +144,30 @@ namespace Resourceedge.Appraisal.API.Controllers
 
             return NotFound();
         }
-        [HttpPatch("{Id}/HodApproval")]
-        public async Task<IActionResult> ApproveAppraisalHOD(string Id, JsonPatchDocument<AcceptanceStatus> entity)
+        [HttpPost("HodApproval/{hodId}/{empId}")]
+        public async Task<IActionResult> ApproveAppraisalHOD(int hodId, int empId, [FromBody]IEnumerable<HodApprovalDto> approvalStatus, [FromQuery]AppraisalQueryParam configParam)
         {
-            ObjectId kra = new ObjectId(Id);
+            var configExist = await appraisalResult.CheckAppraisalConfigurationDetails(configParam);
+            if (!configExist)
+            {
+                return BadRequest(new { message = "Invalid Configuration details" });
+            }
 
-            AcceptanceStatus entityToUpdate = new AcceptanceStatus();
-            entity.ApplyTo(entityToUpdate);
+            var employee = await resultAreaRepo.GetEmployee(empId);
+            if (employee == null)
+            {
+                return BadRequest(new { message = "Employee does not exist" });
+            }
 
-            var res = await appraisalResult.HodApprovalOrReject(kra, entityToUpdate);
-            if (res.MatchedCount > 0)
+            var hod = await resultAreaRepo.GetEmployee(hodId);
+            if(hod == null)
+            {
+                return BadRequest(new { message = "Hod details not found" });
+            }
+                       
+
+            var res = await appraisalResult.HodApprovalOrReject(hod, employee, approvalStatus, ObjectId.Parse(configParam.Cycle));
+            if (res)
                 return Ok();
 
             return NotFound();
@@ -233,6 +250,42 @@ namespace Resourceedge.Appraisal.API.Controllers
 
             return BadRequest(new { message = "something went wrong" });
         }
+
+        [HttpGet("ResetAppraisal/{AppraiserId}/{EmployeeId}")]
+        public async Task<IActionResult> ResetAppraisal(int AppraiserId, int EmployeeId, [FromQuery]AppraisalQueryParam configParam)
+        {
+            var configDetails = await appraisalResult.GetAppraisalConfiguration(configParam.Config);
+            if (configDetails == null)
+            {
+                return NotFound(new { message = "Appraisal configuration not found" });
+            }
+            var result = await appraisalResult.RestAppraisal(EmployeeId, AppraiserId, ObjectId.Parse(configParam.Cycle));
+            if (result)
+            {
+                return Ok(new { success = "Update completed" });
+            }
+
+            return BadRequest(new { message = "something went wrong" });
+        }
+
+        [HttpDelete("ResetEmployeeAppraisal/{EmployeeId}")]
+        public async Task<IActionResult> ResetEmployeeAppraisal(int EmployeeId, [FromQuery]AppraisalQueryParam configParam)
+        {
+            var configDetails = await appraisalResult.GetAppraisalConfiguration(configParam.Config);
+            if (configDetails == null)
+            {
+                return NotFound(new { message = "Appraisal configuration not found" });
+            }
+
+            var result = await appraisalResult.ResetEmployeeAppraisal(EmployeeId, ObjectId.Parse(configParam.Cycle));
+            if (result)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest();
+        }
+
     }
    
 }
