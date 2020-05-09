@@ -32,23 +32,29 @@ namespace Resourceedge.Appraisal.API.Services
         {
             try
             {
-                var appraisalResult = AppraisalResultCollection.AsQueryable().Where(x => x.myId == empId && x.AppraisalCycleId == cycleId);
+                var appraisalResult = AppraisalResultCollection.AsQueryable().Where(x => x.myId == empId && x.AppraisalCycleId == cycleId).ToList();
                 var filter = Builders<FinalAppraisalResult>.Filter.Where(x => x.EmployeeId == empId && x.AppraisalCycleId == cycleId);
                 var oldFinalResult = Collection.Find(filter).FirstOrDefault();
 
-                if(oldFinalResult == null)
+                if (!appraisalResult.Any())
                 {
-                    
-                    var decimalEmployeeResult = (decimal)appraisalResult.Sum(x => x.EmployeeCalculation.WeightContribution);
-                    var decimalAppraisalResult = (decimal)((appraisalResult.FirstOrDefault().IsAccepted != null) ? appraisalResult.Sum(x => x.AppraiseeCalculation.WeightContribution) : 0);
-                    var decimalFinalResult = (decimal)((appraisalResult.FirstOrDefault().IsCompleted != null) ? appraisalResult.Sum(x => x.FinalCalculation.WeightContribution) : 0);
+                    return;
+                }
+
+                if (oldFinalResult == null)
+                {
+                    var totalWeightAppraised = appraisalResult.Sum(a => a.KeyResultArea.Weight);
+
+                    var decimalEmployeeResult = NormalizeResult(totalWeightAppraised, (decimal)appraisalResult.Sum(x => x.EmployeeCalculation.WeightContribution),5);
+                    var decimalAppraisalResult = (decimal)((appraisalResult.FirstOrDefault().IsAccepted != null) ? NormalizeResult(totalWeightAppraised, (decimal)appraisalResult.Sum(x => x.AppraiseeCalculation.WeightContribution),5)  : 0);
+                    var decimalFinalResult = (decimal)((appraisalResult.FirstOrDefault().IsCompleted != null) ? NormalizeResult(totalWeightAppraised, (decimal)appraisalResult.Sum(x => x.FinalCalculation.WeightContribution),5)  : 0);
 
                     var finalResult = new FinalAppraisalResult()
                     {
                         AppraisalConfigId = appraisalResult.FirstOrDefault().AppraisalConfigId,
                         AppraisalCycleId = appraisalResult.FirstOrDefault().AppraisalCycleId,
                         EmployeeId = appraisalResult.FirstOrDefault().myId,
-                        EmployeeResult =(double) decimal.Round(decimalEmployeeResult, 2, MidpointRounding.AwayFromZero),
+                        EmployeeResult = (double)decimal.Round(decimalEmployeeResult, 2, MidpointRounding.AwayFromZero),
                         AppraiseeResult = (double)decimal.Round(decimalAppraisalResult, 2, MidpointRounding.AwayFromZero),
                         FinalResult = (double)decimal.Round(decimalFinalResult, 2, MidpointRounding.AwayFromZero),
                         Year = DateTime.Now.Year.ToString()
@@ -58,12 +64,16 @@ namespace Resourceedge.Appraisal.API.Services
                 }
                 else
                 {
-                    oldFinalResult.EmployeeResult = (oldFinalResult.EmployeeResult != 0) ? oldFinalResult.EmployeeResult : (double)(decimal.Round((decimal)appraisalResult.Sum(x => x.EmployeeCalculation.WeightContribution), 2, MidpointRounding.AwayFromZero));
-                    if (!appraisalResult.Any(x => x.AppraiseeCalculation.WeightContribution == 0)){
-                         oldFinalResult.AppraiseeResult = (oldFinalResult.AppraiseeResult != 0) ? (double)(decimal.Round((decimal)appraisalResult.Sum(x => x.AppraiseeCalculation.WeightContribution), 2, MidpointRounding.AwayFromZero)) : (double)(decimal.Round((decimal)appraisalResult.Sum(x => x.AppraiseeCalculation.WeightContribution), 2, MidpointRounding.AwayFromZero));
+                    var totalWeightAppraised =  appraisalResult.Sum(a => a.KeyResultArea.Weight);
+
+                    oldFinalResult.EmployeeResult = (oldFinalResult.EmployeeResult != 0) ? (double)NormalizeResult(appraisalResult.Sum(a => a.KeyResultArea.Weight), (decimal)appraisalResult.Sum(x => x.EmployeeCalculation.WeightContribution), 5) : (double)NormalizeResult(appraisalResult.Sum(a => a.KeyResultArea.Weight), (decimal)appraisalResult.Sum(x => x.EmployeeCalculation.WeightContribution), 5);
+                    if (!appraisalResult.Any(x => x.AppraiseeCalculation.WeightContribution == 0))
+                    {
+                        oldFinalResult.AppraiseeResult = (oldFinalResult.AppraiseeResult != 0) ? (double)NormalizeResult(totalWeightAppraised, (decimal)appraisalResult.Sum(x => x.AppraiseeCalculation.WeightContribution), 5) : (double)NormalizeResult(totalWeightAppraised, (decimal)appraisalResult.Sum(x => x.AppraiseeCalculation.WeightContribution),5);
                     }
-                    if (!appraisalResult.Any(s => s.FinalCalculation.WeightContribution == 0)){ 
-                    oldFinalResult.FinalResult = (appraisalResult.FirstOrDefault().IsCompleted != null && oldFinalResult.FinalResult == 0) ? (double)(decimal.Round((decimal)appraisalResult.Sum(x => x.FinalCalculation.WeightContribution),2,MidpointRounding.AwayFromZero)) : (double)(decimal.Round((decimal)appraisalResult.Sum(x => x.FinalCalculation.WeightContribution), 2, MidpointRounding.AwayFromZero));
+                    if (!appraisalResult.Any(s => s.FinalCalculation.WeightContribution == 0))
+                    {
+                        oldFinalResult.FinalResult = (appraisalResult.FirstOrDefault().IsCompleted != null && oldFinalResult.FinalResult == 0) ? (double)NormalizeResult(totalWeightAppraised, (decimal)appraisalResult.Sum(x => x.FinalCalculation.WeightContribution), 5) : (double)NormalizeResult(totalWeightAppraised, (decimal)appraisalResult.Sum(x => x.FinalCalculation.WeightContribution), 5);
 
                     }
 
@@ -72,13 +82,13 @@ namespace Resourceedge.Appraisal.API.Services
 
                     Collection.UpdateOne(filter, update);
                 }
-           
+
             }
             catch (Exception ex)
             {
 
                 throw ex;
-            }        
+            }
         }
 
         public async Task<IEnumerable<FinalAppraisalResultForViewDto>> GetAllResultByCycle(ObjectId cycleId)
@@ -90,7 +100,7 @@ namespace Resourceedge.Appraisal.API.Services
                     "$match" ,
                     new BsonDocument
                     {
-                        {$"AppraisalCycleId", cycleId },                       
+                        {$"AppraisalCycleId", cycleId },
                         {$"Year",  year}
                         //{$"IsCompleted", true }
                     }
@@ -135,7 +145,7 @@ namespace Resourceedge.Appraisal.API.Services
                     }
                 }
 
-                    var returnedEmployees = await teamRepository.FetchEmployeesDetailsFromEmployeeService(IdsToSend);
+                var returnedEmployees = await teamRepository.FetchEmployeesDetailsFromEmployeeService(IdsToSend);
                 if (returnedEmployees.Any())
                 {
                     foreach (var employee in returnedEmployees)
@@ -148,7 +158,7 @@ namespace Resourceedge.Appraisal.API.Services
                     }
                 }
             }
-            return finalResultToReturn;;
+            return finalResultToReturn; ;
         }
 
         public FinalAppraisalResult GetEmployeeResult(int empId, ObjectId cycleId)
@@ -161,10 +171,10 @@ namespace Resourceedge.Appraisal.API.Services
             var allResult = await GetAllResultByCycle(cycleId);
 
             var groupResult = allResult.Where(r => r.EmployeeDetail.Company == group).AsQueryable();
-           return  PagedList<FinalAppraisalResultForViewDto>.Create(groupResult, pageNumber, pageSize);
+            return PagedList<FinalAppraisalResultForViewDto>.Create(groupResult, pageNumber, pageSize);
         }
 
-        public async Task<IEnumerable<OrgaizationandCount>> GetOrgaization(ObjectId  CycleId)
+        public async Task<IEnumerable<OrgaizationandCount>> GetOrgaization(ObjectId CycleId)
         {
             var allResult = await GetAllResultByCycle(CycleId);
 
@@ -175,9 +185,11 @@ namespace Resourceedge.Appraisal.API.Services
         {
             try
             {
-                var employeeIds = await teamRepository.GetEmployeeIDs();
+                  var employeeIds = await teamRepository.GetEmployeeIDs();
 
                 employeeIds.ForEach(x => CalculateResult(x, cycleId));
+
+                //CalculateResult(297, cycleId);
 
                 return true;
             }
@@ -211,13 +223,24 @@ namespace Resourceedge.Appraisal.API.Services
                 var filter = Builders<FinalAppraisalResult>.Filter.Where(a => a.EmployeeId == empId && a.AppraisalCycleId == cycleId);
 
                 var result = await Collection.DeleteOneAsync(filter);
-              
+
                 return result.IsAcknowledged;
             }
             catch (Exception ex)
             {
                 return false;
             }
+        }
+
+        public decimal NormalizeResult(decimal totalweight, decimal totalWeightContribution, int rating)
+        {
+            //get the denominator
+            var newRating = ((totalweight / 100) * rating);
+
+            //calculate new result using the denominator
+            var newScore = ((totalWeightContribution / newRating) * rating);
+
+            return decimal.Round(newScore,2,MidpointRounding.AwayFromZero);
         }
 
     }
