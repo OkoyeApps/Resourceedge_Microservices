@@ -337,6 +337,10 @@ namespace Resourceedge.Appraisal.API.Services
                         };
 
                         appraisalResult.KeyOutcomeScore.ToList().ForEach(x => x.HodScore = x.AppraisalScore);
+                        var average = appraisalResult.KeyOutcomeScore.Average(x => x.HodScore.Value);
+                        appraisalResult.FinalCalculation.ScoreTotal = appraisalResult.KeyOutcomeScore.Sum(x => x.HodScore.Value);
+                        appraisalResult.FinalCalculation.Average = average;
+                        appraisalResult.FinalCalculation.WeightContribution = (average * (Convert.ToDouble(appraisalResult.KeyResultArea.Weight)) / 100);
 
                         var newAppraisalResult = appraisalResult.HodApproval("");
                         var entityToUpdate = newAppraisalResult.ToBsonDocument();
