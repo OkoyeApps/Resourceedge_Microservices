@@ -168,7 +168,11 @@ namespace Resourceedge.Appraisal.API.Controllers
 
             var res = await appraisalResult.HodApprovalOrReject(hod, employee, approvalStatus, ObjectId.Parse(configParam.Cycle));
             if (res)
+            {
+        
+               finalResultRepo.CalculateResult(empId, ObjectId.Parse(configParam.Cycle));
                 return Ok();
+            }
 
             return NotFound();
         }

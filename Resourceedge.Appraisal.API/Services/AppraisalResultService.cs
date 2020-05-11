@@ -371,6 +371,10 @@ namespace Resourceedge.Appraisal.API.Services
 
                 return false;
             }
+            finally
+            {
+
+            }
         
         }
 
