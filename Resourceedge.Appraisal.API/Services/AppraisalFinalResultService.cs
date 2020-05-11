@@ -36,6 +36,11 @@ namespace Resourceedge.Appraisal.API.Services
                 var filter = Builders<FinalAppraisalResult>.Filter.Where(x => x.EmployeeId == empId && x.AppraisalCycleId == cycleId);
                 var oldFinalResult = Collection.Find(filter).FirstOrDefault();
 
+                //if(!appraisalResult.Any())
+                //{
+                //    return;
+                //}
+
                 if (oldFinalResult == null)
                 {
                     var totalWeightAppraised = appraisalResult.Sum(a => a.KeyResultArea.Weight);
@@ -68,8 +73,7 @@ namespace Resourceedge.Appraisal.API.Services
                     }
                     if (!appraisalResult.Any(s => s.FinalCalculation.WeightContribution == 0))
                     {
-                        oldFinalResult.FinalResult = (appraisalResult.FirstOrDefault().IsCompleted != null && oldFinalResult.FinalResult == 0) ? (double)NormalizeResult(totalWeightAppraised, (decimal)appraisalResult.Sum(x => x.FinalCalculation.WeightContribution), 5) : (double)NormalizeResult(totalWeightAppraised, (decimal)appraisalResult.Sum(x => x.FinalCalculation.WeightContribution), 5);
-
+                        oldFinalResult.FinalResult = (appraisalResult.FirstOrDefault().IsCompleted != null) ? (double)NormalizeResult(totalWeightAppraised, (decimal)appraisalResult.Sum(x => x.FinalCalculation.WeightContribution), 5) : (double)NormalizeResult(totalWeightAppraised, (decimal)appraisalResult.Sum(x => x.FinalCalculation.WeightContribution), 5);
                     }
 
                     var finalResult = oldFinalResult.ToBsonDocument();
@@ -77,7 +81,6 @@ namespace Resourceedge.Appraisal.API.Services
 
                     Collection.UpdateOne(filter, update);
                 }
-
             }
             catch (Exception ex)
             {
