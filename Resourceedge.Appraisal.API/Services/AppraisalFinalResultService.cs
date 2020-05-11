@@ -36,10 +36,10 @@ namespace Resourceedge.Appraisal.API.Services
                 var filter = Builders<FinalAppraisalResult>.Filter.Where(x => x.EmployeeId == empId && x.AppraisalCycleId == cycleId);
                 var oldFinalResult = Collection.Find(filter).FirstOrDefault();
 
-                if(!appraisalResult.Any())
-                {
-                    return;
-                }
+                //if(!appraisalResult.Any())
+                //{
+                //    return;
+                //}
 
                 if (oldFinalResult == null)
                 {
