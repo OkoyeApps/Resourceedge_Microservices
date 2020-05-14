@@ -151,7 +151,7 @@ namespace Resourceedge.Appraisal.API.Services
                         var currentEmployee = finalResultToReturn.FirstOrDefault(x => x.EmployeeDetail.EmployeeId == employee.EmployeeId);
                         currentEmployee.EmployeeDetail.Email = employee.Email;
                         currentEmployee.EmployeeDetail.EmpStaffId = employee.StaffId;
-                        currentEmployee.EmployeeDetail.FullName = employee.FullName;
+                        currentEmployee.EmployeeDetail.FullName = employee.FullName.ToUpperInvariant();
                         currentEmployee.EmployeeDetail.Company = employee.Subgroup.Name;
                     }
                 }
@@ -168,7 +168,7 @@ namespace Resourceedge.Appraisal.API.Services
         {
             var allResult = await GetAllResultByCycle(cycleId);
 
-            var groupResult = allResult.Where(r => r.EmployeeDetail.Company == group).AsQueryable();
+            var groupResult = allResult.Where(r => r.EmployeeDetail.Company == group).AsQueryable().OrderBy(r => r.EmployeeDetail.FullName);
             return PagedList<FinalAppraisalResultForViewDto>.Create(groupResult, pageNumber, pageSize);
         }
 
@@ -206,7 +206,7 @@ namespace Resourceedge.Appraisal.API.Services
             IDictionary<string, IEnumerable<FinalAppraisalResultForViewDto>> resultForView = new Dictionary<string, IEnumerable<FinalAppraisalResultForViewDto>>();
             foreach (var item in organization)
             {
-                var groupResult = allResult.Where(r => r.EmployeeDetail.Company == item.Group);
+                var groupResult = allResult.Where(r => r.EmployeeDetail.Company == item.Group).OrderBy(a => a.EmployeeDetail.FullName);
 
                 resultForView.Add(item.Group, groupResult);
             }
