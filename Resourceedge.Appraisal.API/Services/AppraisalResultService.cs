@@ -69,7 +69,7 @@ namespace Resourceedge.Appraisal.API.Services
         {
             var employee = await resultAreaRepo.GetEmployee(entities.FirstOrDefault().myId);
             string title = "Appraise";
-            string msg = $"has successfully appraised self. Kindly login to the portal and appraise him/her. <br /> Thank you.</p>";
+            string msg = $"has successfully appraised self. Kindly login to the portal to view. <br /> Thank you.</p>";
             string url = "https://resourceedge.herokuapp.com/";
             string subject = "";
             List<SingleEmailDto> emailDto = new List<SingleEmailDto>();
