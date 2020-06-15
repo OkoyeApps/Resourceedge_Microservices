@@ -17,7 +17,7 @@ using Resourceedge.Appraisal.Domain.Queries;
 
 namespace Resourceedge.Appraisal.API.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("api/resultarea/{empId:int}")]
     public class ResultAreaController : ControllerBase

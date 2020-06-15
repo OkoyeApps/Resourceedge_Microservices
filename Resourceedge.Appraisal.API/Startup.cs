@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -47,6 +48,17 @@ namespace Resourceedge.Appraisal.API
 
             services.AddAuthentication("Bearer").AddJwtBearer("Bearer", config =>
             {
+                config.Events = new JwtBearerEvents()
+                {
+                    OnMessageReceived = context =>
+                    {
+                        if (context.Request.Query.ContainsKey("access_token"))
+                        {
+                            context.Token = context.Request.Query["access_token"];
+                        }
+                        return Task.CompletedTask;
+                    }
+                };
                 config.Authority = Configuration["Services:Authority"];
                 config.Audience = "Appraisal";
                 config.RequireHttpsMetadata = false;

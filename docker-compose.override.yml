@@ -25,4 +25,3 @@ services:
       - DefaultConnection__DataBaseName=EdgeEmployee
     ports:
       - "8001:80"
-     

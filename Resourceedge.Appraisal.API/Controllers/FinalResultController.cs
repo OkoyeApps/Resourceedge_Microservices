@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Resourceedge.Appraisal.API.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("api/finalResult")]
     public class FinalResultController : ControllerBase
@@ -144,10 +144,9 @@ namespace Resourceedge.Appraisal.API.Controllers
             }
 
 
-            string sWebRootFolder = $"{hostingEnvironment.ContentRootPath}\\AppraisalResult";
+            string sWebRootFolder = $"{hostingEnvironment.ContentRootPath}/AppraisalResult";
             string sFileName = @$"Result_For_{configDetails.Name}.xlsx";
             string URL = string.Format("{0}://{1}/{2}", Request.Scheme, Request.Host, sFileName);
-            FileInfo file = new FileInfo(Path.Combine(sWebRootFolder, sFileName));
             var memory = new MemoryStream();
             using (var fs = new FileStream(Path.Combine(sWebRootFolder, sFileName), FileMode.Create, FileAccess.Write))
             {

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
@@ -15,6 +16,7 @@ using System.Threading.Tasks;
 
 namespace Resourceedge.Appraisal.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/Appraisal")]
     public class AppraisalResultController : ControllerBase
@@ -61,7 +63,7 @@ namespace Resourceedge.Appraisal.API.Controllers
             }
 
             var hasDoneAppraisal = await appraisalResult.HasPaticipatedInAppraisal(employeeId);
-            if (!hasDoneAppraisal)
+            if (hasDoneAppraisal.HasValue && !hasDoneAppraisal.Value)
             {
                 return BadRequest(new { message = "Employee has not participated in this appraisal!" });
             }
@@ -99,7 +101,7 @@ namespace Resourceedge.Appraisal.API.Controllers
             }
 
             var hasDoneAppraisal = await appraisalResult.HasPaticipatedInAppraisal(employeeId);
-            if (hasDoneAppraisal)
+            if (hasDoneAppraisal.HasValue && hasDoneAppraisal.Value)
             {
                 return BadRequest(new { message = "You have already participated in this appraisal" });
             }

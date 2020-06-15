@@ -19,7 +19,7 @@ namespace Resourceedge.Appraisal.API.Interfaces
         Task<UpdateResult> EmployeeAcceptOrReject(ObjectId appraisalResultId, AcceptanceStatus status);
         Task<bool> HodApprovalOrReject(OldEmployeeForViewDto Hod, OldEmployeeForViewDto employee, IEnumerable<HodApprovalDto> approvalDto, ObjectId Cycle);
         Task<IEnumerable<AppraisalForApprovalDto>> GetEmployeesToAppraise(int employeeId, string appraisalConfigurationId, string appraisalCycleId, string whoami);
-        Task<bool> HasPaticipatedInAppraisal(int employeeId);
+        Task<bool?> HasPaticipatedInAppraisal(int employeeId);
         Task<bool> CheckAppraisalConfigurationDetails(AppraisalQueryParam model);
         Task<bool> CheckMultipleAppraisalConfigurationDetails(IEnumerable<AppraisalQueryParam> model);
         Task<bool> AppraiseEmployee(int empId, IEnumerable<AppraisalResultForCreationDto> entities);
