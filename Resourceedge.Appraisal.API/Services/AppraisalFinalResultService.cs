@@ -47,7 +47,7 @@ namespace Resourceedge.Appraisal.API.Services
 
                     var decimalEmployeeResult = NormalizeResult(totalWeightAppraised, (decimal)appraisalResult.Sum(x => x.EmployeeCalculation.WeightContribution),5);
                     var decimalAppraisalResult = (decimal)((appraisalResult.FirstOrDefault().IsAccepted != null) ? NormalizeResult(totalWeightAppraised, (decimal)appraisalResult.Sum(x => x.AppraiseeCalculation.WeightContribution),5)  : 0);
-                    var decimalFinalResult = (decimal)((appraisalResult.FirstOrDefault().IsCompleted != null) ? NormalizeResult(totalWeightAppraised, (decimal)appraisalResult.Sum(x => x.FinalCalculation.WeightContribution),5)  : 0);
+                    var decimalFinalResult = (decimal)((appraisalResult.FirstOrDefault().IsAccepted != null) ? NormalizeResult(totalWeightAppraised, (decimal)appraisalResult.Sum(x => x.FinalCalculation.WeightContribution),5)  : 0);
 
                     var finalResult = new FinalAppraisalResult()
                     {
@@ -73,7 +73,7 @@ namespace Resourceedge.Appraisal.API.Services
                     }
                     if (!appraisalResult.Any(s => s.FinalCalculation.WeightContribution == 0))
                     {
-                        oldFinalResult.FinalResult = (appraisalResult.FirstOrDefault().IsCompleted != null) ? (double)NormalizeResult(totalWeightAppraised, (decimal)appraisalResult.Sum(x => x.FinalCalculation.WeightContribution), 5) : (double)NormalizeResult(totalWeightAppraised, (decimal)appraisalResult.Sum(x => x.FinalCalculation.WeightContribution), 5);
+                        oldFinalResult.FinalResult = (appraisalResult.FirstOrDefault().IsAccepted != null) ? (double)NormalizeResult(totalWeightAppraised, (decimal)appraisalResult.Sum(x => x.FinalCalculation.WeightContribution), 5) : (double)NormalizeResult(totalWeightAppraised, (decimal)appraisalResult.Sum(x => x.FinalCalculation.WeightContribution), 5);
                     }
 
                     var finalResult = oldFinalResult.ToBsonDocument();

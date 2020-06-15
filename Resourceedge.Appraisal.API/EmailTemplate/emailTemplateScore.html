@@ -1,0 +1,256 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appraisal Result</title>
+
+    <style>
+        body {
+
+            font-family: Helvetica, sans-serif;
+        }
+
+        main {
+            width: 100%;
+        }
+
+        .header {
+            display: flex;
+            justify-content: center;
+            font-style: normal;
+            font-weight: 600;
+            font-size: 23px;
+            line-height: 31px;
+            text-align: center;
+            color: #4F5A68;
+        }
+
+        .header p {
+            margin-left: 0.5rem;
+        }
+
+        .main-comment h4 {
+            font-style: normal;
+            font-weight: bold;
+            font-size: 36px;
+            line-height: 56px;
+            text-align: center;
+            color: #2B2B57;
+            margin-bottom: 0;
+        }
+
+        .main-comment p {
+            font-style: normal;
+            font-weight: normal;
+            font-size: 16px;
+            line-height: 24px;
+            text-align: center;
+            color: #4F5A68;
+        }
+
+        .main-comment {
+            margin: 1rem 2rem 4rem 2rem;
+        }
+
+        .score-ring {
+            font-style: normal;
+            font-weight: bold;
+            font-size: 88px;
+            line-height: 101px;
+            text-align: center;
+            border-radius: 50%;
+            width: 264px;
+            height: 264px;
+            margin: 2rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .very-poor {
+            color: #DD0000;
+            border: 20px solid #FF9191;
+        }
+
+        .poor {
+            color: #EC6E00;
+            ;
+            border: 20px solid #FEC797;
+        }
+
+
+        .average {
+            color: #FBC02D;
+            border: 20px solid #FFF38C;
+
+        }
+
+        .good {
+            color: #2EC476;
+            border: 20px solid #D0F1F0;
+        }
+
+        .excellent {
+            color: #388E3C;
+            border: 20px solid #A5D6A7;
+
+        }
+
+        .complete-btn {
+            background: #2B2B57;
+            border-radius: 8px;
+            font-style: normal;
+            font-weight: bold;
+            font-size: 16px;
+            line-height: 24px;
+            text-align: center;
+            color: #FFFFFF;
+            border: none;
+            padding: 0.5em 3em;
+        }
+
+        .text-center {
+            text-align: center;
+            margin-top: 4rem;
+            margin-bottom: 4rem;
+        }
+
+        .dash {
+            background: #4F5A68;
+            mix-blend-mode: normal;
+            opacity: 0.1;
+        }
+
+        .footer p {
+            font-style: normal;
+            font-weight: normal;
+            font-size: 14px;
+            line-height: 20px;
+            margin-bottom: 4rem;
+            color: rgba(79, 90, 104, 0.5);
+        }
+
+        .footer a {
+            color: #1A73E8;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 14px;
+            line-height: 20px;
+            text-align: center;
+        }
+
+        @media(min-width: 768px) {
+            main {
+                width: 680px;
+                margin: 0 auto;
+            }
+        }
+
+        @media(max-width: 425px) {
+            .header {
+                font-size: 18px;
+                line-height: 25px;
+            }
+
+            .score-ring {
+                width: 150px;
+                height: 150px;
+                font-size: 60px;
+            }
+
+            .text-center {
+                margin-top: 2rem;
+                margin-bottom: 2rem;
+            }
+
+
+
+            .main-comment h4 {
+                font-size: 26px;
+                line-height: 36px;
+
+            }
+
+            .main-comment {
+                margin-bottom: 2rem;
+            }
+
+            .main-comment p {
+                font-size: 12px;
+                line-height: 20px;
+            }
+
+            .complete-btn {
+                font-size: 13px;
+                line-height: 20px;
+            }
+
+            .footer p {
+                font-size: 13px;
+                line-height: 18px;
+                margin-bottom: 2rem;
+
+            }
+
+            .footer a {
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main>
+        <div class="header">
+            <img alt="icon" src="logo.svg" />
+            <p>Resource Edge</p>
+        </div>
+
+        <section class="main-comment">
+            <h4>Hi {FirstName}, this is {Status}!</h4>
+
+
+            <div class="score-ring very-poor" id="ring">
+                {score}
+            </div>
+
+            <p>{Message}</p>
+
+            <div class="text-center">
+                <a class="complete-btn" href="{Url}" >View Complete Result</a>
+            </div>
+            <hr class="dash" />
+        </section>
+
+
+        <section class="footer text-center">
+            <p>© 2020 Resource Edge. All rights reserved.You received this email because you’re an employee of the
+                Tenece Group of
+                companies. To update your emails subscription preferences <a href="#">click here.</a></p>
+
+            <a href="#">View this email in the browser</a>
+        </section>
+    </main>
+
+    <script>
+        let ring = document.getElementById('ring');
+        let score = parseFloat(ring.innerHTML);
+        if (score >= 4.5) {
+            ring.classList.add("excellent")
+        }
+        else if (score < 4.5 && score >= 4) {
+            ring.classList.add("good");
+        } else if (score < 4 && score >= 3) {
+            ring.classList.add("average")
+        } else if (score < 3 && score >= 2) {
+            ring.classList.add("poor")
+        } else if (score < 2) {
+            ring.classList.add("very-poor")
+        }
+    </script>
+</body>
+
+</html>

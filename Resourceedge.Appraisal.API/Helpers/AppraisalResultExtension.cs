@@ -15,7 +15,6 @@ namespace Resourceedge.Appraisal.API.Helpers
 
             if (employeeAccept)
             {
-                result.IsAccepted = true;
                 result.IsCompleted = true;
             }
             else
@@ -33,8 +32,7 @@ namespace Resourceedge.Appraisal.API.Helpers
             bool hodApproval = result.HodAccept.IsAccepted.Value;
             if (hodApproval)
             {
-                
-                result.IsCompleted = true;
+                result.IsAccepted = true;
             }
             else
             {

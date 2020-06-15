@@ -16,7 +16,7 @@ namespace Resourceedge.Appraisal.API.Interfaces
         IEnumerable<AppraisalResult> Get(ObjectId AppraisalConfigId, ObjectId CycleId, int? EmployeeId);
         void InsertResult(AppraisalResult entity);
         Task<(bool, string)> SubmitAppraisal(int empId, IEnumerable<AppraisalResultForCreationDto> entity);
-        Task<UpdateResult> EmployeeAcceptOrReject(ObjectId appraisalResultId, AcceptanceStatus status);
+        Task<UpdateResult> EmployeeAcceptOrReject(int employeeId, ObjectId appraisalResultId, AcceptanceStatus status);
         Task<bool> HodApprovalOrReject(OldEmployeeForViewDto Hod, OldEmployeeForViewDto employee, IEnumerable<HodApprovalDto> approvalDto, ObjectId Cycle);
         Task<IEnumerable<AppraisalForApprovalDto>> GetEmployeesToAppraise(int employeeId, string appraisalConfigurationId, string appraisalCycleId, string whoami);
         Task<bool?> HasPaticipatedInAppraisal(int employeeId);
@@ -30,5 +30,6 @@ namespace Resourceedge.Appraisal.API.Interfaces
         Task UpdateAppraisalResult(AppraisalResult appraisalResult);
         Task<bool> RestAppraisal(int empId, int appraiserId, ObjectId cycleId);
         Task<bool> ResetEmployeeAppraisal(int empId, ObjectId cycleId);
+        Task SendOutEmail(OldEmployeeForViewDto employee, string subject, double finalResult);
     }
 }

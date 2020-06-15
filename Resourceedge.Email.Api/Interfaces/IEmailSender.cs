@@ -13,5 +13,6 @@ namespace Resourceedge.Email.Api.Interfaces
         Task<HttpStatusCode> SendMultipleEmail(string subject, string employeeName, EmailDtoForMultiple emailDtos, string message, string title);
         Task<string> FormatEmail(string Name, string supervisor, string message, string title, string Url);
         Task<string> FormatEmail(string Name, string Url);
+        Task<string> FormatEmailAppraisalScore(string Name, string score);
     }
 }

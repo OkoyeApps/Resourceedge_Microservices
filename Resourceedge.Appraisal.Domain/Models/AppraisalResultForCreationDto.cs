@@ -32,13 +32,13 @@ namespace Resourceedge.Appraisal.Domain.Models
     public class AppraisalKeyOutcomeDtoString
     {
         public string KeyOutcomeId { get; set; }
-        public int EmployeeScore { get; set; }
+        public int? EmployeeScore { get; set; }
     }
 
     public class AppraisalKeyOutcomeDto
     {
         public ObjectId KeyOutcomeId { get; set; }
-        public int EmployeeScore { get; set; }
+        public int? EmployeeScore { get; set; }
     }
 
 }

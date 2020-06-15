@@ -71,7 +71,7 @@ namespace Resourceedge.Appraisal.API.Controllers
             var configExist = await appraisalResult.CheckAppraisalConfigurationDetails(configParam);
             if (!configExist)
             {
-                return BadRequest( new { message = "Invalid Configuration details" });
+                return BadRequest(new { message = "Invalid Configuration details" });
             }
 
             var appraisalResultToSubmit = mapper.Map<IEnumerable<AppraisalResultForCreationDtoString>, IEnumerable<AppraisalResultForCreationDto>>(appraisalResultForCreation);
@@ -110,7 +110,7 @@ namespace Resourceedge.Appraisal.API.Controllers
             if (!configExist)
             {
                 return BadRequest(new { message = "Invalid Configuration details" });
-            }                
+            }
 
             var appraisalResultToSubmit = mapper.Map<IEnumerable<AppraisalResultForCreationDtoString>, IEnumerable<AppraisalResultForCreationDto>>(appraisalResultForCreation);
                        
@@ -130,21 +130,21 @@ namespace Resourceedge.Appraisal.API.Controllers
             return BadRequest(new { message = result.Item2 });
         }
 
-        [HttpPatch("{Id}/AcceptAppraisal")]
-        public async Task<IActionResult> AcceptAppraisal(string Id, JsonPatchDocument<AcceptanceStatus> entity)
+        [HttpPatch("AcceptAppraisal/{employeeId}/{KraId}")]
+        public async Task<IActionResult> AcceptAppraisal(int employeeId, string KraId, JsonPatchDocument<AcceptanceStatus> entity)
         {
-            ObjectId kra = new ObjectId(Id);
+            ObjectId kra = new ObjectId(KraId);
 
             AcceptanceStatus entityToUpdate = new AcceptanceStatus();
             entity.ApplyTo(entityToUpdate);
 
-            var res = await appraisalResult.EmployeeAcceptOrReject(kra, entityToUpdate);
+            var res = await appraisalResult.EmployeeAcceptOrReject(employeeId, kra, entityToUpdate);
             if (res != null)
             {
-                return Ok();
+                return Ok(new {message = "Appraisal Result Accepted Successfully" });
             }
 
-            return NotFound();
+            return NotFound(new { message = "An error occured, Try Again!!!" });
         }
         [HttpPost("HodApproval/{hodId}/{empId}")]
         public async Task<IActionResult> ApproveAppraisalHOD(int hodId, int empId, [FromBody]IEnumerable<HodApprovalDto> approvalStatus, [FromQuery]AppraisalQueryParam configParam)
@@ -171,12 +171,16 @@ namespace Resourceedge.Appraisal.API.Controllers
             var res = await appraisalResult.HodApprovalOrReject(hod, employee, approvalStatus, ObjectId.Parse(configParam.Cycle));
             if (res)
             {
-        
-               finalResultRepo.CalculateResult(empId, ObjectId.Parse(configParam.Cycle));
-                return Ok();
+                string subject = $"Appraisal Notification";
+
+
+                finalResultRepo.CalculateResult(empId, ObjectId.Parse(configParam.Cycle));
+               var score = finalResultRepo.GetEmployeeResult(empId, ObjectId.Parse(configParam.Cycle));
+               await appraisalResult.SendOutEmail(employee, subject, score.FinalResult);
+                return Ok(new {message = "Appraisal Approved Successfully" });
             }
 
-            return NotFound();
+            return NotFound(new { message = "An Error Or Try Again Later !!" });
         }
 
         [Route("hasparticipated/{employeeId}"),HttpGet]

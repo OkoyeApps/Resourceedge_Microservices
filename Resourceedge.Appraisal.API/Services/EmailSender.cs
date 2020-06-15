@@ -1,4 +1,5 @@
-﻿using Resourceedge.Email.Api.Interfaces;
+﻿using MongoDB.Driver.Core.WireProtocol.Messages;
+using Resourceedge.Email.Api.Interfaces;
 using Resourceedge.Email.Api.Model;
 using Resourceedge.Email.Api.Services;
 using Resourceedge.Email.Api.SGridClient;
@@ -98,6 +99,67 @@ namespace Resourceedge.Appraisal.API.Services
                 return null;
             }
           
+        }
+
+        public async Task<string> FormatEmailAppraisalScore(string Name, string score)
+        {
+            string[] message = GetEmailMessage(score);
+            string Url = "https://resourceedge.herokuapp.com/";
+            try
+            {
+                string body = "";
+                string filename = Path.GetFullPath("EmailTemplate\\emailTemplateScore.html");
+                using (StreamReader sr = new StreamReader(filename))
+                {
+                    body = await sr.ReadToEndAsync();
+                }
+
+                body = body.Replace("{FirstName}", Name);
+                body = body.Replace("{score}", score);
+                body = body.Replace("{Message}", message[0]);
+                body = body.Replace("{Status}", message[1]);
+                body = body.Replace("{Url}", Url);
+                
+                return body;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        private string[] GetEmailMessage(string scores)
+        {
+            double score = Convert.ToDouble(scores);
+            string[] message = new string[2];
+
+            if (score >= 4.5)
+            {
+                message[1]  = "Excellent";
+                message[0] = "You did well, you achieved your targets and you have performed Excellently well. This is commendable and you are representing our values, Well done.";
+            }
+            else if (score < 4.5 && score >= 4)
+            {
+                message[1] = "Good";
+                message[0] = "You did well, you achieved your targets and you have a good performance. This is commendable and you are representing our values, Well done.";
+            }
+            else if (score < 4 && score >= 3)
+            {
+                message[1] = "Average";
+                message[0] = "You achieve average targets at all and you have performed well. This is acceptable and you can do better.";
+            }
+            else if (score < 3 && score >= 2)
+            {
+                message[1] = "Poor";
+                message[0] = "You did not achieve your targets at all and you have performed poorly.This is totally unacceptable and doesn’t represent the values we hold dear.";
+            }
+            else if (score < 2)
+            {
+                message[1] = "Very Poor";
+                message[0] = "You did not achieve your targets at all and you have performed poorly. This is totally unacceptable and doesn’t represent the values we hold dear.";
+            }
+
+            return message;
         }
 
         public Task<string> FormatEmail(string Name, string Url)
