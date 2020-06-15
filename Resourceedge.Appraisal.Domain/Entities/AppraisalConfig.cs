@@ -18,10 +18,16 @@ namespace Resourceedge.Appraisal.Domain.Entities
 
     public class AppraisalCycle
     {
+        public AppraisalCycle()
+        {
+            Completed = (this.isActive.HasValue && this.isActive.Value) ? false : (this.isActive.HasValue && !this.isActive.Value) ? true : (bool?) null;
+        }
         public ObjectId Id { get; set; } = ObjectId.GenerateNewId();
         public DateTime StartDate { get; set; } 
         public DateTime StopDate { get; set; }
         public bool? isActive { get; set; }
+        public string Name { get; set; }
+        public bool? Completed { get; set; }
 
     }
 }

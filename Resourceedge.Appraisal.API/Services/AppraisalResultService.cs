@@ -429,10 +429,22 @@ namespace Resourceedge.Appraisal.API.Services
             return computedArray;
         }
 
-        public async Task<bool> HasPaticipatedInAppraisal(int employeeId)
+        public async Task<bool?> HasPaticipatedInAppraisal(int employeeId)
         {
-            var result = Collection.AsQueryable().Any(x => x.myId == employeeId);
-            return result;
+            var year = DateTime.Now.Year;
+            var configuration = AppraisalConfigCollection.AsQueryable().FirstOrDefault(x=>x.Year == year);
+            if(configuration != null)
+            {
+                var cycleId = configuration.Cycles.FirstOrDefault(x => x.isActive == true);
+                if(cycleId != null)
+                {
+                     var result = Collection.AsQueryable().Any(x => x.myId == employeeId && x.AppraisalCycleId == cycleId.Id && x.AppraisalConfigId == configuration.Id);
+                    return result;
+    
+                }
+            }
+            //this null is used to stop you from participating in the appraisal you are trying to access;
+            return null;
         }
 
         public async Task<bool> CheckAppraisalConfigurationDetails(AppraisalQueryParam model)
@@ -490,21 +502,31 @@ namespace Resourceedge.Appraisal.API.Services
             {
                 return true;
             }
-            var splitedTimelimit = keyOutcome.TimeLimit.Split('/');
-            if(splitedTimelimit.Length < 3)
-            {
-                return false;
-            }
-            var dateString = $"{splitedTimelimit[1]}/{splitedTimelimit[0]}/{splitedTimelimit[2]}";
-            var isvalid = DateTime.TryParseExact(dateString, "MM/dd/yyyy", CultureInfo.CurrentCulture, DateTimeStyles.AdjustToUniversal, out parsedDate);
 
-            if (isvalid)
+            var validDate = DateTime.TryParse(keyOutcome.TimeLimit, out DateTime defaultParsedDate);
+            if (validDate)
             {
-                if (parsedDate <= cycle.StopDate)
+                return defaultParsedDate <= cycle.StopDate;
+            }
+            else
+            {
+                var splitedTimelimit = keyOutcome.TimeLimit.Split('/');
+                if (splitedTimelimit.Length < 3)
                 {
-                    return true;
+                    return false;
+                }
+                var dateString = $"{splitedTimelimit[1]}/{splitedTimelimit[0]}/{splitedTimelimit[2]}";
+                var isvalid = DateTime.TryParseExact(dateString, "MM/dd/yyyy", CultureInfo.CurrentCulture, DateTimeStyles.AdjustToUniversal, out parsedDate);
+
+                if (isvalid)
+                {
+                    if (parsedDate <= cycle.StopDate)
+                    {
+                        return true;
+                    }
                 }
             }
+            
             //unknown timelimit supplied so we return false
             return false;
         }

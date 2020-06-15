@@ -1,7 +1,9 @@
 ﻿using IdentityModel.Client;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using Resourceedge.Appraisal.API.Interfaces;
 using Resourceedge.Appraisal.Domain.DBContexts;
@@ -19,6 +21,11 @@ using System.Threading.Tasks;
 
 namespace Resourceedge.Appraisal.API.Services
 {
+    public class PeopleToAppraiseDto
+    {
+        public int EmployeeId { get; set; }
+        public bool? HasApproved { get; set; }
+    }
     public class TeamService : ITeamRepository
     {
         private readonly ILogger<TeamService> logger;
@@ -64,24 +71,64 @@ namespace Resourceedge.Appraisal.API.Services
 
         public async Task<IEnumerable<OldEmployeeDto>> GetEmployeesToApproveEPA(int employeeId, string type)
         {
-            var EmployeesToAppraise = new List<string>();
+            var EmployeesToAppraise = new List<PeopleToAppraiseDto>();
             if(string.IsNullOrEmpty(type) || type != "appraisal")
             {
-                EmployeesToAppraise =  QueryableCollection.Where(x => x.HodDetails.EmployeeId == employeeId).Select(x => x.EmployeeId.ToString()).Distinct().ToList();
+                EmployeesToAppraise = QueryableCollection.Where(x => x.HodDetails.EmployeeId == employeeId).Select(x => new PeopleToAppraiseDto { EmployeeId = x.EmployeeId, HasApproved = x.Status.Hod }).ToList();
+                EmployeesToAppraise = EmployeesToAppraise.Distinct(EdgeComparer.Get<PeopleToAppraiseDto>((x, y) => x.EmployeeId == y.EmployeeId && x.HasApproved == y.HasApproved , "EmployeeId")).ToList();
             }
             else
             {
-                EmployeesToAppraise = QueryableCollection.Where(x => x.HodDetails.EmployeeId == employeeId || x.AppraiserDetails.EmployeeId == employeeId).Select(x => x.EmployeeId.ToString()).Distinct().ToList();
+                EmployeesToAppraise = QueryableCollection.Where(x => x.HodDetails.EmployeeId == employeeId || x.AppraiserDetails.EmployeeId == employeeId).Select(x => new PeopleToAppraiseDto { EmployeeId = x.EmployeeId, HasApproved = x.Status.Hod }).ToList();
             }
                 
 
             if (EmployeesToAppraise.Any())
             {
-                return await FetchEmployeesDetailsFromEmployeeService(EmployeesToAppraise);
+                var distinctEmployees = GetDistinctEmployeeByApprovalStatus(EmployeesToAppraise);
+                var returnedEmployees =  await FetchEmployeesDetailsFromEmployeeService(distinctEmployees.Select(x=>x.EmployeeId.ToString()));
+                var transformedEmployee = returnedEmployees.Select(x => new EpaToApproveDto { Email = x.Email, EmployeeId = x.EmployeeId, FullName = x.FullName, Subgroup = x.Subgroup, UserId = x.UserId }).OrderBy(x=>x.FullName).ToList();
+                foreach (var item in distinctEmployees)
+                {
+                    var employeedetail = transformedEmployee.Where(x => x.EmployeeId == item.EmployeeId).FirstOrDefault();
+                    if(employeedetail != null && item.HasApproved != employeedetail.HasApproved && item.HasApproved != null)
+                    {
+                         employeedetail.HasApproved = item.HasApproved;
+                    }
+                    else if(employeedetail != null)
+                    {
+                        employeedetail.HasApproved = item.HasApproved;
+                    }
+                }
+
+                return transformedEmployee;
             }
             return new List<OldEmployeeDto>();
         }
 
+
+        private IEnumerable<PeopleToAppraiseDto> GetDistinctEmployeeByApprovalStatus(List<PeopleToAppraiseDto> employees)
+        {
+            List<PeopleToAppraiseDto> employeesToReturn = new List<PeopleToAppraiseDto>();
+
+            foreach (var item in employees)
+            {
+                var existingEmployee = employeesToReturn.Where(x => x.EmployeeId == item.EmployeeId).FirstOrDefault();
+                if (existingEmployee != null)
+                {
+                    if(item.HasApproved == true || item.HasApproved == false)
+                    {
+                        existingEmployee.HasApproved = item.HasApproved;
+                    }
+                }
+                else
+                {
+                    employeesToReturn.Add(item);
+                }
+            }
+            return employeesToReturn;
+        }
+   
 
         public async Task<IEnumerable<OldEmployeeDto>> FetchEmployeesDetailsFromEmployeeService(IEnumerable<string> Ids)
         {

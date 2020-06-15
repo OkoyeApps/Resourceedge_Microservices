@@ -3,6 +3,8 @@
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS base
 WORKDIR /app
 EXPOSE 80
+RUN mkdir EmailTemplate
+COPY ["Resourceedge.Appraisal.API/EmailTemplate", "/app/EmailTemplate"]
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
@@ -19,5 +21,6 @@ RUN dotnet publish "Resourceedge.Appraisal.API.csproj" -c Release -o /app/publis
 
 FROM base AS final
 WORKDIR /app
+RUN mkdir AppraisalResult 
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "Resourceedge.Appraisal.API.dll"]

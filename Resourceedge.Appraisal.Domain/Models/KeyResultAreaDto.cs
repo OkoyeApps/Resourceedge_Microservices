@@ -16,11 +16,17 @@ namespace Resourceedge.Appraisal.Domain.Models
         public NameEmail HeadOfDepartment { get; set; }
         public NameEmail Appraiser { get; set; }
         public bool? Approved { get; set; }
-        public ICollection<KeyOutcome> keyOutcomes { get; set; } = new List<KeyOutcome>();
+        public ICollection<KeyOutcomeForCreationDto> keyOutcomes { get; set; } = new List<KeyOutcomeForCreationDto>();
         public ApprovalStatus Status { get; set; } = new ApprovalStatus();
         public BsonDateTime CreatedAt { get; set; } = BsonDateTime.Create(DateTime.Now);
-
     }
+
+    public class KeyOutcomeForCreationDto : KeyOutcome
+    {
+
+        //public string completionperiod { get; set; }
+    }
+
 
     public class KeyResultAreaForViewDto
     {

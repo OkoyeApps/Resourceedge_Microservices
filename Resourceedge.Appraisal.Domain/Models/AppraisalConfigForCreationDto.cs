@@ -16,13 +16,22 @@ namespace Resourceedge.Appraisal.Domain.Models
         public List<AppraisalCycleClass> Cycles { get; set; }
     }
 
+    public class AppraisalCongifurationForViewDto : AppraisalConfigForCreationDto
+    {
+        public ObjectId ConfigId { get; set; }
+    }
+
+
     public class AppraisalCycleClass
     {
+        public ObjectId Id { get; set; } = ObjectId.GenerateNewId(DateTime.UtcNow);
         [Required]
         public DateTime Start { get; set; }
         [Required]
         public DateTime Stop { get; set; }
         public bool? isActive { get; set; }
+        public string Name { get; set; }
+        public bool? Completed { get; set; }
     }
 
     public class AppraisalCycleForAppraisal

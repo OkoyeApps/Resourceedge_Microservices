@@ -20,6 +20,7 @@ namespace Resourceedge.Appraisal.Domain.Profiles
                 .ForMember(dest => dest.HodDetails, to => to.MapFrom(src => src.HeadOfDepartment))
                 .ForMember(dest => dest.AppraiserDetails, to => to.MapFrom(src => src.Appraiser))
                 .ForMember(dest => dest.EmployeeId, to => to.MapFrom(src => src.myId));
+            
         }
     }
 }

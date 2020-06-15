@@ -23,3 +23,12 @@ mongodb+srv://chocksy:ewZg5URqMNyal7Xs@lawyerpp-cluster-5faak.mongodb.net/EdgeEm
 
 ##Local connection string
 mongodb://127.0.0.1:27017/EdgeAppraisal
+
+
+ volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/app
+      - ${APPDATA}/ASP.NET/Https:/app
+
+ environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=https://+:443;http://+:80
