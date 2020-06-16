@@ -31,5 +31,6 @@ namespace Resourceedge.Appraisal.API.Interfaces
         Task<bool> RestAppraisal(int empId, int appraiserId, ObjectId cycleId);
         Task<bool> ResetEmployeeAppraisal(int empId, ObjectId cycleId);
         Task SendOutEmail(OldEmployeeForViewDto employee, string subject, double finalResult);
+        Task<bool> IsAnyAppriasalResultRejected(int EmployeeId, ObjectId CycleId);
     }
 }

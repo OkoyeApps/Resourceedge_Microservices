@@ -619,7 +619,11 @@ namespace Resourceedge.Appraisal.API.Services
             }
 
             await sender.SendToSingleEmployee(subject, emailDto);
+        }
 
+        public async Task<bool> IsAnyAppriasalResultRejected(int EmployeeId, ObjectId CycleId)
+        {
+            return Collection.AsQueryable().Where(x => x.myId == EmployeeId && x.AppraisalCycleId == CycleId).Any(x => x.IsAccepted == false);
         }
     }
 }
