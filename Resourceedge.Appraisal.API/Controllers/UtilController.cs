@@ -5,6 +5,7 @@ using Resourceedge.Appraisal.API.Interfaces;
 using Resourceedge.Appraisal.Domain.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -30,9 +31,10 @@ namespace Resourceedge.Appraisal.API.Controllers
         [Route("check/email/template/for/valid"), HttpGet]
         public async Task<IActionResult> CheckEmailTemplate()
         {
-            //var temp = Path.Combine(Directory.GetCurrentDirectory(), "EmailTemplate\\AppraisalNotification.html");
+            //var temp = Path.Combine(Directory.GetCurrentDirectory(), "EmailTemplate/emailTemplateScore.html");
             //var fileInfo = new FileInfo(temp);
             //var body = "";
+            //var bbbb = fileInfo.Directory;
             ////if (fileInfo.Exists)
             ////{
             ////    using (StreamReader stream = new StreamReader(fileInfo.FullName))

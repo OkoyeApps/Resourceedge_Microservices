@@ -56,8 +56,27 @@ namespace Resourceedge.Appraisal.Domain.Profiles
                 }
                 return "continuously";
             };
+            Func<KeyOutcome,KeyOutcomeForCreationDto, object> convert2 = (src, dest) =>
+            {
+                var regex = new Regex("(continuously)|(yearly)|(annually)|(weekly)|(quaterly)|(continuous)|(ongoing)");
+                if (src.TimeLimit is null)
+                {
+                    return "continuously";
+                }
+                var passedRegex = regex.IsMatch((src.TimeLimit.ToLower()));
+                if (passedRegex)
+                {
+                    return src.TimeLimit;
+                }
+
+                var posixTime = DateTime.SpecifyKind(new DateTime(1970, 1, 1), DateTimeKind.Utc);
+                var convertedDate = DateTime.Parse(src.TimeLimit);
+                return    convertedDate.ToUniversalTime().Subtract(posixTime).TotalMilliseconds;
+            };
             CreateMap<KeyOutcomeForCreationDto, KeyOutcome>()
                 .ForMember(dest => dest.TimeLimit, to => to.MapFrom(convert));
+            CreateMap<KeyOutcome, KeyOutcomeForCreationDto>()
+                .ForMember(dest => dest.TimeLimit, to => to.MapFrom(convert2));
        
         }
     }
