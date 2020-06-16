@@ -296,6 +296,30 @@ namespace Resourceedge.Appraisal.API.Controllers
             return BadRequest();
         }
 
+        public async Task<IActionResult> CheckForRejectedAppriasal(int EmployeeId, [FromQuery]AppraisalQueryParam configParam)
+        {
+            var configDetails = await appraisalResult.GetAppraisalConfiguration(configParam.Config);
+            if (configDetails == null)
+            {
+                return NotFound(new { message = "Appraisal configuration not found" });
+            }
+
+            var employee = await resultAreaRepo.GetEmployee(EmployeeId);
+            if (employee == null)
+            {
+                return BadRequest(new { message = "Employee does not exist" });
+            }
+
+            var result = await appraisalResult.IsAnyAppriasalResultRejected(employee.EmployeeId, ObjectId.Parse(configParam.Cycle));
+            if (!result)
+            {
+                return Ok(new { status = "Rejected" });
+            }
+
+            return Ok(new { status = "Accepted" });
+
+        }
+
     }
    
 }
