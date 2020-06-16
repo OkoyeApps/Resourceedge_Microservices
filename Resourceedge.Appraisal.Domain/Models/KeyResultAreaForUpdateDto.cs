@@ -13,12 +13,12 @@ namespace Resourceedge.Appraisal.Domain.Models
     {
         public KeyResultAreaForUpdateDto()
         {
-            this.UpdatedAt = DateTime.Now;
+            this.UpdatedAt = DateTime.UtcNow;
         }
         public NameEmail HeadOfDepartment { get; set; } = new NameEmail { };
         public NameEmail Appraiser { get; set; } = new NameEmail { };
         public ICollection<KeyOutcome> keyOutcomes { get; set; } = new List<KeyOutcome>();
-        public BsonDateTime UpdatedAt { get; private set; } = BsonDateTime.Create(DateTime.Now);
+        public BsonDateTime UpdatedAt { get; private set; } = BsonDateTime.Create(DateTime.UtcNow);
     }
 
     public class KeyOutcomeForUpdate

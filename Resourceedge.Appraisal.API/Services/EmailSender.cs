@@ -79,7 +79,7 @@ namespace Resourceedge.Appraisal.API.Services
             try
             {
                 string body = "";
-                string filename = Path.GetFullPath("EmailTemplate\\AppraisalNotification.html");
+                string filename = Path.GetFullPath("EmailTemplate/AppraisalNotification.html");
                 using (StreamReader sr = new StreamReader(filename))
                 {
                     body = await sr.ReadToEndAsync();
@@ -108,10 +108,11 @@ namespace Resourceedge.Appraisal.API.Services
             try
             {
                 string body = "";
-                string filename = Path.GetFullPath("EmailTemplate\\emailTemplateScore.html");
+                string filename = Path.GetFullPath("EmailTemplate/emailTemplateScore.html");
                 using (StreamReader sr = new StreamReader(filename))
                 {
                     body = await sr.ReadToEndAsync();
+                    sr.Close();
                 }
 
                 body = body.Replace("{FirstName}", Name);
