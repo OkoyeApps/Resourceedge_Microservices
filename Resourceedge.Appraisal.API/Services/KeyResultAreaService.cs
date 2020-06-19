@@ -9,27 +9,19 @@ using Resourceedge.Appraisal.Domain.DBContexts;
 using Resourceedge.Appraisal.Domain.Entities;
 using Resourceedge.Appraisal.Domain.Models;
 using Resourceedge.Common.Archive;
+using Resourceedge.Common.Util;
 using Resourceedge.Email.Api.Interfaces;
 using Resourceedge.Email.Api.Model;
 using Resourceedge.Email.Api.SGridClient;
 using Resourceedge.Worker.Auth.Services;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using System.Collections;
-using Resourceedge.Common.Util;
-using Resourceedge.Common.Models;
-using System.Text.RegularExpressions;
-using Resourceedge.Appraisal.Domain.Queries;
-using MongoDB.Bson.Serialization;
-using Resourceedge.Appraisal.API.DBQueries;
 
 namespace Resourceedge.Appraisal.API.Services
 {
@@ -263,21 +255,21 @@ namespace Resourceedge.Appraisal.API.Services
                 var oldKeyResultArea = Collection.Find(filter).FirstOrDefault();
                 if (oldKeyResultArea != null)
                 {
-                    if (oldKeyResultArea.HodDetails.EmployeeId == empId && oldKeyResultArea.AppraiserDetails.EmployeeId == empId)
+                    if (oldKeyResultArea.AppraiserDetails.EmployeeId == empId)
+                    {
+                        oldKeyResultArea.Status.Appraiser = entity.Approve;
+                    }
+                    else if (oldKeyResultArea.HodDetails.EmployeeId == empId && whoami == "HOD")
                     {
                         oldKeyResultArea.Status.Hod = entity.Approve;
-                        oldKeyResultArea.Approved = entity.Approve;
-                    }
-                    else if (whoami == "HOD")
-                    {
-                        oldKeyResultArea.Status.Hod = entity.Approve;
-                        oldKeyResultArea.Approved = entity.Approve;
-                    }
-                    else
-                    {
                         oldKeyResultArea.Status.IsAccepted = entity.Approve;
                         oldKeyResultArea.SetActive();
                     }
+                    else
+                    {
+                        oldKeyResultArea.SetActive();
+                    }
+
                     var newKeyResultArea = oldKeyResultArea.ToBsonDocument();
 
                     var update = new BsonDocument("$set", newKeyResultArea);
@@ -302,7 +294,7 @@ namespace Resourceedge.Appraisal.API.Services
                 var filter = Builders<KeyResultArea>.Filter.Where(r => r.EmployeeId == empId && r.Year == DateTime.Now.Year);
 
                 var oldKeyResultArea = Collection.Find(filter).ToList();
-                oldKeyResultArea.ForEach(x => x.Status.Employee = entity.Approve);
+                oldKeyResultArea.ForEach(x => x.Status.Employee = (x.Status.Appraiser.Value == true) ? entity.Approve : null); ;
 
                 var update = Builders<KeyResultArea>.Update.Set("Status.Employee", entity.Approve);
                 var result = await Collection.UpdateManyAsync(filter, update);

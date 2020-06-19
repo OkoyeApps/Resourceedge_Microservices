@@ -47,6 +47,7 @@ namespace Resourceedge.Appraisal.Domain.Entities
     public class ApprovalStatus
     {
         public bool? Hod { get; set; } = null;
+        public bool? Appraiser { get; set; } = null;
         public bool? Employee { get; set; } = null;
         public bool? IsAccepted { get; set; } = null;
     }
