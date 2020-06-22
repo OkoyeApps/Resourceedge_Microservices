@@ -57,6 +57,7 @@ namespace Resourceedge.Appraisal.API.Services
                 throw new ArgumentNullException(nameof(logger));
             }
         }
+
         public async Task<IEnumerable<OldEmployeeDto>> GetEmployeesToAppraise(int employeeId)
         {
             var EmployeesToAppraise = QueryableCollection.Where(x => x.HodDetails.EmployeeId == employeeId).Select(x => x.EmployeeId.ToString()).Distinct().ToList();
@@ -106,7 +107,6 @@ namespace Resourceedge.Appraisal.API.Services
             return new List<OldEmployeeDto>();
         }
 
-
         private IEnumerable<PeopleToAppraiseDto> GetDistinctEmployeeByApprovalStatus(List<PeopleToAppraiseDto> employees)
         {
             List<PeopleToAppraiseDto> employeesToReturn = new List<PeopleToAppraiseDto>();
@@ -127,8 +127,7 @@ namespace Resourceedge.Appraisal.API.Services
                 }
             }
             return employeesToReturn;
-        }
-   
+        }   
 
         public async Task<IEnumerable<OldEmployeeDto>> FetchEmployeesDetailsFromEmployeeService(IEnumerable<string> Ids)
         {
@@ -144,7 +143,6 @@ namespace Resourceedge.Appraisal.API.Services
             return new List<OldEmployeeDto>();
         }
 
-
         public async Task<IEnumerable<AppraisalKeyResultAreaForViewDto>> GetTeamMemberKpi(int MyId, int TeammeberId)
         {
             //var result = resultArea.GetKeyResultAreasForAppraiser(MyId, TeammeberId);
@@ -153,14 +151,13 @@ namespace Resourceedge.Appraisal.API.Services
             return await Task.FromResult(UpdateWhoAmIForList(result, MyId));
         }
 
-
         public IEnumerable<AppraisalKeyResultAreaForViewDto> UpdateWhoAmIForList(IEnumerable<KeyResultArea> resultArea, int employeeId)
         {
             var result = resultArea.Select(x =>
                 new AppraisalKeyResultAreaForViewDto
                 {
-                    //whoami = x.AppraiserDetails.EmployeeId == employeeId ? "APPRAISER" : "HOD",
-                    whoami = "HOD",
+                    whoami = x.AppraiserDetails.EmployeeId == employeeId ? "APPRAISER" : "HOD",
+                    //whoami = "HOD",
                     Approved = x.Approved,
                     EmployeeId = x.EmployeeId,
                     Name = x.Name,
