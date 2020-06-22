@@ -149,7 +149,7 @@ namespace Resourceedge.Appraisal.API.Services
         {
             //var result = resultArea.GetKeyResultAreasForAppraiser(MyId, TeammeberId);
             var year = DateTime.Now.Year;
-            var result = QueryableCollection.Where(x => x.HodDetails.EmployeeId == MyId && x.EmployeeId == TeammeberId && x.Year == year);
+            var result = QueryableCollection.Where(x => (x.HodDetails.EmployeeId == MyId || x.AppraiserDetails.EmployeeId == MyId)  && x.EmployeeId == TeammeberId && x.Year == year);
             return await Task.FromResult(UpdateWhoAmIForList(result, MyId));
         }
 
