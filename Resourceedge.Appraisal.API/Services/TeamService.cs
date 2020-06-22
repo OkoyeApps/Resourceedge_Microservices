@@ -144,15 +144,13 @@ namespace Resourceedge.Appraisal.API.Services
             return new List<OldEmployeeDto>();
         }
 
-
         public async Task<IEnumerable<KeyResultAreaForViewDto>> GetTeamMemberKpi(int MyId, int TeammeberId)
         {
             //var result = resultArea.GetKeyResultAreasForAppraiser(MyId, TeammeberId);
             var year = DateTime.Now.Year;
-            var result = QueryableCollection.Where(x => x.HodDetails.EmployeeId == MyId && x.EmployeeId == TeammeberId && x.Year == year);
+            var result = QueryableCollection.Where(x => x.HodDetails.EmployeeId == MyId || x.AppraiserDetails.EmployeeId == MyId && x.EmployeeId == TeammeberId && x.Year == year);
             return UpdateWhoAmIForList(result, MyId);
         }
-
 
         public IEnumerable<KeyResultAreaForViewDto> UpdateWhoAmIForList(IEnumerable<KeyResultArea> resultArea, int employeeId)
         {
