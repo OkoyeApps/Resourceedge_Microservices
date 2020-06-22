@@ -27,10 +27,17 @@ namespace Resourceedge.Appraisal.Domain.Models
         //public string completionperiod { get; set; }
     }
 
-
-    public class KeyResultAreaForViewDto
+    public class KeyResultAreaForViewDto : KeyResultAreaDtoForCreation
     {
-        private string currentPosition = "appraiser";
+        public ObjectId Id { get; set; }
+    }
+
+
+
+
+
+    public class AppraisalKeyResultAreaForViewDto
+    {
         public ObjectId Id { get; set; }
         public string Name { get; set; }
         public int EmployeeId { get; set; }

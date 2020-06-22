@@ -17,7 +17,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Resourceedge.Appraisal.API.DBQueries;
 using System.Linq.Expressions;
 using System.Globalization;
 using System.Diagnostics;
@@ -418,7 +417,7 @@ namespace Resourceedge.Appraisal.API.Services
                 if(cycleId != null)
                 {
                      var result = Collection.AsQueryable().Any(x => x.myId == employeeId && x.AppraisalCycleId == cycleId.Id && x.AppraisalConfigId == configuration.Id);
-                    return result;
+                    return await Task.FromResult(result);
     
                 }
             }
@@ -428,7 +427,8 @@ namespace Resourceedge.Appraisal.API.Services
 
         public async Task<bool> CheckAppraisalConfigurationDetails(AppraisalQueryParam model)
         {
-            return AppraisalConfigCollection.AsQueryable().Any(x => x.Id == ObjectId.Parse(model.Config) && x.Cycles.Any(y => y.Id == ObjectId.Parse(model.Cycle)));
+            var result =  AppraisalConfigCollection.AsQueryable().Any(x => x.Id == ObjectId.Parse(model.Config) && x.Cycles.Any(y => y.Id == ObjectId.Parse(model.Cycle)));
+            return await Task.FromResult(result);
         }
 
         public async Task<bool> CheckMultipleAppraisalConfigurationDetails(IEnumerable<AppraisalQueryParam> model)
@@ -438,10 +438,10 @@ namespace Resourceedge.Appraisal.API.Services
                 var res = await CheckAppraisalConfigurationDetails(item);
                 if (!res)
                 {
-                    return false;
+                    return await Task.FromResult(false);
                 }
             }
-            return true;
+            return await Task.FromResult(true);
         }
 
         public IEnumerable<KeyResultArea> GetAcceptedKRAForAppraisal(int userId, AppraisalCycle configParam, string resultId = null)
@@ -577,7 +577,7 @@ namespace Resourceedge.Appraisal.API.Services
                     appraisalResult.ForEach(x => x.ResetForAppraiser(Collection));
                 }
 
-                return true;
+                return await Task.FromResult(true);
             }
             catch (Exception)
             {
@@ -623,7 +623,8 @@ namespace Resourceedge.Appraisal.API.Services
 
         public async Task<bool> IsAnyAppriasalResultRejected(int EmployeeId, ObjectId CycleId)
         {
-            return Collection.AsQueryable().Where(x => x.myId == EmployeeId && x.AppraisalCycleId == CycleId).Any(x => x.IsAccepted == false);
+            var result =  Collection.AsQueryable().Where(x => x.myId == EmployeeId && x.AppraisalCycleId == CycleId).Any(x => x.IsAccepted == false);
+            return await Task.FromResult(result);
         }
     }
 }

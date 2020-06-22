@@ -20,12 +20,17 @@ namespace Resourceedge.Appraisal.Domain.Profiles
             CreateMap<KeyResultAreaForUpdateDto, KeyResultArea>()
                .ForMember(dest => dest.HodDetails, opt => opt.MapFrom(src => src.HeadOfDepartment))
                .ForMember(dest => dest.AppraiserDetails, opt => opt.MapFrom(src => src.Appraiser));
-            CreateMap<KeyResultAreaForViewDto, KeyResultArea>()
+            CreateMap<AppraisalKeyResultAreaForViewDto, KeyResultArea>()
                .ForMember(dest => dest.HodDetails, opt => opt.MapFrom(src => src.HeadOfDepartment))
                .ForMember(dest => dest.AppraiserDetails, opt => opt.MapFrom(src => src.Appraiser));
+            CreateMap<KeyResultArea, AppraisalKeyResultAreaForViewDto>()
+               .ForMember(dest => dest.HeadOfDepartment, opt => opt.MapFrom(src => src.HodDetails))
+               .ForMember(dest => dest.Appraiser, opt => opt.MapFrom(src => src.AppraiserDetails));
+
             CreateMap<KeyResultArea, KeyResultAreaForViewDto>()
                .ForMember(dest => dest.HeadOfDepartment, opt => opt.MapFrom(src => src.HodDetails))
                .ForMember(dest => dest.Appraiser, opt => opt.MapFrom(src => src.AppraiserDetails));
+            
             CreateMap<KeyResultAreaForUpdateMainDto, KeyResultAreaForUpdateDto>()
                 .ForMember(dest => dest.HeadOfDepartment, to => to.MapFrom(src => src.HodDetails))
                 .ForMember(dest => dest.Appraiser, to => to.MapFrom(src => src.AppraiserDetails));
@@ -58,20 +63,21 @@ namespace Resourceedge.Appraisal.Domain.Profiles
             };
             Func<KeyOutcome,KeyOutcomeForCreationDto, object> convert2 = (src, dest) =>
             {
-                var regex = new Regex("(continuously)|(yearly)|(annually)|(weekly)|(quaterly)|(continuous)|(ongoing)");
-                if (src.TimeLimit is null)
-                {
-                    return "continuously";
-                }
-                var passedRegex = regex.IsMatch((src.TimeLimit.ToLower()));
-                if (passedRegex)
-                {
-                    return src.TimeLimit;
-                }
+                //var regex = new Regex("(continuously)|(yearly)|(annually)|(weekly)|(quaterly)|(continuous)|(ongoing)");
+                //if (src.TimeLimit is null)
+                //{
+                //    return "continuously";
+                //}
+                //var passedRegex = regex.IsMatch((src.TimeLimit.ToLower()));
+                //if (passedRegex)
+                //{
+                //    return src.TimeLimit;
+                //}
 
-                var posixTime = DateTime.SpecifyKind(new DateTime(1970, 1, 1), DateTimeKind.Utc);
-                var convertedDate = DateTime.Parse(src.TimeLimit);
-                return    convertedDate.ToUniversalTime().Subtract(posixTime).TotalMilliseconds;
+                //var posixTime = DateTime.SpecifyKind(new DateTime(1970, 1, 1), DateTimeKind.Utc);
+                //var convertedDate = DateTime.Parse(src.TimeLimit);
+                //return    convertedDate.ToUniversalTime().Subtract(posixTime).TotalMilliseconds;
+                return src.TimeLimit;
             };
             CreateMap<KeyOutcomeForCreationDto, KeyOutcome>()
                 .ForMember(dest => dest.TimeLimit, to => to.MapFrom(convert));

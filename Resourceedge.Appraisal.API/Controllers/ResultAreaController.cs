@@ -17,7 +17,7 @@ using Resourceedge.Appraisal.Domain.Queries;
 
 namespace Resourceedge.Appraisal.API.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     [Route("api/resultarea/{empId:int}")]
     public class ResultAreaController : ControllerBase
@@ -41,7 +41,7 @@ namespace Resourceedge.Appraisal.API.Controllers
         public ActionResult<IEnumerable<KeyResultAreaDtoForCreation>> GetPersonalKpis(int empId)
         {
             var resultFromMap = resultArea.GetPersonalkpis(empId);
-            var mapInstance = mapper.Map<IEnumerable<KeyResultAreaForViewDto>>(resultFromMap);
+            var mapInstance = mapper.Map<IEnumerable<AppraisalKeyResultAreaForViewDto>>(resultFromMap);
             return Ok(mapInstance);
         }
 
@@ -95,7 +95,7 @@ namespace Resourceedge.Appraisal.API.Controllers
             mapper.Map(resultAreaToPatch, keyResult);
 
             var entityToUpdate = await resultArea.Update(Id, keyResult);
-            var entityToReturn = mapper.Map<KeyResultAreaDtoForCreation>(entityToUpdate);
+            var entityToReturn = mapper.Map<KeyResultAreaForViewDto>(entityToUpdate);
 
             return Ok(entityToReturn);
         }

@@ -145,19 +145,19 @@ namespace Resourceedge.Appraisal.API.Services
         }
 
 
-        public async Task<IEnumerable<KeyResultAreaForViewDto>> GetTeamMemberKpi(int MyId, int TeammeberId)
+        public async Task<IEnumerable<AppraisalKeyResultAreaForViewDto>> GetTeamMemberKpi(int MyId, int TeammeberId)
         {
             //var result = resultArea.GetKeyResultAreasForAppraiser(MyId, TeammeberId);
             var year = DateTime.Now.Year;
             var result = QueryableCollection.Where(x => x.HodDetails.EmployeeId == MyId && x.EmployeeId == TeammeberId && x.Year == year);
-            return UpdateWhoAmIForList(result, MyId);
+            return await Task.FromResult(UpdateWhoAmIForList(result, MyId));
         }
 
 
-        public IEnumerable<KeyResultAreaForViewDto> UpdateWhoAmIForList(IEnumerable<KeyResultArea> resultArea, int employeeId)
+        public IEnumerable<AppraisalKeyResultAreaForViewDto> UpdateWhoAmIForList(IEnumerable<KeyResultArea> resultArea, int employeeId)
         {
             var result = resultArea.Select(x =>
-                new KeyResultAreaForViewDto
+                new AppraisalKeyResultAreaForViewDto
                 {
                     //whoami = x.AppraiserDetails.EmployeeId == employeeId ? "APPRAISER" : "HOD",
                     whoami = "HOD",
