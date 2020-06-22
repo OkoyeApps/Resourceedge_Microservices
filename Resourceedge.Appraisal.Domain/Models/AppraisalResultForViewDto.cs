@@ -12,7 +12,7 @@ namespace Resourceedge.Appraisal.Domain.Models
         public ObjectId Id { get; set; }
         public ObjectId AppraisalConfigId { get; set; }
         public ObjectId AppraisalCycleId { get; set; }
-        public KeyResultAreaForViewDto KeyResultArea { get; set; }
+        public AppraisalKeyResultAreaForViewDto KeyResultArea { get; set; }
         public ICollection<AppraisalKeyOutcome> KeyOutcomeScore { get; set; }
         public FeedBack AppraiseeFeedBack { get; set; }
         public bool? IsAccepted { get; set; }

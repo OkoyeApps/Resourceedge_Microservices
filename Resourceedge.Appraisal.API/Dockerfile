@@ -3,7 +3,6 @@
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS base
 WORKDIR /app
 EXPOSE 80
-RUN mkdir testDir
 RUN mkdir EmailTemplate
 COPY ["Resourceedge.Appraisal.API/EmailTemplate", "/app/EmailTemplate"]
 

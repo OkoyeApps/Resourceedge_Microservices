@@ -8,7 +8,6 @@ namespace Resourceedge.Appraisal.Domain.Models
 {
     public class CoreValueKRAForViewDto 
     {
-        private string currentPosition = "appraiser";
         public ObjectId Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
