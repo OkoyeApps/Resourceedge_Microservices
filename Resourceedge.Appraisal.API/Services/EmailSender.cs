@@ -52,7 +52,7 @@ namespace Resourceedge.Appraisal.API.Services
                     SingleEmailDto singleEmail = new SingleEmailDto()
                     {
                         PlainTextContent = emailDtos.PlainTextContent,
-                        HtmlContent = await FormatEmail(employeeName, item.Name, message, title,url),
+                        HtmlContent = await FormatEmail(employeeName, item.Name, message),
                         ReceiverEmailAddress = item.Email,
                         ReceiverFullName = item.Name
                     };
@@ -73,8 +73,9 @@ namespace Resourceedge.Appraisal.API.Services
             }        
         }
 
-        public async Task<string> FormatEmail(string Name, string supervisor,string message, string title,string Url)
+        public async Task<string> FormatEmail(string Name, string supervisor,string message)
         {
+            string Url = "https://resourceedge.herokuapp.com/";
             //var mailMessage = new MailMessage();
             try
             {
@@ -89,7 +90,7 @@ namespace Resourceedge.Appraisal.API.Services
                 body = body.Replace("{GroupName}", "RESOURCE EDGE");
                 body = body.Replace("{Supervisor}", supervisor);
                 body = body.Replace("{Message}", message);
-                body = body.Replace("{Title}", title);
+                //body = body.Replace("{Title}", title);
                 body = body.Replace("{Link}", Url);
 
                 return body;

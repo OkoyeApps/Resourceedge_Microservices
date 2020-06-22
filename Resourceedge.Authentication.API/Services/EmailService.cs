@@ -65,7 +65,7 @@ namespace Resourceedge.Authentication.API.Services
             throw new NotImplementedException();
         }
 
-        public Task<string> FormatEmail(string Name, string supervisor, string message, string title, string Url)
+        public Task<string> FormatEmail(string Name, string supervisor, string message)
         {
             throw new NotImplementedException();
         }

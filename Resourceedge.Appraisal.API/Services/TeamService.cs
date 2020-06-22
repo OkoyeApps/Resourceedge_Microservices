@@ -74,7 +74,7 @@ namespace Resourceedge.Appraisal.API.Services
             var EmployeesToAppraise = new List<PeopleToAppraiseDto>();
             if(string.IsNullOrEmpty(type) || type != "appraisal")
             {
-                EmployeesToAppraise = QueryableCollection.Where(x => x.HodDetails.EmployeeId == employeeId).Select(x => new PeopleToAppraiseDto { EmployeeId = x.EmployeeId, HasApproved = x.Status.Hod }).ToList();
+                EmployeesToAppraise = QueryableCollection.Where(x => x.HodDetails.EmployeeId == employeeId || x.AppraiserDetails.EmployeeId == employeeId).Select(x => new PeopleToAppraiseDto { EmployeeId = x.EmployeeId, HasApproved = x.Status.Hod }).ToList();
                 EmployeesToAppraise = EmployeesToAppraise.Distinct(EdgeComparer.Get<PeopleToAppraiseDto>((x, y) => x.EmployeeId == y.EmployeeId && x.HasApproved == y.HasApproved , "EmployeeId")).ToList();
             }
             else
