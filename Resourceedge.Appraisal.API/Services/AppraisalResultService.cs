@@ -160,7 +160,7 @@ namespace Resourceedge.Appraisal.API.Services
                             return false;
                         }
 
-                        if (entity.whoami == "APPRAISER")
+                        if (entity.whoami.ToUpper() == "APPRAISER")
                         {
                             if (result.KeyResultArea.AppraiserDetails.EmployeeId != entity.myId)
                                 continue;
@@ -180,8 +180,9 @@ namespace Resourceedge.Appraisal.API.Services
                                     }
                                 }
                             }
-                            result.NextAppraisee = "hod";
-
+                            result.IsAccepted = true;
+                            result.NextAppraisee = "Hod";
+                                
                             if (!result.KeyOutcomeScore.All(x => x.AppraisalScore == null))
                             {
                                 result.AppraiseeCalculation.ScoreTotal = result.KeyOutcomeScore.Where(x => x.AppraisalScore != null).Sum(x => x.AppraisalScore.Value);
