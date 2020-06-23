@@ -37,6 +37,7 @@ namespace Resourceedge.Appraisal.API.Helpers
             else
             {
                 result.NextAppraisee = "APPRAISER";
+                result.IsAccepted = false;
                 result.HodAccept.Reason = reason;
             }
             return result;
@@ -72,7 +73,7 @@ namespace Resourceedge.Appraisal.API.Helpers
         
         public static AppraisalResult ResetForAppraiser(this AppraisalResult result, IMongoCollection<AppraisalResult> Collection)
         {
-            result.IsCompleted = null;
+            result.IsAccepted = null;
             result.NextAppraisee = "Appraiser";
 
             var filter = Builders<AppraisalResult>.Filter.Where(x => x.Id == result.Id);
