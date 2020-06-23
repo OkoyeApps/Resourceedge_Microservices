@@ -141,7 +141,7 @@ namespace Resourceedge.Appraisal.API.Services
             var employee = await resultAreaRepo.GetEmployee(empId);
             List<SingleEmailDto> emailDto = new List<SingleEmailDto>();
             string msg = $"<p> has successfully participated in this quarter appraisal, Please attend to it. Kindly login to the portal to view. <br /><br /> Thank you.</p>";
-            string subject = $"{employee.FullName} Appriasal, your are next to Appraise him/her ";
+            string subject = $"Appraise {employee.FullName}";
 
             if (employee != null)
             {
