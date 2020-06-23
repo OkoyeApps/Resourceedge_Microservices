@@ -293,23 +293,28 @@ namespace Resourceedge.Appraisal.API.Services
                 var filter = Builders<KeyResultArea>.Filter.Where(r => r.EmployeeId == empId && r.Year == DateTime.Now.Year);
 
                 var oldKeyResultArea = Collection.Find(filter).ToList();
-                oldKeyResultArea.ForEach(x => { x.Status.Employee = (x.Status.Appraiser.Value == true) ? entity.Approve : null; x.SetActive(); });
+                oldKeyResultArea.ForEach(async x =>
+                {
+                    x.Status.Employee = (x.Status.Appraiser.Value == true) ? entity.Approve : null;
+                    x.SetActive();
 
-                var update = Builders<KeyResultArea>.Update.Set("Status.Employee", entity.Approve);
-                var result = await Collection.UpdateManyAsync(filter, update);
+                    var newKeyResultArea = x.ToBsonDocument();
+                    var update = new BsonDocument("$set", newKeyResultArea);
 
-                return result.ModifiedCount;
+                    var newfilter = Builders<KeyResultArea>.Filter.Where(a => a.Id == x.Id);
+
+                    //var update = Builders<KeyResultArea>.Update.Set("Status.Employee", entity.Approve);
+                    var result = await Collection.FindOneAndUpdateAsync(newfilter, update, options: new FindOneAndUpdateOptions<KeyResultArea> { ReturnDocument = ReturnDocument.After });
+
+                });
+
+                return oldKeyResultArea.Count();
             }
             catch (Exception ex)
             {
                 logger.LogError("update of appraisal configuration failed", ex);
                 return 0;
             }
-        }
-
-        public void SetKRAActive()
-        {
-
         }
 
         public IEnumerable<KeyResultArea> GetKeyResultAreasForAppraiser(int appraiserId, int employeeId)

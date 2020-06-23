@@ -16,11 +16,11 @@ namespace Resourceedge.Appraisal.API.Helpers
                 resultArea.IsActive = true;
                 resultArea.Approved = true;
             }
-            else
-            {
-                resultArea.IsActive = false;
-                resultArea.Approved = false;
-            }
+            //else
+            //{
+            //    resultArea.IsActive = false;
+            //    resultArea.Approved = false;
+            //}
 
             return resultArea;
         }
