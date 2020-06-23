@@ -65,7 +65,7 @@ namespace Resourceedge.Appraisal.API.Services
             Collection.InsertOne(entity);
         }
 
-        public async Task<(bool,string)> SubmitAppraisal(int empId, IEnumerable<AppraisalResultForCreationDto> entities)
+        public async Task<(bool, string)> SubmitAppraisal(int empId, IEnumerable<AppraisalResultForCreationDto> entities)
         {
             var employee = await resultAreaRepo.GetEmployee(entities.FirstOrDefault().myId);
             string msg = $"<p> has successfully participated in this quarter appraisal, Please attend to it. Kindly login to the portal to view. <br /><br /> Thank you.</p>";
@@ -83,7 +83,7 @@ namespace Resourceedge.Appraisal.API.Services
                     {
 
                         var keyResultArea = GetOnlyApplicableKeyoutcomesForAppraisal(entity.KeyResultAreaId, empId, entity.KeyOutcomeScore.Select(x => x.KeyOutcomeId.ToString()).ToList()).FirstOrDefault();
-                        if(keyResultArea == null)
+                        if (keyResultArea == null)
                         {
                             return (false, "No Key Result Area Found, Invalid Key result area Id");
                         }
@@ -164,8 +164,8 @@ namespace Resourceedge.Appraisal.API.Services
                         {
                             if (result.KeyResultArea.AppraiserDetails.EmployeeId != entity.myId)
                                 continue;
-                            else if (result.NextAppraisee == "Hod")
-                                continue;                            
+                            else if (result.NextAppraisee.ToLower() == "hod")
+                                continue;
 
                             foreach (var item in entity.KeyOutcomeScore)
                             {
@@ -175,11 +175,12 @@ namespace Resourceedge.Appraisal.API.Services
                                     {
                                         if (item.KeyOutcomeId == item1.KeyOutcomeId)
                                         {
-                                            result.KeyOutcomeScore.FirstOrDefault(x => x.KeyOutcomeId == item1.KeyOutcomeId).AppraisalScore = item.EmployeeScore;                                        
+                                            result.KeyOutcomeScore.FirstOrDefault(x => x.KeyOutcomeId == item1.KeyOutcomeId).AppraisalScore = item.EmployeeScore;
                                         }
                                     }
                                 }
                             }
+                            result.NextAppraisee = "hod";
 
                             if (!result.KeyOutcomeScore.All(x => x.AppraisalScore == null))
                             {
@@ -205,11 +206,8 @@ namespace Resourceedge.Appraisal.API.Services
                                 {
                                     result.HodAccept.IsAccepted = true;
                                     result = result.HodApproval("");
-
                                 }
-
                             }
-                            result.NextAppraisee = "Hod";                                                   
 
                             var entityToUpdate = result.ToBsonDocument();
                             var update = new BsonDocument("$set", entityToUpdate);
@@ -255,7 +253,7 @@ namespace Resourceedge.Appraisal.API.Services
                         //    //    }
                         //    //}
                         //    //result.AppraiseeFeedBack = entity.AppraiseeFeedBack;
-                           
+
                         //    result.HodAccept.IsAccepted = true;
                         //    var average = result.AppraiseeCalculation.Average;
                         //    result.FinalCalculation.ScoreTotal = result.AppraiseeCalculation.ScoreTotal;
@@ -287,7 +285,7 @@ namespace Resourceedge.Appraisal.API.Services
                 }
                 finally
                 {
-                   await SendSubmittedAppraisalEmail(subject, emailDto);
+                    await SendSubmittedAppraisalEmail(subject, emailDto);
                 }
             }
 
@@ -302,7 +300,7 @@ namespace Resourceedge.Appraisal.API.Services
 
             if (appraisalResult != null)
             {
-                if(appraisalResult.myId != employeeId)
+                if (appraisalResult.myId != employeeId)
                 {
                     return null;
                 }
@@ -324,11 +322,11 @@ namespace Resourceedge.Appraisal.API.Services
         public async Task<bool> HodApprovalOrReject(OldEmployeeForViewDto Hod, OldEmployeeForViewDto employee, IEnumerable<HodApprovalDto> approvalDtos, ObjectId Cycle)
         {
             try
-            {                
+            {
                 foreach (var approvalDto in approvalDtos)
                 {
                     var filter = Builders<AppraisalResult>.Filter.Where(a => a.Id == ObjectId.Parse(approvalDto.AppraisalResultId));
-                    var appraisalResult = Collection.Find(filter).FirstOrDefault();            
+                    var appraisalResult = Collection.Find(filter).FirstOrDefault();
 
                     if (appraisalResult != null)
                     {
@@ -341,6 +339,7 @@ namespace Resourceedge.Appraisal.API.Services
                         {
                             IsAccepted = approvalDto.Status
                         };
+                        appraisalResult = appraisalResult.HodApproval("");
 
                         var average = appraisalResult.AppraiseeCalculation.Average;
                         appraisalResult.FinalCalculation.ScoreTotal = appraisalResult.AppraiseeCalculation.ScoreTotal;
@@ -350,11 +349,11 @@ namespace Resourceedge.Appraisal.API.Services
                         var newAppraisalResult = appraisalResult.HodApproval("");
                         var entityToUpdate = newAppraisalResult.ToBsonDocument();
                         var update = new BsonDocument("$set", entityToUpdate);
-                       
+
                         var res = await Collection.UpdateOneAsync(filter, update);
                     }
 
-                }     
+                }
                 return true;
             }
             catch (Exception)
@@ -362,7 +361,7 @@ namespace Resourceedge.Appraisal.API.Services
 
                 return false;
             }
-        
+
         }
 
         public async Task<IEnumerable<AppraisalForApprovalDto>> GetEmployeesToAppraise(int employeeId, string appraisalConfigurationId, string appraisalCycleId, string whoAmI)
@@ -419,15 +418,15 @@ namespace Resourceedge.Appraisal.API.Services
         public async Task<bool?> HasPaticipatedInAppraisal(int employeeId)
         {
             var year = DateTime.Now.Year;
-            var configuration = AppraisalConfigCollection.AsQueryable().FirstOrDefault(x=>x.Year == year);
-            if(configuration != null)
+            var configuration = AppraisalConfigCollection.AsQueryable().FirstOrDefault(x => x.Year == year);
+            if (configuration != null)
             {
                 var cycleId = configuration.Cycles.FirstOrDefault(x => x.isActive == true);
-                if(cycleId != null)
+                if (cycleId != null)
                 {
-                     var result = Collection.AsQueryable().Any(x => x.myId == employeeId && x.AppraisalCycleId == cycleId.Id && x.AppraisalConfigId == configuration.Id);
+                    var result = Collection.AsQueryable().Any(x => x.myId == employeeId && x.AppraisalCycleId == cycleId.Id && x.AppraisalConfigId == configuration.Id);
                     return await Task.FromResult(result);
-    
+
                 }
             }
             //this null is used to stop you from participating in the appraisal you are trying to access;
@@ -436,7 +435,7 @@ namespace Resourceedge.Appraisal.API.Services
 
         public async Task<bool> CheckAppraisalConfigurationDetails(AppraisalQueryParam model)
         {
-            var result =  AppraisalConfigCollection.AsQueryable().Any(x => x.Id == ObjectId.Parse(model.Config) && x.Cycles.Any(y => y.Id == ObjectId.Parse(model.Cycle)));
+            var result = AppraisalConfigCollection.AsQueryable().Any(x => x.Id == ObjectId.Parse(model.Config) && x.Cycles.Any(y => y.Id == ObjectId.Parse(model.Cycle)));
             return await Task.FromResult(result);
         }
 
@@ -514,7 +513,7 @@ namespace Resourceedge.Appraisal.API.Services
                     }
                 }
             }
-            
+
             //unknown timelimit supplied so we return false
             return false;
         }
@@ -545,12 +544,12 @@ namespace Resourceedge.Appraisal.API.Services
             catch (Exception ex)
             {
                 return false;
-            }         
+            }
         }
 
         public async Task UpdateAppraisalResult(AppraisalResult appraisalResult)
         {
-            if(appraisalResult.KeyOutcomeScore.Count != appraisalResult.KeyResultArea.keyOutcomes.Count())
+            if (appraisalResult.KeyOutcomeScore.Count != appraisalResult.KeyResultArea.keyOutcomes.Count())
             {
                 appraisalResult.KeyResultArea = GetOnlyApplicableKeyoutcomesForAppraisal(appraisalResult.KeyResultArea.Id,
                       appraisalResult.myId, appraisalResult.KeyOutcomeScore.Select(x => x.KeyOutcomeId.ToString()).ToList()).FirstOrDefault();
@@ -561,7 +560,7 @@ namespace Resourceedge.Appraisal.API.Services
             }
         }
 
-        public async Task<bool> RestAppraisal(int empId, int appraiserId, ObjectId cycleId )
+        public async Task<bool> RestAppraisal(int empId, int appraiserId, ObjectId cycleId)
         {
             try
             {
@@ -579,9 +578,9 @@ namespace Resourceedge.Appraisal.API.Services
                 }
                 else
                 {
-                     filter = Builders<AppraisalResult>.Filter.Where(x => x.myId == empId &&
-                                                            x.KeyResultArea.AppraiserDetails.EmployeeId == appraiserId
-                                                            && x.AppraisalCycleId == cycleId);
+                    filter = Builders<AppraisalResult>.Filter.Where(x => x.myId == empId &&
+                                                           x.KeyResultArea.AppraiserDetails.EmployeeId == appraiserId
+                                                           && x.AppraisalCycleId == cycleId);
                     appraisalResult = Collection.Find(filter).ToList();
                     appraisalResult.ForEach(x => x.ResetForAppraiser(Collection));
                 }
@@ -612,7 +611,7 @@ namespace Resourceedge.Appraisal.API.Services
                 return false;
             }
         }
-        
+
         public async Task SendOutEmail(OldEmployeeForViewDto employee, string subject, double finalResult)
         {
             SingleEmailDto emailDto = new SingleEmailDto()
@@ -630,19 +629,19 @@ namespace Resourceedge.Appraisal.API.Services
             await sender.SendToSingleEmployee(subject, emailDto);
         }
 
-        public  async Task SendSubmittedAppraisalEmail(string subject, List<SingleEmailDto> emailDto)
-        {        
+        public async Task SendSubmittedAppraisalEmail(string subject, List<SingleEmailDto> emailDto)
+        {
             var emailDtos = AppraisalResultExtension.FormatEmailForAppraisal(emailDto);
 
             if (emailDtos.Any())
             {
-               emailDtos.ForEach(async e => await sender.SendToSingleEmployee(subject, e));
-            }           
+                emailDtos.ForEach(async e => await sender.SendToSingleEmployee(subject, e));
+            }
         }
 
         public async Task<bool> IsAnyAppriasalResultRejected(int EmployeeId, ObjectId CycleId)
         {
-            var result =  Collection.AsQueryable().Where(x => x.myId == EmployeeId && x.AppraisalCycleId == CycleId).Any(x => x.IsAccepted == false);
+            var result = Collection.AsQueryable().Where(x => x.myId == EmployeeId && x.AppraisalCycleId == CycleId).Any(x => x.IsAccepted == false);
             return await Task.FromResult(result);
         }
     }

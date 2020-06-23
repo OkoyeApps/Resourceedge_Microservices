@@ -263,7 +263,6 @@ namespace Resourceedge.Appraisal.API.Services
                     {
                         oldKeyResultArea.Status.Hod = entity.Approve;
                         oldKeyResultArea.Status.IsAccepted = entity.Approve;
-                        oldKeyResultArea.SetActive();
                     }
                     else
                     {
@@ -294,7 +293,7 @@ namespace Resourceedge.Appraisal.API.Services
                 var filter = Builders<KeyResultArea>.Filter.Where(r => r.EmployeeId == empId && r.Year == DateTime.Now.Year);
 
                 var oldKeyResultArea = Collection.Find(filter).ToList();
-                oldKeyResultArea.ForEach(x => x.Status.Employee = (x.Status.Appraiser.Value == true) ? entity.Approve : null); ;
+                oldKeyResultArea.ForEach(x => { x.Status.Employee = (x.Status.Appraiser.Value == true) ? entity.Approve : null; x.SetActive(); });
 
                 var update = Builders<KeyResultArea>.Update.Set("Status.Employee", entity.Approve);
                 var result = await Collection.UpdateManyAsync(filter, update);
