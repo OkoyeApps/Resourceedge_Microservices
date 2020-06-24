@@ -94,6 +94,8 @@ namespace Resourceedge.Appraisal.API.Controllers
             entityForUpdate.ApplyTo(resultAreaToPatch);
             mapper.Map(resultAreaToPatch, keyResult);
 
+            keyResult.Status.Appraiser = (!keyResult.Status.Appraiser.Value) ? null : keyResult.Status.Appraiser;
+
             var entityToUpdate = await resultArea.Update(Id, keyResult);
             var entityToReturn = mapper.Map<KeyResultAreaForViewDto>(entityToUpdate);
 
