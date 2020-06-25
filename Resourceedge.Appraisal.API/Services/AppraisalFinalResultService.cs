@@ -34,6 +34,7 @@ namespace Resourceedge.Appraisal.API.Services
             {
                 var allAppraisalResult = AppraisalResultCollection.AsQueryable().Where(x => x.myId == empId && x.AppraisalCycleId == cycleId).ToList();
                 var appraisalResult = allAppraisalResult.Where(x => x.AppraiseeCalculation.ScoreTotal != null).ToList();
+                var empAppraisalResult = allAppraisalResult.Where(x => x.EmployeeCalculation.ScoreTotal != null).ToList();
                 var filter = Builders<FinalAppraisalResult>.Filter.Where(x => x.EmployeeId == empId && x.AppraisalCycleId == cycleId);
                 var oldFinalResult = Collection.Find(filter).FirstOrDefault();
 
@@ -44,9 +45,10 @@ namespace Resourceedge.Appraisal.API.Services
 
                 if (oldFinalResult == null)
                 {
-                    var totalWeightAppraised = appraisalResult.Sum(a => a.KeyResultArea.Weight);
+                    var totalWeightAppraised = empAppraisalResult.Sum(a => a.KeyResultArea.Weight);
 
-                    var decimalEmployeeResult = NormalizeResult(totalWeightAppraised, (decimal)appraisalResult.Sum(x => x.EmployeeCalculation.WeightContribution),5);
+
+                    var decimalEmployeeResult = NormalizeResult(totalWeightAppraised, (decimal)empAppraisalResult.Sum(x => x.EmployeeCalculation.WeightContribution),5);
                     var decimalAppraisalResult = (decimal)((appraisalResult.FirstOrDefault().IsAccepted != null) ? NormalizeResult(totalWeightAppraised, (decimal)appraisalResult.Sum(x => x.AppraiseeCalculation.WeightContribution),5)  : 0);
                     var decimalFinalResult = (decimal)((appraisalResult.FirstOrDefault().IsAccepted != null) ? NormalizeResult(totalWeightAppraised, (decimal)appraisalResult.Sum(x => x.FinalCalculation.WeightContribution),5)  : 0);
 
@@ -67,7 +69,7 @@ namespace Resourceedge.Appraisal.API.Services
                 {
                     var totalWeightAppraised =  appraisalResult.Sum(a => a.KeyResultArea.Weight);
 
-                    oldFinalResult.EmployeeResult = (oldFinalResult.EmployeeResult != 0) ? (double)NormalizeResult(appraisalResult.Sum(a => a.KeyResultArea.Weight), (decimal)appraisalResult.Sum(x => x.EmployeeCalculation.WeightContribution), 5) : (double)NormalizeResult(appraisalResult.Sum(a => a.KeyResultArea.Weight), (decimal)appraisalResult.Sum(x => x.EmployeeCalculation.WeightContribution), 5);
+                    oldFinalResult.EmployeeResult = (oldFinalResult.EmployeeResult != 0) ? (double)NormalizeResult(empAppraisalResult.Sum(a => a.KeyResultArea.Weight), (decimal)empAppraisalResult.Sum(x => x.EmployeeCalculation.WeightContribution), 5) : (double)NormalizeResult(empAppraisalResult.Sum(a => a.KeyResultArea.Weight), (decimal)empAppraisalResult.Sum(x => x.EmployeeCalculation.WeightContribution), 5);
                     if (!appraisalResult.Any(x => x.AppraiseeCalculation.WeightContribution == 0))
                     {
                         oldFinalResult.AppraiseeResult = (oldFinalResult.AppraiseeResult != 0) ? (double)NormalizeResult(totalWeightAppraised, (decimal)appraisalResult.Sum(x => x.AppraiseeCalculation.WeightContribution), 5) : (double)NormalizeResult(totalWeightAppraised, (decimal)appraisalResult.Sum(x => x.AppraiseeCalculation.WeightContribution),5);
