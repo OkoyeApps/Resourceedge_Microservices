@@ -47,16 +47,15 @@ namespace Resourceedge.Appraisal.API.Services
                 {
                     var totalWeightAppraised = empAppraisalResult.Sum(a => a.KeyResultArea.Weight);
 
-
                     var decimalEmployeeResult = NormalizeResult(totalWeightAppraised, (decimal)empAppraisalResult.Sum(x => x.EmployeeCalculation.WeightContribution),5);
-                    var decimalAppraisalResult = (decimal)((appraisalResult.FirstOrDefault().IsAccepted != null) ? NormalizeResult(totalWeightAppraised, (decimal)appraisalResult.Sum(x => x.AppraiseeCalculation.WeightContribution),5)  : 0);
-                    var decimalFinalResult = (decimal)((appraisalResult.FirstOrDefault().IsAccepted != null) ? NormalizeResult(totalWeightAppraised, (decimal)appraisalResult.Sum(x => x.FinalCalculation.WeightContribution),5)  : 0);
+                    var decimalAppraisalResult = (decimal)((appraisalResult.Any() && appraisalResult.FirstOrDefault().IsAccepted != null) ? NormalizeResult(totalWeightAppraised, (decimal)appraisalResult.Sum(x => x.AppraiseeCalculation.WeightContribution),5)  : 0);
+                    var decimalFinalResult = (decimal)((appraisalResult.Any() && appraisalResult.FirstOrDefault().IsAccepted != null) ? NormalizeResult(totalWeightAppraised, (decimal)appraisalResult.Sum(x => x.FinalCalculation.WeightContribution),5)  : 0);
 
                     var finalResult = new FinalAppraisalResult()
                     {
-                        AppraisalConfigId = appraisalResult.FirstOrDefault().AppraisalConfigId,
-                        AppraisalCycleId = appraisalResult.FirstOrDefault().AppraisalCycleId,
-                        EmployeeId = appraisalResult.FirstOrDefault().myId,
+                        AppraisalConfigId = empAppraisalResult.FirstOrDefault().AppraisalConfigId,
+                        AppraisalCycleId = empAppraisalResult.FirstOrDefault().AppraisalCycleId,
+                        EmployeeId = empAppraisalResult.FirstOrDefault().myId,
                         EmployeeResult = (double)decimal.Round(decimalEmployeeResult, 2, MidpointRounding.AwayFromZero),
                         AppraiseeResult = (double)decimal.Round(decimalAppraisalResult, 2, MidpointRounding.AwayFromZero),
                         FinalResult = (double)decimal.Round(decimalFinalResult, 2, MidpointRounding.AwayFromZero),
