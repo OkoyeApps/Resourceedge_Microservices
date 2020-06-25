@@ -32,7 +32,8 @@ namespace Resourceedge.Appraisal.API.Services
         {
             try
             {
-                var appraisalResult = AppraisalResultCollection.AsQueryable().Where(x => x.myId == empId && x.AppraisalCycleId == cycleId).ToList();
+                var allAppraisalResult = AppraisalResultCollection.AsQueryable().Where(x => x.myId == empId && x.AppraisalCycleId == cycleId).ToList();
+                var appraisalResult = allAppraisalResult.Where(x => x.AppraiseeCalculation.ScoreTotal != null).ToList();
                 var filter = Builders<FinalAppraisalResult>.Filter.Where(x => x.EmployeeId == empId && x.AppraisalCycleId == cycleId);
                 var oldFinalResult = Collection.Find(filter).FirstOrDefault();
 

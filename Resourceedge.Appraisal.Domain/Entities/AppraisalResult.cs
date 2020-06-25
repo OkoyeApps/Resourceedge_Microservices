@@ -47,8 +47,8 @@ namespace Resourceedge.Appraisal.Domain.Entities
 
     public class AppraisalCalculationByKRA
     {
-        public double ScoreTotal { get; set; }
-        public double Average { get; set; }
-        public double WeightContribution { get; set; }
+        public double? ScoreTotal { get; set; }
+        public double? Average { get; set; }
+        public double? WeightContribution { get; set; }
     }
 }
