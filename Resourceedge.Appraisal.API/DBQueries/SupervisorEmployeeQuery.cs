@@ -134,7 +134,9 @@ namespace Resourceedge.Appraisal.API.DBQueries
                                 }
                             }
                         },
-                         { "EmployeeDetail", "$EmployeeDetail"}
+                         { "EmployeeDetail", "$EmployeeDetail"},
+                        {"appraisalconfiguration", ObjectId.Parse(appraisalConfigurationId) },
+                        {"appraisalCycle",  ObjectId.Parse(appraisalCycleId)}
                     }
                 }
             };
@@ -145,8 +147,39 @@ namespace Resourceedge.Appraisal.API.DBQueries
                     "$lookup", new BsonDocument
                     {
                        {"from", "FinalAppraisalResults" },
-                        {"localField", "EmployeeDetail.EmployeeId"},
-                        {"foreignField", "EmployeeId" },
+                        {"let",  new BsonDocument{
+                            {"config", "$appraisalconfiguration" },
+                            {"cycle","$appraisalCycle" },
+                            {"employeeId", "$EmployeeDetail.EmployeeId" }
+                        } },
+                        {"pipeline", new BsonArray
+                         {
+                            new BsonDocument
+                            {
+                                {"$match", new BsonDocument
+                                {
+                                    {"$expr" , new BsonDocument{
+                                        {
+                                            "$and", new BsonArray
+                                            {
+                                                new BsonDocument {{
+                                                    "$eq" , new BsonArray(new dynamic[] { "$$config", "$AppraisalConfigId"})
+                                                    }},
+                                                new BsonDocument {{
+                                                        "$eq", new BsonArray(new dynamic[] { "$$cycle", "$AppraisalCycleId"})
+                                                    }},
+                                                 new BsonDocument {{
+                                                        "$eq", new BsonArray(new dynamic[] { "$$employeeId", "$EmployeeId"})
+                                                    }}
+                                            }
+                                        }
+                                    }
+                                    } }
+                                }
+                            }
+                        } },
+                        //{"localField", "EmployeeDetail.EmployeeId"},
+                        //{"foreignField", "EmployeeId" },
                         {"as", "Temp_Appraisal_Result" }
                     }
                 }

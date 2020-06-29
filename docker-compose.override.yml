@@ -4,8 +4,8 @@ services:
   resourceedge.appraisal.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - DefaultConnection__ConnectionString=mongodb+srv://emma:%40A1234567@lawyerpp-cluster-5faak.mongodb.net/EdgeAppraisal?retryWrites=true&w=majority
-     # - DefaultConnection__ConnectionString=mongodb+srv://edgeadmin:9o2oNXbr9kmuDrwI@version1cluster-j74f5.mongodb.net/EdgeAppraisal?retryWrites=true&w=majority
+     # - DefaultConnection__ConnectionString=mongodb+srv://emma:%40A1234567@lawyerpp-cluster-5faak.mongodb.net/EdgeAppraisal?retryWrites=true&w=majority
+      - DefaultConnection__ConnectionString=mongodb+srv://edgeadmin:9o2oNXbr9kmuDrwI@version1cluster-j74f5.mongodb.net/EdgeAppraisal?retryWrites=true&w=majority
       - DefaultConnection__DataBaseName=EdgeAppraisal
       - Services__employee=https://resourceedgeemployee.azurewebsites.net/api
       - SendGrid__SENDGRID_API_KEY=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

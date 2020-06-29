@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Resourceedge.Appraisal.API.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("api/Appraisal")]
     public class AppraisalResultController : ControllerBase
